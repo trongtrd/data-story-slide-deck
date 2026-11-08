@@ -1,0 +1,264 @@
+# D-035 benchmark (fictional, Vietnamese): a members' briefing with no ask and no resistance.
+# Exercises: resistance_assessment none_identified, reading notes, implication callouts (no method caveats on
+# cards, D-058), two-entity Color Tie, a conclusion close, and an appendix diverging
+# stacked bar of an answer scale (D-057 B9).
+run_id: bench_vi_briefing_no_ask
+example_card: EX-004
+deck: {language: vi, delivery_mode: hybrid, palette: blue}
+title_slide: {title: Kết quả khảo sát hội viên Sông Xanh năm 2026, audience_line: Buổi chia sẻ với hội viên hiệp hội, date: Tháng 11/2026, presenter: Nhóm nghiên cứu của hiệp hội}
+
+context:
+  org: Hiệp hội Hợp tác xã Nông sản Sông Xanh (hư cấu)
+  room: Buổi chia sẻ kết quả khảo sát hội viên năm 2026
+  decision_maker:
+    name_or_role: Ông Quang (Chủ tịch hiệp hội, chủ trì buổi chia sẻ)
+    decision_authority: Chốt cách đọc chung kết quả khảo sát trước phần thảo luận chính sách
+    core_priority: Hội viên hiểu đúng và giống nhau về tình hình năm 2026
+  allies:
+    - name_or_role: Nhóm nghiên cứu của hiệp hội
+      priority: Trình bày kết quả trung thực và dễ hiểu
+      evidence_needed: Tỷ lệ theo từng khó khăn, theo quy mô và kế hoạch năm 2027
+  resistance_assessment: none_identified
+  resistance_reason: Buổi chia sẻ kết quả cho hội viên; không có đề xuất hay quyết định nào bị tranh chấp.
+  primary_action: Thống nhất cách đọc chung kết quả khảo sát năm 2026 để làm nền cho phần thảo luận chính sách.
+  fallback: Ghi nhận các điểm hội viên cần làm rõ để bổ sung trong báo cáo đầy đủ.
+  benefits:
+    - Phần thảo luận chính sách bắt đầu từ cùng một bức tranh về chi phí, giá bán và kế hoạch năm 2027.
+    - Hội viên nhóm nhỏ thấy rõ mức độ khó khăn của mình so với nhóm lớn.
+  risks:
+    - Mỗi nhóm đọc số liệu theo một cách và thảo luận lệch hướng.
+    - Tỷ lệ của nhóm lớn bị diễn giải quá mức dù cỡ mẫu nhỏ.
+  big_idea:
+    sentence: Hợp tác xã đang chịu sức ép kép từ giá phân bón và giá bán nên phần lớn giữ nguyên kế hoạch năm 2027, và đó là nền chung cho thảo luận chính sách.
+    point_of_view: Hợp tác xã đang chịu sức ép kép từ giá phân bón và giá bán
+    stakes_clause: phần lớn giữ nguyên kế hoạch năm 2027
+    phrasing_mode: directional
+    phrasing_rationale: Buổi chia sẻ cần hướng đọc chung trước; số liệu chi tiết nằm ở từng slide.
+
+report: |
+  # Hiệp hội Hợp tác xã Nông sản Sông Xanh — Khảo sát hội viên năm 2026 (dữ liệu hư cấu cho benchmark)
+
+  - 240 hợp tác xã trả lời; mỗi hợp tác xã chọn tối đa hai khó khăn lớn nhất.
+  - Giá phân bón tăng: 64,2%; giá bán nông sản giảm: 47,5%; thiếu lao động thời vụ: 31,7%; khó tiếp cận vốn: 22,9%.
+  - Tỷ lệ báo giảm doanh thu: 52,4% ở nhóm dưới 20 thành viên (126 hợp tác xã), 41,0% ở nhóm 20–50 (96), 27,8% ở nhóm trên 50 (18).
+  - Kế hoạch sản xuất năm 2027: mở rộng 18,3%, giữ nguyên 49,6%, thu hẹp 14,2%, chưa quyết định 17,9%.
+  - Kỳ vọng năm 2027 so với năm 2026 (xấu hơn nhiều / xấu hơn / như năm nay / tốt hơn / tốt hơn nhiều): nhóm dưới 20 thành viên 14,3 / 27,8 / 31,0 / 21,4 / 5,6%; nhóm 20–50: 9,4 / 21,9 / 33,3 / 27,1 / 8,3%; nhóm trên 50: 5,6 / 16,7 / 27,8 / 33,3 / 16,7%.
+
+datasets:
+  difficulties:
+    columns: [difficulty, pct]
+    rows:
+      - [Giá phân bón tăng, 64.2]
+      - [Giá bán nông sản giảm, 47.5]
+      - [Thiếu lao động thời vụ, 31.7]
+      - [Khó tiếp cận vốn, 22.9]
+  by_size:
+    columns: [size_group, revenue_decline_pct, n]
+    rows:
+      - [Dưới 20 thành viên, 52.4, 126]
+      - [20–50 thành viên, 41.0, 96]
+      - [Trên 50 thành viên, 27.8, 18]
+  plan_2027:
+    columns: [plan, pct]
+    rows:
+      - [Mở rộng, 18.3]
+      - [Giữ nguyên, 49.6]
+      - [Thu hẹp, 14.2]
+      - [Chưa quyết định, 17.9]
+  outlook_2027:
+    columns: [size_group, much_worse_pct, worse_pct, same_pct, better_pct, much_better_pct, n]
+    rows:
+      - [Dưới 20 thành viên, 14.3, 27.8, 31.0, 21.4, 5.6, 126]
+      - [20–50 thành viên, 9.4, 21.9, 33.3, 27.1, 8.3, 96]
+      - [Trên 50 thành viên, 5.6, 16.7, 27.8, 33.3, 16.7, 18]
+
+storyline:
+  tension: Chi phí đầu vào tăng đúng lúc giá bán giảm, nên hợp tác xã chọn đứng yên thay vì mở rộng.
+  withheld: 5
+  pruned:
+    - {item: Cách chọn mẫu và tỷ lệ phản hồi theo tỉnh, disposition: speaker_notes, reason: Hội viên không cần để đọc kết quả; trả lời khi được hỏi.}
+    - {item: Bảng khó khăn theo từng loại cây trồng, disposition: excluded, reason: Không đổi bức tranh chung của buổi chia sẻ.}
+  climax:
+    slide_numbers: [4]
+    human_or_operational_peak: 52,4% hợp tác xã dưới 20 thành viên báo giảm doanh thu.
+    financial_or_strategic_peak: Chỉ 18,3% dự định mở rộng sản xuất năm 2027.
+  opening_summary:
+    enabled: true
+    reason: Buổi chia sẻ dạng hybrid, không có phản đối; hội viên đọc trước nên cần câu trả lời ngay trang đầu.
+  sections:
+    - {number: 1, claim: Giá phân bón và giá bán cùng ép biên lợi nhuận., slides: [2]}
+    - {number: 2, claim: Hợp tác xã nhỏ chịu sức ép doanh thu nặng nhất., slides: [3]}
+    - {number: 3, claim: Phần lớn hợp tác xã chưa vội mở rộng năm 2027., slides: [4, 5]}
+
+qa:
+  - skeptic_name_or_role: Hội viên nhóm trên 50 thành viên
+    predicted_question: Vì sao nhóm lớn có tỷ lệ giảm doanh thu thấp hơn hẳn?
+    evidence_backed_response: Nhóm này có 18 hợp tác xã trả lời, ít hơn nhiều so với hai nhóm còn lại; dòng nguồn của slide 3 nêu cỡ mẫu từng nhóm.
+    supporting_slide_numbers: [3]
+  - skeptic_name_or_role: Ông Quang (Chủ tịch hiệp hội)
+    predicted_question: Có thể dùng các tỷ lệ khó khăn để xếp hạng mức độ nghiêm trọng không?
+    evidence_backed_response: Có thể so sánh mức độ phổ biến, vì mỗi hợp tác xã chọn tối đa hai khó khăn; slide 2 cho thấy giá phân bón được chọn nhiều nhất.
+    supporting_slide_numbers: [2]
+
+slides:
+  - arc: summary
+    layout: executive_summary
+    title: Sức ép từ phân bón và giá bán khiến hợp tác xã đứng yên năm 2027.
+    tie: [đứng yên năm 2027]
+    pass1: Giá phân bón tăng và giá bán giảm cùng lúc, nên phần lớn hợp tác xã giữ nguyên kế hoạch sản xuất năm 2027 thay vì mở rộng.
+    question: Khảo sát hội viên năm 2026 cho thấy điều gì?
+    stakeholder: Ông Quang (Chủ tịch hiệp hội, chủ trì buổi chia sẻ)
+    points:
+      - {lead: Giá phân bón và giá bán cùng ép biên lợi nhuận., detail: '64,2% hợp tác xã chọn giá phân bón tăng, 47,5% chọn giá bán giảm.', slides: [2]}
+      - {lead: Hợp tác xã nhỏ chịu sức ép doanh thu nặng nhất., detail: '52,4% nhóm dưới 20 thành viên báo giảm doanh thu, so với 27,8% ở nhóm trên 50.', slides: [3]}
+      - {lead: Phần lớn hợp tác xã chưa vội mở rộng năm 2027., detail: '49,6% giữ nguyên kế hoạch và chỉ 18,3% dự định mở rộng.', slides: [4]}
+    footnote: 'Nguồn: Khảo sát hội viên Sông Xanh năm 2026; n = 240 hợp tác xã.'
+    claim: {construct: sức ép kép khiến hợp tác xã đứng yên, metric: Tóm tắt các slide 2–4 (không có biểu đồ)}
+
+  - arc: plot
+    layout: one_sided_right_text
+    title: Giá phân bón và giá bán cùng ép biên lợi nhuận hợp tác xã.
+    tie: [Giá phân bón, {text: giá bán, color: tier2}]
+    pass1: Hai khó khăn được chọn nhiều nhất là giá phân bón tăng và giá bán nông sản giảm, cùng lúc ép biên lợi nhuận của hợp tác xã.
+    question: Khó khăn nào được hợp tác xã chọn nhiều nhất năm 2026?
+    stakeholder: Ông Quang (Chủ tịch hiệp hội, chủ trì buổi chia sẻ)
+    chart_title: Hợp tác xã chọn mỗi khó khăn trong hai khó khăn lớn nhất, năm 2026 (%)
+    labels_mode: bar_values
+    rec: {kind: implication, text: Chi phí đầu vào và giá đầu ra nên được bàn cùng nhau trong phần thảo luận.}
+    reading_note: Mỗi hợp tác xã chọn tối đa hai khó khăn nên các tỷ lệ không cộng thành 100%.
+    footnote: 'Nguồn: Khảo sát hội viên Sông Xanh năm 2026; n = 240 hợp tác xã.'
+    g3: {selected: Biểu đồ thanh ngang xếp theo tỷ lệ, shows: Thứ tự phổ biến của bốn khó khăn., obscures: Hợp tác xã nào gặp cả hai khó khăn., rejected: [Biểu đồ tròn]}
+    claim: {construct: sức ép từ giá phân bón và giá bán, metric: Tỷ lệ hợp tác xã chọn mỗi khó khăn (%)}
+    reveal:
+      - {step_number: 1, visible_panel_ids: [panel_difficulties], visible_series_roles: [context_greyscale, focal_secondary_tier2, focal_primary_tier1], show_annotations: true, show_recommendation_callout: true, speaker_notes: 'Giá phân bón tăng là khó khăn được chọn nhiều nhất, 64,2%. Ngay sau đó là giá bán giảm, 47,5%. Hai sức ép này đến cùng lúc.'}
+    panels:
+      - id: panel_difficulties
+        family: horizontal_bar_chart
+        title: Bốn khó khăn trong phiếu hỏi
+        categories: [Giá phân bón tăng, Giá bán nông sản giảm, Thiếu lao động thời vụ, Khó tiếp cận vốn]
+        y: [0, 80]
+        format: '0'
+        series:
+          - name: Tỷ lệ hợp tác xã
+            role: context
+            labels: bar_end
+            label: '{v:.1f}%'
+            base: {dataset: difficulties, column: pct}
+            category_key: {column: difficulty, values: [Giá phân bón tăng, Giá bán nông sản giảm, Thiếu lao động thời vụ, Khó tiếp cận vốn]}
+            highlight: {Giá phân bón tăng: focal, Giá bán nông sản giảm: tier2}
+
+  - arc: rising_action
+    layout: one_sided_right_text
+    title: Hợp tác xã nhỏ báo giảm doanh thu nhiều hơn nhóm lớn.
+    tie: [Hợp tác xã nhỏ]
+    pass1: Hợp tác xã dưới 20 thành viên báo giảm doanh thu nhiều hơn rõ rệt so với các nhóm lớn hơn.
+    question: Quy mô nào báo giảm doanh thu nhiều nhất?
+    stakeholder: Hội viên nhóm dưới 20 thành viên
+    chart_title: Hợp tác xã báo giảm doanh thu theo số thành viên, năm 2026 (%)
+    labels_mode: bar_values
+    rec: {kind: implication, text: 'Sức ép doanh thu dồn vào nhóm nhỏ, cũng là nhóm đông hội viên nhất của hiệp hội.', tie: [nhóm nhỏ]}
+    reading_note: Quy mô tính theo số thành viên hợp tác xã tự khai báo.
+    footnote: 'Nguồn: Khảo sát hội viên Sông Xanh năm 2026; n = 126, 96 và 18 hợp tác xã.'
+    g3: {selected: Biểu đồ thanh ngang theo nhóm quy mô, shows: Mức chênh giữa nhóm nhỏ và nhóm lớn., obscures: Khác biệt theo loại cây trồng., rejected: [Biểu đồ cột chồng]}
+    claim: {construct: hợp tác xã nhỏ báo giảm doanh thu nhiều hơn, metric: Tỷ lệ hợp tác xã báo giảm doanh thu (%)}
+    panels:
+      - id: panel_size
+        family: horizontal_bar_chart
+        title: Ba nhóm quy mô
+        categories: [Dưới 20 thành viên, 20–50 thành viên, Trên 50 thành viên]
+        y: [0, 60]
+        format: '0'
+        series:
+          - name: Báo giảm doanh thu
+            role: context
+            labels: bar_end
+            label: '{v:.1f}%'
+            base: {dataset: by_size, column: revenue_decline_pct}
+            category_key: {column: size_group, values: [Dưới 20 thành viên, 20–50 thành viên, Trên 50 thành viên]}
+            highlight: {Dưới 20 thành viên: focal}
+
+  - arc: climax
+    layout: one_sided_right_text
+    title: Gần một nửa hợp tác xã giữ nguyên kế hoạch sản xuất năm 2027.
+    tie: [giữ nguyên kế hoạch]
+    pass1: Trước sức ép chi phí và giá bán, gần một nửa hợp tác xã chọn giữ nguyên kế hoạch sản xuất năm 2027 và chỉ một phần nhỏ dự định mở rộng.
+    question: Hợp tác xã dự định làm gì với sản xuất năm 2027?
+    stakeholder: Ông Quang (Chủ tịch hiệp hội, chủ trì buổi chia sẻ)
+    chart_title: Kế hoạch sản xuất năm 2027 của hợp tác xã (%)
+    labels_mode: bar_values
+    rec: {kind: implication, text: 'Chỉ 18,3% dự định mở rộng, nên khó kỳ vọng sản lượng tăng mạnh năm 2027.', tie: ['18,3%']}
+    reading_note: Kế hoạch do hợp tác xã tự khai báo vào tháng 9 năm 2026.
+    footnote: 'Nguồn: Khảo sát hội viên Sông Xanh năm 2026; n = 240 hợp tác xã.'
+    g3: {selected: Biểu đồ thanh ngang bốn lựa chọn, shows: Giữ nguyên là lựa chọn phổ biến nhất., obscures: Lý do của từng lựa chọn., rejected: [Biểu đồ tròn]}
+    claim: {construct: gần một nửa giữ nguyên kế hoạch, metric: Tỷ lệ hợp tác xã theo kế hoạch sản xuất năm 2027 (%)}
+    panels:
+      - id: panel_plan
+        family: horizontal_bar_chart
+        title: Bốn lựa chọn
+        categories: [Mở rộng, Giữ nguyên, Thu hẹp, Chưa quyết định]
+        y: [0, 60]
+        format: '0'
+        series:
+          - name: Tỷ lệ hợp tác xã
+            role: context
+            labels: bar_end
+            label: '{v:.1f}%'
+            base: {dataset: plan_2027, column: pct}
+            category_key: {column: plan, values: [Mở rộng, Giữ nguyên, Thu hẹp, Chưa quyết định]}
+            highlight: {Giữ nguyên: focal}
+
+  - arc: resolution
+    layout: statement_or_transition
+    title: Hợp tác xã chịu sức ép kép và chưa vội mở rộng năm 2027.
+    tie: [sức ép kép]
+    pass1: Hợp tác xã đang chịu sức ép kép từ chi phí đầu vào và giá bán, nên phần lớn chưa vội mở rộng sản xuất năm 2027.
+    question: Hội viên nên cùng đọc kết quả khảo sát thế nào?
+    stakeholder: Ông Quang (Chủ tịch hiệp hội, chủ trì buổi chia sẻ)
+    chart_title: Ba điểm chính của khảo sát hội viên năm 2026
+    rec:
+      kind: implication
+      text: Giá phân bón tăng và giá bán giảm cùng lúc, nên phần lớn hợp tác xã giữ nguyên kế hoạch thay vì mở rộng.
+      tie: [giữ nguyên kế hoạch]
+    step_style: big_number
+    steps:
+      - {title: '64,2%', description: hợp tác xã chọn giá phân bón tăng là khó khăn lớn nhất, source_cell_ref: 'difficulties.csv!R2C2', focal: true}
+      - {title: '52,4%', description: hợp tác xã dưới 20 thành viên báo giảm doanh thu, source_cell_ref: 'by_size.csv!R2C2'}
+      - {title: '18,3%', description: 'hợp tác xã định mở rộng sản xuất năm 2027; 49,6% giữ nguyên', source_cell_ref: 'plan_2027.csv!R2C2'}
+    footnote: 'Nguồn: Khảo sát hội viên Sông Xanh năm 2026; nhắc lại số liệu từ slide 2–4.'
+    claim: {construct: sức ép kép và kế hoạch thận trọng, metric: Tóm tắt bằng chứng slide 2–4 (không có biểu đồ)}
+
+  - arc: appendix
+    layout: one_sided_right_text
+    title: Hợp tác xã càng lớn càng kỳ vọng năm 2027 khả quan hơn.
+    tie: [khả quan hơn]
+    pass1: Hội viên hỏi kỳ vọng năm 2027 theo quy mô; nhóm càng lớn thì càng nhiều hợp tác xã chờ một năm tốt hơn.
+    question: Hợp tác xã mỗi nhóm quy mô kỳ vọng năm 2027 ra sao?
+    stakeholder: Ông Quang (Chủ tịch hiệp hội, chủ trì buổi chia sẻ)
+    audience_need: Hội viên hỏi kỳ vọng năm 2027 theo quy mô để chuẩn bị phần thảo luận chính sách.
+    chart_title: Kỳ vọng năm 2027 so với năm 2026, theo số thành viên (% hợp tác xã)
+    labels_mode: bar_values
+    rec: {kind: implication, text: 'Nhóm nhỏ bước vào năm 2027 dè dặt nhất, nên là trọng tâm của phần thảo luận chính sách.', tie: [Nhóm nhỏ]}
+    reveal:
+      - {step_number: 1, visible_panel_ids: [panel_outlook], visible_series_roles: [context_greyscale, focal_secondary_tier2, focal_primary_tier1], show_annotations: true, show_recommendation_callout: true, speaker_notes: 'Mỗi thanh là một nhóm quy mô và cộng thành một trăm phần trăm. Câu trả lời xấu hơn nằm bên trái vạch giữa, tốt hơn nằm bên phải, còn Như năm nay chia đôi qua vạch giữa. Nhóm càng lớn thì phần bên phải càng dài.'}
+    footnote: 'Nguồn: Khảo sát hội viên Sông Xanh năm 2026; n = 126, 96 và 18 hợp tác xã.'
+    g3: {selected: Thanh chồng phân kỳ theo nhóm quy mô, shows: Mức nghiêng về tốt hơn hay xấu hơn của từng nhóm quanh câu trả lời trung lập., obscures: Lý do của từng kỳ vọng., rejected: [Năm biểu đồ cột riêng, Thanh chồng 100% không có vạch giữa]}
+    claim: {construct: hợp tác xã lớn kỳ vọng năm 2027 khả quan hơn, metric: Tỷ lệ hợp tác xã theo kỳ vọng năm 2027 (%)}
+    panels:
+      - id: panel_outlook
+        family: stacked_bar_chart
+        orientation: horizontal
+        stack_mode: diverging
+        side_totals: brackets
+        colour_scale: diverging
+        colour_midpoint: {value: 0, meaning: câu trả lời trung lập (như năm nay)}
+        category_order: natural
+        title: Ba nhóm quy mô
+        categories: [Dưới 20 thành viên, 20–50 thành viên, Trên 50 thành viên]
+        y: [0, 100]
+        format: '0'
+        series:
+          - {name: Xấu hơn nhiều, role: alt, diverging_side: negative, labels: bar_end, label: '{v:.0f}%', base: {dataset: outlook_2027, column: much_worse_pct}, category_key: {column: size_group, values: [Dưới 20 thành viên, 20–50 thành viên, Trên 50 thành viên]}}
+          - {name: Xấu hơn, role: tier2, color: '#F0974A', diverging_side: negative, labels: bar_end, label: '{v:.0f}%', base: {dataset: outlook_2027, column: worse_pct}, category_key: {column: size_group, values: [Dưới 20 thành viên, 20–50 thành viên, Trên 50 thành viên]}}
+          - {name: Như năm nay, role: context, diverging_side: neutral, labels: bar_end, label: '{v:.0f}%', base: {dataset: outlook_2027, column: same_pct}, category_key: {column: size_group, values: [Dưới 20 thành viên, 20–50 thành viên, Trên 50 thành viên]}}
+          - {name: Tốt hơn, role: tier2, diverging_side: positive, labels: bar_end, label: '{v:.0f}%', base: {dataset: outlook_2027, column: better_pct}, category_key: {column: size_group, values: [Dưới 20 thành viên, 20–50 thành viên, Trên 50 thành viên]}}
+          - {name: Tốt hơn nhiều, role: focal, diverging_side: positive, labels: bar_end, label: '{v:.0f}%', base: {dataset: outlook_2027, column: much_better_pct}, category_key: {column: size_group, values: [Dưới 20 thành viên, 20–50 thành viên, Trên 50 thành viên]}}

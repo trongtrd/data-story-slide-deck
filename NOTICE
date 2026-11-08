@@ -1,0 +1,94 @@
+Data Story Slide Deck
+Copyright 2026 Trong Truong and Data Story Slide Deck contributors
+
+LICENSING (D-016)
+-----------------
+This repository is dual-licensed by content type:
+
+  * Code — Apache License 2.0 (see LICENSE):
+      40_plugin/scripts/, 40_plugin/install.py, 50_evals/scripts/, .github/,
+      and every other *.py, *.json, and *.yml file.
+
+  * Written content — Creative Commons Attribution 4.0 International
+    (CC BY 4.0, see LICENSE-CONTENT):
+      20_knowledge/ (knowledge cards, glossary, index), 30_design/ (workflow and
+      artifact contracts), 40_plugin/skills/ (SKILL.md files), 40_plugin/knowledge/
+      and 40_plugin/contracts/ (synced copies), 40_plugin/examples/, 50_evals/
+      (rubric, benchmark scenarios, reports), and the documentation (*.md).
+
+When you reuse CC BY 4.0 content, credit "Data Story Slide Deck" with a link to the
+repository and indicate any changes.
+
+ATTRIBUTION
+-----------
+The knowledge base synthesizes ideas from the "storytelling with data" (SWD) body of
+work. All text is written in our own words. No source text, images, or files are
+redistributed. Examples and benchmarks use original, fictional scenarios (D-017).
+
+Primary sources (cited by ID in each card; see 10_sources/SOURCES.md):
+  * Cole Nussbaumer Knaflic and the storytelling with data team — SWD + AI Primer
+    (including an excerpt from "storytelling with data: before & after", Wiley, 2025)
+    and the "AI for data storytelling" article series on storytellingwithdata.com
+  * Alex Velez — "using AI without giving up control" (editable PowerPoint charts)
+  * Amy Esselman — "apply color thoughtfully in your graphs"; "give each point its own view"
+
+Secondary sources (they supplement SWD and never override it; ideas restated in our
+own words, nothing copied; cited by ID; licences as recorded in 10_sources/SOURCES.md):
+  * SRC-SEC-005  Yuki Amano, Hiroshima University — "An Introduction to Slide Making
+                 With Information Design in Mind" (2024), CC BY-SA 4.0
+  * SRC-SEC-006  Lisa Charlotte Muth, Datawrapper GmbH — Datawrapper blog articles on
+                 colour in data visualization
+  * SRC-SEC-007  Lisa Charlotte Muth, Datawrapper GmbH — Datawrapper blog articles on
+                 text and fonts in data visualization
+  * SRC-SEC-008  Lisa Charlotte Muth, Datawrapper GmbH — "A friendly guide to choosing
+                 a chart type" (2025)
+  * SRC-SEC-009  Financial Times Visual Journalism Team — "Visual Vocabulary"
+  * SRC-SEC-010  Cathryn Lavery and contributors — "diagram-design" skill, MIT
+  * SRC-SEC-011  Jim Liu and contributors — "claude-slides" skill (baoyu-design), MIT
+  * SRC-SEC-012  "Practical Charts", a public claude.ai artifact page (author not stated)
+  * SRC-SEC-013  Jonathan A. Schwabish — "Ten Guidelines for Better Tables", Journal of
+                 Benefit-Cost Analysis 11(2), 2020, doi:10.1017/bca.2020.11
+  * SRC-SEC-014  SlideModel — "Analyzing the McKinsey Presentation Structure" (blog)
+  * SRC-SEC-015  SlideSpeak and contributors — "slide-design-skill", MIT
+  * SRC-SEC-016  v0id-byte — "Peg Design System", MIT
+  * SRC-SEC-017  ehmo — "typecraft-guide" skill, MIT
+  * SRC-SEC-018  Paul Bakaus and contributors — "impeccable" design skill, Apache-2.0
+  * SRC-SEC-019  Anthropic skills repository contributors — "frontend-design" skill,
+                 Apache-2.0
+  * SRC-SEC-020  Urban Institute — Data Visualization Style Guide, Apache-2.0
+  * SRC-SEC-021  IBM Carbon Design System team — Carbon data visualization guidance,
+                 Apache-2.0
+  * SRC-SEC-022  Yan Holtz, Data to Viz — "61 Dataviz Caveats" (2024)
+  * SRC-SEC-023  McKinsey & Company — "Chart of the Week" pages
+Sources with no licence named above are all rights reserved or carry no open licence;
+they are credited for ideas only.
+
+Decision-tree interviewing and inline glossary capture were inspired by Matt Pocock's
+open skills ("grilling", "grill-with-docs", "domain-modeling").
+
+TRADEMARKS AND ENDORSEMENT
+--------------------------
+"storytelling with data" and "SWD" are trademarks of their owner. This project is
+independent: it is not affiliated with, sponsored by, or endorsed by Cole Nussbaumer
+Knaflic or storytelling with data, LLC. Names are used only to credit sources. The
+same holds for every secondary source above: no author or organization named there
+endorses or is affiliated with this project, and their names and marks belong to them.
+PowerPoint is a trademark of Microsoft Corporation; LibreOffice is a trademark of
+The Document Foundation.
+
+THIRD-PARTY SOFTWARE
+--------------------
+Installed from PyPI at install time and not redistributed in this repository:
+
+  python-pptx 1.0.2        MIT
+  Pillow 13.0.0            MIT-CMU (HPND)
+  PyYAML 6.0.3             MIT
+  jsonschema 4.26.0        MIT  (with jsonschema-specifications, referencing,
+                                 rpds-py, attrs: MIT)
+  lxml 6.1.3               BSD-3-Clause
+  pypdfium2 5.14.0         Apache-2.0 / BSD-3-Clause (bundles PDFium, BSD-3-Clause)
+  XlsxWriter 3.3.0         BSD-2-Clause
+  typing-extensions 4.16.0 PSF-2.0
+
+External prerequisite, installed by the user: LibreOffice (MPL-2.0), used headless to
+render QA images.

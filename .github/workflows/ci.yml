@@ -1,0 +1,67 @@
+# Data Story Slide Deck CI (D-022): bundled resources in sync, eval suite + negative tests,
+# clean install with a smoke render, and Claude Code manifest validation.
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  eval-and-install:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the public-tree audit checks history for raw sources
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install LibreOffice (Linux; QA renders)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends libreoffice-impress fonts-liberation
+
+      - name: Install dev dependencies
+        run: python -m pip install -r requirements.txt
+
+      - name: Bundled plugin resources match their sources
+        run: python 50_evals/scripts/sync_plugin_resources.py --check
+
+      - name: Public-tree audit (licenses, source names, secrets, personal paths)
+        run: python 50_evals/scripts/export_public_tree.py --audit-only
+
+      - name: Eval suite with negative tests
+        run: python 50_evals/scripts/run_eval_suite.py --report-md ${{ runner.temp }}/eval.md --report-json ${{ runner.temp }}/eval.json
+
+      - name: Independent review regression tests
+        run: python 50_evals/scripts/test_review_regressions.py
+
+      - name: Clean install, doctor, and smoke render (Linux, with LibreOffice)
+        if: runner.os == 'Linux'
+        run: python 40_plugin/install.py --target codex,antigravity --home "${{ runner.temp }}/pai" --user-home "${{ runner.temp }}/home"
+
+      - name: Clean install and smoke build (Windows/macOS, without LibreOffice)
+        if: runner.os != 'Linux'
+        shell: bash
+        run: |
+          python 40_plugin/install.py --target codex,antigravity --no-smoke --home "${{ runner.temp }}/pai" --user-home "${{ runner.temp }}/home"
+          DATA_STORY_SLIDE_DECK_HOME="${{ runner.temp }}/pai" python "${{ runner.temp }}/pai/plugin/scripts/deckctl.py" smoke
+
+  claude-plugin-manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # the public-tree audit checks history for raw sources
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Validate plugin and marketplace manifests
+        run: |
+          npx -y @anthropic-ai/claude-code plugin validate --strict ./40_plugin
+          npx -y @anthropic-ai/claude-code plugin validate --strict .

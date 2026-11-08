@@ -1,0 +1,19 @@
+metric,unit_type,cohort,before_rotation,current
+competency_score,Critical Care,Senior,4.4,4.4
+competency_score,Critical Care,Experienced,4.2,4.1
+competency_score,Critical Care,New graduate,3.9,3.2
+competency_score,Emergency,Senior,4.3,4.2
+competency_score,Emergency,Experienced,4.1,4.0
+competency_score,Emergency,New graduate,3.8,3.3
+competency_score,Outpatient,Senior,4.5,4.5
+competency_score,Outpatient,Experienced,4.3,4.3
+competency_score,Outpatient,New graduate,4.0,3.8
+first_year_turnover_pct,Critical Care,Senior,5,5
+first_year_turnover_pct,Critical Care,Experienced,8,9
+first_year_turnover_pct,Critical Care,New graduate,14,27
+first_year_turnover_pct,Emergency,Senior,6,6
+first_year_turnover_pct,Emergency,Experienced,9,10
+first_year_turnover_pct,Emergency,New graduate,15,24
+first_year_turnover_pct,Outpatient,Senior,4,4
+first_year_turnover_pct,Outpatient,Experienced,7,7
+first_year_turnover_pct,Outpatient,New graduate,11,16

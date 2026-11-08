@@ -1,0 +1,2 @@
+# Runtime dependencies live with the plugin; this file keeps `pip install -r requirements.txt` working at the repo root.
+-r 40_plugin/requirements.txt

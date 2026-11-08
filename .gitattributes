@@ -1,0 +1,2 @@
+# The commit-msg hook must keep LF endings or /bin/sh fails on Windows checkouts (D-098).
+.github/hooks/* text eol=lf

@@ -1,0 +1,8 @@
+#!/bin/sh
+# Reject commit messages that credit an AI tool (D-042, D-098). GitHub lists every Co-authored-by trailer among the
+# repository's Contributors, so such a line must never reach a commit. Enable once per clone with:
+#   git config core.hooksPath .github/hooks
+if grep -iqE '^co-authored-by:.*(claude|anthropic|copilot|chatgpt|openai|gemini|codex)|generated (with|by) \[?(claude|chatgpt|copilot|gemini|codex)' "$1"; then
+    echo "commit-msg: the message credits an AI tool; remove the Co-authored-by / 'Generated with' line (D-042, D-098)." >&2
+    exit 1
+fi

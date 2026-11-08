@@ -1,0 +1,13 @@
+month,planned_staff,staff_actual_or_forecast,status
+Jan,740,738,actual
+Feb,742,740,actual
+Mar,745,742,actual
+Apr,748,741,actual
+May,750,730,actual
+Jun,752,722,actual
+Jul,755,718,actual
+Aug,757,721,actual
+Sep,758,726,actual
+Oct,759,728,forecast
+Nov,760,730,forecast
+Dec,760,730,forecast

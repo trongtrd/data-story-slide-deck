@@ -1,0 +1,672 @@
+# EX-003 benchmark (fictional): two-tier color intensity on a ranked bar chart, plus paired views of a staffing gap.
+run_id: bench_en_coffee_two_tier
+example_card: EX-003
+deck: {language: en, delivery_mode: standalone, palette: orange, footer_label: FY2026 menu and staffing}
+title_slide: {title: Recover $2.4M in FY2026 through barista hiring and the seasonal menu, audience_line: Pre-read for the Operating Committee, date: November 2026, presenter: Store Operations and Finance}
+
+context:
+  org: Copperleaf Coffee (fictional, 140 stores)
+  room: Operating Committee — FY2026 menu and staffing plan (pre-read)
+  decision_maker:
+    name_or_role: Owen Byrne (Chief Operating Officer)
+    decision_authority: Approves FY2026 store hiring and menu change budgets
+    core_priority: Same-store sales growth without margin erosion
+  allies:
+    - name_or_role: Sofia Marin (Head of Menu Innovation)
+      priority: Replacing seasonal drinks that are losing customers
+      evidence_needed: Item-level sales change ranked against the core menu
+  skeptics:
+    - name_or_role: Kenji Watanabe (Chief Financial Officer)
+      core_bias_or_fear: Sees hiring 22 baristas as pure cost.
+      required_reframe_or_proof: Slide 4 shows $1.5M of sales recovered by filling the barista gap.
+    - name_or_role: Amara Diallo (Regional Operations Director)
+      core_bias_or_fear: Doubts that stores can hire baristas fast enough.
+      required_reframe_or_proof: Slide 3 shows the gap is concentrated in one role, so hiring can be targeted.
+  primary_action: Approve hiring 22 baristas in Q1 and refreshing the two weakest seasonal drinks.
+  fallback: Approve the barista hiring now and decide the menu refresh at the Q2 review.
+  benefits:
+    - About $2.4M of FY2026 sales recovered ($1.5M staffing, $0.9M menu).
+    - Seasonal lineup stops dragging on same-store sales.
+  risks:
+    - Stores stay 30 staff short of plan through December.
+    - Mint Chill and Hazelnut Cloud keep losing 14–18% of sales a year.
+  big_idea:
+    sentence: Filling 22 barista roles and refreshing our two weakest seasonal drinks will recover about $2.4M of sales in FY2026.
+    point_of_view: Fill 22 barista roles and refresh the two weakest seasonal drinks
+    stakes_clause: recover about $2.4M of sales in FY2026
+    phrasing_mode: quantified
+    phrasing_rationale: A standalone pre-read must carry the number on its own.
+
+report: |
+  # Copperleaf Coffee — Menu and Staffing Review (fictional benchmark data)
+
+  Year-over-year sales change by drink (FY2025 vs. FY2024): Espresso Tonic +15%, Iced Matcha +12%, Classic Americano +9%, Flat White +7%, Chai Latte +4%, Honey Lavender Latte +2%, Maple Oat Latte -3%, Cocoa Crunch Frappé -6%, Hazelnut Cloud Mocha -14%, Mint Chill Cold Brew -18%.
+  Store staffing fell from 738 in January to 718 in July against a plan rising to 760; the forecast ends December at 730.
+  Year-end plan vs. forecast by role: baristas 420 vs. 398, shift supervisors 140 vs. 134, store managers 140 vs. 138, bakers 60 vs. 60.
+  Modeled FY2026 sales recovery: $1.5M from filling barista roles and $0.9M from refreshing the two weakest seasonal drinks.
+  Operations rated the effort of six recovery initiatives on a 1 to 6 scale (filling barista roles 2, refreshing seasonal drinks 1, extending evening hours 2, a loyalty app 4, remodelling flagships 5, price changes 4); the modeled sales recovery of each is in the initiatives file.
+
+  ## Recruiting plan for the 22 open barista roles
+
+  The budget is approved on 15 January and the roles open on 1 February. The first hiring wave starts on 15 March and is trained by 31 March; the second wave starts on 30 April. All 22 roles are filled by 30 June, and a 90-day review follows on 15 September. Each hire trains on shift for two weeks.
+
+  ## Applicant screening
+
+  Every barista applicant takes a paid four-hour trial shift. Applicants without barista experience first join a two-week training cohort and then take the trial shift. Applicants who pass the trial receive an offer; the others are invited to reapply.
+
+  ## Hiring hand-offs
+
+  The store manager requests the hire; HR posts the role and screens the applicants; a regional trainer runs the trial shift; the store manager decides; HR sends the offer. Applicants wait a median of five days for a regional trainer, the longest wait between any two steps.
+
+datasets:
+  menu_yoy:
+    columns: [item, segment, yoy_sales_change_pct]
+    rows:
+      - [Espresso Tonic, core, 15]
+      - [Iced Matcha, core, 12]
+      - [Classic Americano, core, 9]
+      - [Flat White, core, 7]
+      - [Chai Latte, core, 4]
+      - [Honey Lavender Latte, seasonal, 2]
+      - [Maple Oat Latte, seasonal, -3]
+      - [Cocoa Crunch Frappé, seasonal, -6]
+      - [Hazelnut Cloud Mocha, seasonal, -14]
+      - [Mint Chill Cold Brew, seasonal, -18]
+  staffing_monthly:
+    columns: [month, planned_staff, staff_actual_or_forecast, status]
+    rows:
+      - [Jan, 740, 738, actual]
+      - [Feb, 742, 740, actual]
+      - [Mar, 745, 742, actual]
+      - [Apr, 748, 741, actual]
+      - [May, 750, 730, actual]
+      - [Jun, 752, 722, actual]
+      - [Jul, 755, 718, actual]
+      - [Aug, 757, 721, actual]
+      - [Sep, 758, 726, actual]
+      - [Oct, 759, 728, forecast]
+      - [Nov, 760, 730, forecast]
+      - [Dec, 760, 730, forecast]
+  roles:
+    columns: [role, planned_year_end, forecast_year_end]
+    rows:
+      - [Baristas, 420, 398]
+      - [Shift supervisors, 140, 134]
+      - [Store managers, 140, 138]
+      - [Bakers, 60, 60]
+  recovery:
+    columns: [initiative, fy2026_sales_recovery_usd_m]
+    rows:
+      - [Fill 22 barista roles, 1.5]
+      - [Refresh two seasonal drinks, 0.9]
+  initiatives:
+    columns: [initiative, effort_rating_1_to_6, fy2026_sales_recovery_usd_m]
+    rows:
+      - [Fill 22 barista roles, 2, 1.5]
+      - [Refresh two seasonal drinks, 1, 0.9]
+      - [Extend evening hours, 2, 0.4]
+      - [Loyalty app, 4, 0.7]
+      - [Remodel flagships, 5, 0.3]
+      - [Price changes, 4, 1.4]
+  store_scorecard:
+    columns: [store, sales_change_pct, avg_wait_min, baristas_short]
+    rows:
+      - [Harbor Street, -4.1, 6.8, 3]
+      - [Union Square, -2.6, 5.9, 2]
+      - [Riverside, -1.8, 5.4, 1]
+      - [Old Town, 0.6, 4.9, 1]
+      - [Market Hall, 1.2, 4.6, 1]
+      - [Lakeview, 2.4, 4.2, 1]
+      - [Station Plaza, 3.0, 4.0, 0]
+      - [Hillcrest, 3.8, 3.7, 0]
+
+  network_waits:
+    columns: [store, wait_morning_min, wait_midday_min, wait_evening_min]
+    rows:
+      - [Alder Park, 7.6, 5.0, 4.8]
+      - [Bayview, 6.6, 5.5, 4.5]
+      - [Bridgeport, 5.8, 5.2, 5.1]
+      - [Canal Walk, 5.5, 6.5, 5.3]
+      - [Cedar Point, 9.3, 6.0, 3.6]
+      - [Chapel Hill, 7.9, 5.2, 4.0]
+      - [Clifton, 9.8, 5.8, 4.8]
+      - [Copper Row, 8.4, 5.9, 4.9]
+      - [Dockside, 7.1, 6.1, 5.3]
+      - [Eastgate, 7.0, 4.0, 5.0]
+      - [Elm Court, 7.2, 4.7, 5.2]
+      - [Fairfield, 5.7, 5.2, 5.4]
+      - [Ferry Lane, 6.8, 4.6, 4.1]
+      - [Foundry, 6.0, 3.9, 5.0]
+      - [Garden Row, 8.5, 6.3, 4.7]
+      - [Glenwood, 5.8, 6.4, 3.8]
+      - [Granary, 7.1, 5.3, 4.6]
+      - [Greenway, 7.6, 5.8, 5.6]
+      - [Harbor Street, 9.1, 6.1, 5.3]
+      - [Highbury, 9.4, 4.5, 5.2]
+      - [Hillcrest, 4.7, 3.5, 2.9]
+      - [Ivy Bridge, 6.7, 5.7, 3.6]
+      - [Kingsway, 7.9, 5.2, 4.7]
+      - [Lakeview, 5.3, 3.9, 3.4]
+      - [Larkspur, 6.5, 5.3, 5.8]
+      - [Market Hall, 5.8, 4.3, 3.7]
+      - [Mill Pond, 5.4, 5.1, 4.2]
+      - [Northfield, 8.5, 5.0, 3.5]
+      - [Oakmont, 6.0, 5.1, 4.3]
+      - [Old Town, 6.1, 4.6, 4.0]
+      - [Orchard, 5.6, 4.8, 3.3]
+      - [Parkside, 10.0, 5.7, 4.1]
+      - [Quayside, 9.6, 4.6, 5.6]
+      - [Redwood, 7.5, 6.0, 4.6]
+      - [Riverside, 6.9, 5.0, 4.3]
+      - [Rosemont, 8.5, 4.9, 5.2]
+      - [Southbank, 6.9, 5.9, 4.8]
+      - [Station Plaza, 5.1, 3.8, 3.1]
+      - [Stonegate, 7.0, 7.0, 5.3]
+      - [Tanner Yard, 8.5, 5.3, 5.6]
+      - [Thornbury, 8.2, 3.3, 5.5]
+      - [Union Square, 7.6, 5.4, 4.7]
+      - [University, 7.5, 6.2, 4.7]
+      - [Valley Road, 9.1, 5.0, 4.2]
+      - [Westbrook, 8.9, 5.5, 4.1]
+      - [Willow Bend, 8.0, 4.0, 4.0]
+      - [Windmill, 7.5, 4.4, 3.2]
+      - [Yardley, 9.2, 5.6, 4.6]
+
+storyline:
+  arc_model: story_mountain
+  tension: The menu's seasonal drinks are shrinking while stores run short of baristas — two separate leaks in same-store sales.
+  withheld: 4
+  pruned:
+    - {item: Store-by-store weather adjustment model, disposition: excluded, reason: Explains noise that does not change the decision.}
+    - {item: Full ingredient cost breakdown per drink, disposition: excluded, reason: Margin detail the menu team receives as a separate cost sheet after the meeting.}
+  climax:
+    slide_numbers: [2, 3]
+    human_or_operational_peak: Stores will be 22 baristas short of plan by December.
+    financial_or_strategic_peak: Mint Chill and Hazelnut Cloud lost 18% and 14% of sales.
+  skeptic_slides:
+    - {slide_number: 3, target_skeptic: Amara Diallo (Regional Operations Director), objection_neutralized: 'The gap sits in one role, so hiring can be targeted.'}
+    - {slide_number: 4, target_skeptic: Kenji Watanabe (CFO), objection_neutralized: Filling the gap recovers $1.5M of sales.}
+
+qa:
+  - skeptic_name_or_role: Kenji Watanabe (CFO)
+    predicted_question: Isn't hiring 22 baristas just more cost?
+    evidence_backed_response: Slide 4 models $1.5M of recovered sales from the filled roles, plus $0.9M from the menu refresh.
+    supporting_slide_numbers: [4]
+  - skeptic_name_or_role: Amara Diallo (Regional Operations Director)
+    predicted_question: Can we even hire that many people?
+    evidence_backed_response: Slide 3 shows 22 of the 30-person gap is baristas; other roles are within six of plan, so recruiting can focus on one role.
+    supporting_slide_numbers: [3]
+
+slides:
+  - arc: plot
+    layout: one_sided_right_text
+    title: Seasonal drinks fell while core drinks kept growing.
+    tie: [Seasonal drinks fell]
+    pass1: Looking at FY2025 sales by menu segment, the seasonal drinks declined on average while the core menu continued to grow.
+    question: How did core and seasonal drinks perform this year?
+    stakeholder: Owen Byrne (COO)
+    chart_title: Average year-over-year sales change (%) by menu segment, FY2025
+    labels_mode: bar_values
+    annotations:
+      - {text: Core drinks averaged +9.4% while seasonal drinks averaged -7.8%., tie: [seasonal drinks averaged -7.8%], anchor: Seasonal drinks (5)}
+    rec: {text: Look inside the seasonal lineup before cutting it wholesale.}
+    footnote: 'Source: Copperleaf point-of-sale data, FY2025 vs. FY2024 (140 stores).'
+    g3: {selected: Two-bar column chart of segment averages, shows: The direction of each segment., obscures: Item-level spread (next slide)., rejected: [Table of ten items]}
+    claim: {construct: seasonal decline vs. core growth, metric: Average YoY sales change (%) by segment}
+    panels:
+      - id: panel_segments
+        family: vertical_bar_chart
+        title: Two menu segments
+        categories: [Core drinks (5), Seasonal drinks (5)]
+        y: [-10, 15]
+        format: 0%
+        series:
+          - name: Average change
+            role: context
+            labels: bar_end
+            label: '{s}{a:.1f}%'
+            base: {dataset: menu_yoy, column: yoy_sales_change_pct}
+            highlight: {Seasonal drinks (5): focal}
+            points:
+              Core drinks (5): {where: [{item: Espresso Tonic}, {item: Iced Matcha}, {item: Classic Americano}, {item: Flat White}, {item: Chai Latte}], aggregation: mean}
+              Seasonal drinks (5): {where: [{item: Honey Lavender Latte}, {item: Maple Oat Latte}, {item: Cocoa Crunch Frappé}, {item: Hazelnut Cloud Mocha}, {item: Mint Chill Cold Brew}], aggregation: mean}
+
+  - arc: climax
+    layout: one_sided_right_text
+    title: Mint Chill and Hazelnut Cloud fell the most among seasonal drinks.
+    tie: [Mint Chill and Hazelnut Cloud]
+    pass1: Ranking every drink by its change in sales shows that two seasonal drinks, Mint Chill and Hazelnut Cloud, declined far more than any other item.
+    question: Which drinks are behind the seasonal decline?
+    stakeholder: Sofia Marin (Head of Menu Innovation)
+    chart_title: Year-over-year sales change (%) by drink, FY2025, ranked
+    labels_mode: bar_values
+    annotations:
+      - {text: 'Maple Oat (-3%) and Cocoa Crunch (-6%) also fell, by far less.', tie: [{text: by far less, color: tier2}], anchor: Maple Oat Latte}
+    rec: {text: Replace Mint Chill and Hazelnut Cloud first; keep watching Maple Oat and Cocoa Crunch.}
+    footnote: 'Source: Copperleaf point-of-sale data, FY2025 vs. FY2024 (140 stores).'
+    g3: {selected: Ranked horizontal bars with two-tier orange, shows: The two biggest drops and the milder declines., obscures: Absolute sales volume per drink., rejected: [Ten-color bar chart with a legend]}
+    claim: {construct: the largest declines among seasonal drinks, metric: YoY sales change (%) by drink}
+    panels:
+      - id: panel_items
+        family: horizontal_bar_chart
+        title: Ten drinks, ranked
+        categories: [Espresso Tonic, Iced Matcha, Classic Americano, Flat White, Chai Latte, Honey Lavender Latte, Maple Oat Latte, Cocoa Crunch Frappé, Hazelnut Cloud Mocha, Mint Chill Cold Brew]
+        y: [-20, 20]
+        format: 0%
+        series:
+          - name: YoY sales change
+            role: context
+            labels: bar_end
+            label: '{s}{a:.0f}%'
+            base: {dataset: menu_yoy, column: yoy_sales_change_pct}
+            category_key: {column: item, values: [Espresso Tonic, Iced Matcha, Classic Americano, Flat White, Chai Latte, Honey Lavender Latte, Maple Oat Latte, Cocoa Crunch Frappé, Hazelnut Cloud Mocha, Mint Chill Cold Brew]}
+            highlight: {Mint Chill Cold Brew: focal, Hazelnut Cloud Mocha: focal, Maple Oat Latte: tier2, Cocoa Crunch Frappé: tier2}
+
+  - arc: climax
+    layout: two_sided_paired_views
+    title: Barista hiring gaps leave stores 22 baristas short by December.
+    tie: [22 baristas short]
+    pass1: Store staffing has fallen behind plan since May, and by December we will still be short of plan, mostly in baristas.
+    question: How far behind plan is store staffing, and in which roles?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    chart_title: Store staff vs. plan by month (left) and year-end staff by role, plan vs. forecast (right)
+    rec: {text: Focus Q1 recruiting on baristas; other roles are within six of plan.}
+    footnote: 'Source: Copperleaf HR system and FY2026 staffing forecast.'
+    g3: {selected: Paired line chart and slopegraph, shows: When the gap opened and which role drives it., obscures: Store-level variation., rejected: [One combo chart with two y-axes]}
+    claim: {construct: barista shortfall by December, metric: Year-end staff by role (plan vs. forecast)}
+    panels:
+      - id: panel_monthly
+        role: paired_left
+        family: line_chart
+        headline: {text: Stores end the year 30 staff below plan, tie: [30 staff below plan]}
+        panel_text: The gap widened from May, peaked at 37 in July and holds at 30 through December.
+        title: Store staff vs. plan, by month
+        categories: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]
+        y: [700, 780]
+        format: '0'
+        deltas: [{upper_series_name: Plan, lower_series_name: Staff (actual and forecast), start_category: May, end_category: Dec, label_text: '-30 staff vs. plan by December'}]
+        series:
+          - {name: Plan, role: context, label: '{v:.0f}', base: {dataset: staffing_monthly, column: planned_staff}, category_key: {column: month, values: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]}}
+          - {name: Staff (actual and forecast), direct_label_name: Staff, role: focal, label: '{v:.0f}', forecast: [Oct, Nov, Dec], base: {dataset: staffing_monthly, column: staff_actual_or_forecast}, category_key: {column: month, values: [Jan, Feb, Mar, Apr, May, Jun, Jul, Aug, Sep, Oct, Nov, Dec]}}
+      - id: panel_roles
+        role: paired_right
+        shaded: true
+        family: slopegraph
+        headline: {text: Baristas make up 22 of the 30, tie: [Baristas]}
+        panel_text: Supervisors are 6 short and managers 2; bakers are on plan.
+        title: Year-end staff by role
+        categories: [Plan, Forecast]
+        y: [0, 450]
+        format: '0'
+        series:
+          - {name: Bakers, role: context, labels: both_endpoints, label: '{v:.0f}', forecast: [Forecast], base: {dataset: roles, where: {role: Bakers}}, points: {Plan: {column: planned_year_end}, Forecast: {column: forecast_year_end}}}
+          - {name: Store managers, direct_label_name: Managers, role: context, labels: both_endpoints, label: '{v:.0f}', forecast: [Forecast], base: {dataset: roles, where: {role: Store managers}}, points: {Plan: {column: planned_year_end}, Forecast: {column: forecast_year_end}}}
+          - {name: Shift supervisors, direct_label_name: Supervisors, role: tier2, labels: both_endpoints, label: '{v:.0f}', forecast: [Forecast], base: {dataset: roles, where: {role: Shift supervisors}}, points: {Plan: {column: planned_year_end}, Forecast: {column: forecast_year_end}}}
+          - {name: Baristas, role: focal, labels: both_endpoints, label: '{v:.0f}', forecast: [Forecast], base: {dataset: roles, where: {role: Baristas}}, points: {Plan: {column: planned_year_end}, Forecast: {column: forecast_year_end}}}
+
+  - arc: resolution
+    layout: evidence_columns
+    title: Fill barista roles and refresh seasonal drinks to recover $2.4M.
+    tie: [recover $2.4M]
+    pass1: We recommend hiring the missing baristas and replacing the two weakest seasonal drinks, which together should recover about $2.4M of sales next year at low effort.
+    question: What should we approve for FY2026?
+    stakeholder: Owen Byrne (COO) and Kenji Watanabe (CFO)
+    chart_title: Six recovery initiatives compared on payoff and effort
+    labels_mode: bar_values
+    rec_line:
+      text: 'Approve 22 barista hires in Q1 and the two-drink refresh (fallback: hire now, decide the menu at the Q2 review).'
+      tie: [Approve 22 barista hires]
+    footnote: 'Source: Copperleaf FY2026 sales recovery model and operations effort ratings.'
+    g3: {selected: 'Two ranked bar columns, payoff beside effort for the same six initiatives', shows: What each initiative recovers and what it costs in effort., obscures: Timing by quarter and the cost in dollars., rejected: [Single stacked column with a total, Scatter of payoff against effort]}
+    claim: {construct: $2.4M sales recovery from the two proposals, metric: Modeled FY2026 sales recovery ($M) and effort rating by initiative}
+    panels:
+      - id: panel_payoff
+        role: evidence_column
+        column: Payoff
+        family: horizontal_bar_chart
+        headline: {text: 'Barista hiring leads on payoff at $1.5M; the menu refresh adds $0.9M.', tie: [Barista hiring leads on payoff]}
+        title: Modeled sales recovery ($M)
+        categories: [Fill 22 barista roles, Price changes, Refresh two seasonal drinks, Loyalty app, Extend evening hours, Remodel flagships]
+        y: [0, 2]
+        format: $0.0M
+        series:
+          - name: Modeled recovery
+            role: context
+            labels: bar_end
+            label: '${v:.1f}M'
+            base: {dataset: initiatives, column: fy2026_sales_recovery_usd_m}
+            category_key: {column: initiative, values: [Fill 22 barista roles, Price changes, Refresh two seasonal drinks, Loyalty app, Extend evening hours, Remodel flagships]}
+            highlight: {Fill 22 barista roles: focal, Refresh two seasonal drinks: tier2}
+      - id: panel_effort
+        role: evidence_column
+        column: Effort
+        family: horizontal_bar_chart
+        headline: {text: 'Both proposals need little effort: 2 and 1 on a six-point scale.', tie: [2 and 1]}
+        title: Effort rating (1 easiest, 6 hardest)
+        categories: [Fill 22 barista roles, Price changes, Refresh two seasonal drinks, Loyalty app, Extend evening hours, Remodel flagships]
+        y: [0, 6]
+        format: '0'
+        series:
+          - name: Effort rating
+            role: context
+            labels: bar_end
+            label: '{v:.0f}'
+            base: {dataset: initiatives, column: effort_rating_1_to_6}
+            category_key: {column: initiative, values: [Fill 22 barista roles, Price changes, Refresh two seasonal drinks, Loyalty app, Extend evening hours, Remodel flagships]}
+            highlight: {Fill 22 barista roles: focal, Refresh two seasonal drinks: tier2}
+
+  - arc: appendix
+    layout: data_table
+    title: Harbor Street is the flagship store furthest behind on baristas.
+    tie: [Harbor Street]
+    tie_link: focal row
+    pass1: Regional directors asked for the store-level figures behind the barista gap so they can plan Q1 recruiting store by store.
+    question: Which flagship stores need baristas first?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked for store-level figures to plan Q1 recruiting by store.
+    footnote: 'Source: Copperleaf point-of-sale data and HR system, FY2025 (eight flagship stores).'
+    g3: {selected: Heatmap table of the eight flagship stores, shows: 'Exact sales change, wait time and barista gap for each store, with colour showing which stores sit at the worst end of each measure.', obscures: The pattern across all 140 stores (slides 3-4)., rejected: [Three separate bar charts]}
+    claim: {construct: store-level barista gap, metric: 'Baristas short, sales change and average wait by store'}
+    table:
+      title: Flagship store scorecard, FY2025
+      dataset: store_scorecard
+      key: store
+      rows: [Harbor Street, Union Square, Riverside, Old Town, Market Hall, Lakeview, Station Plaza, Hillcrest]
+      row_ids: {Harbor Street: r_harbor, Union Square: r_union, Riverside: r_riverside, Old Town: r_oldtown, Market Hall: r_market, Lakeview: r_lakeview, Station Plaza: r_station, Hillcrest: r_hillcrest}
+      groups: [Customers]
+      columns:
+        - {id: store, header: Store, kind: text}
+        - {id: sales, header: 'Sales change, %', column: sales_change_pct, format: '+0.0', label: '{s}{a:.1f}', group: Customers}
+        - {id: wait, header: Avg wait (min), column: avg_wait_min, format: '0.0', label: '{v:.1f}', group: Customers}
+        - {id: short, header: Baristas short, column: baristas_short, format: '0', label: '{v:.0f}'}
+      order: {mode: by_column, col_id: short, direction: descending}
+      summary: {row_id: r_all, label: All eight stores, aggregation: {sales: mean, wait: mean, short: sum}}
+      focal: {kind: row, row_id: r_harbor}
+      heatmap:
+        scale: per_column
+        steps: 5
+        columns:
+          - {col_id: sales, dark_end: low}
+          - {col_id: wait, dark_end: high}
+          - {col_id: short, dark_end: high}
+
+  - arc: appendix
+    layout: one_sided_right_text
+    title: The three slowest stores are the only ones losing sales.
+    tie: [three slowest stores]
+    pass1: Across the eight flagship stores, the three with waits over five minutes are the ones whose sales fell.
+    question: Which stores lose sales as waits grow?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked which stores to staff first; the table above gives the figures, this view shows the pattern.
+    chart_title: Sales change vs. average wait, by flagship store, FY2025
+    rec: {text: Staff the three slowest stores first; the other five grew.}
+    footnote: 'Source: Copperleaf point-of-sale data and HR system, FY2025 (eight flagship stores).'
+    g3: {selected: Scatterplot with a five-minute line, shows: How wait and sales change go together store by store., obscures: Exact values (in the table)., rejected: [Two separate bar charts]}
+    claim: {construct: slow stores losing sales, metric: 'Sales change (%) and average wait (min) by store'}
+    reveal:
+      - {step_number: 1, visible_panel_ids: [panel_stores], visible_series_roles: [context_greyscale, focal_primary_tier1], show_annotations: true, show_recommendation_callout: true, speaker_notes: 'Each store is one dot: average wait across, sales change up and down. The three stores to the right of the five-minute line are the only ones below zero.'}
+    panels:
+      - id: panel_stores
+        family: scatter_plot
+        title: Eight flagship stores
+        categories: [Harbor Street, Union Square, Riverside, Old Town, Market Hall, Lakeview, Station Plaza, Hillcrest]
+        x: [3, 8]
+        x_format: '0'
+        x_title: Average wait (min)
+        y: [-6, 6]
+        format: '+0;-0;0'
+        y_title: Sales change (%)
+        reference_lines: [{axis: x, value: 5}]
+        section_labels: [{text: Waits over 5 min, x: 5.1, y: -0.6}, {text: Waits under 5 min, x: 3.1, y: 4.6}]
+        series:
+          - name: Other stores
+            role: context
+            base: {dataset: store_scorecard, column: sales_change_pct}
+            x_column: avg_wait_min
+            points: {Old Town: {where: {store: Old Town}}, Market Hall: {where: {store: Market Hall}}, Lakeview: {where: {store: Lakeview}}, Station Plaza: {where: {store: Station Plaza}}, Hillcrest: {where: {store: Hillcrest}}}
+          - name: Slowest stores
+            role: focal
+            base: {dataset: store_scorecard, column: sales_change_pct}
+            x_column: avg_wait_min
+            points: {Harbor Street: {where: {store: Harbor Street}}, Union Square: {where: {store: Union Square}}, Riverside: {where: {store: Riverside}}}
+
+  - arc: appendix
+    layout: one_sided_right_text
+    title: Baristas account for 22 of the 30 positions missing at year-end.
+    tie: [22 of the 30 positions]
+    pass1: Baristas are 22 of the 30 positions the year-end forecast leaves unfilled against plan; supervisors and managers add 8.
+    question: Which roles explain the staffing gap?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked where the year-end staffing gap sits, so they can sequence hiring.
+    chart_title: Year-end headcount against the plan of 760, by role
+    rec: {text: 'Filling the 22 barista roles closes most of the gap, so hire them first.'}
+    footnote: 'Source: Copperleaf HR system, year-end plan and forecast by role.'
+    g3: {selected: Waterfall of the changes against plan, shows: Which roles make up the net gap., obscures: The plan and forecast totals (named in the chart title)., rejected: [Stacked bar of plan and forecast]}
+    claim: {construct: roles behind the staffing gap, metric: 'Forecast minus planned year-end headcount by role'}
+    reveal:
+      - {step_number: 1, visible_panel_ids: [panel_gap], visible_series_roles: [focal_primary_tier1], show_annotations: true, show_recommendation_callout: true, speaker_notes: 'Start from the plan: each bar is one role falling short of its planned headcount, stacked one after another until the net gap on the right. Baristas alone are most of it.'}
+    panels:
+      - id: panel_gap
+        family: waterfall_chart
+        title: Roles against plan
+        categories: [Baristas, Shift supervisors, Store managers]
+        y: [-34, 0]
+        format: '0'
+        waterfall_mode: changes_only
+        net_label: Net gap
+        series:
+          - name: Forecast minus plan
+            role: focal
+            base: {dataset: roles, column: forecast_year_end}
+            label: ''
+            points:
+              Baristas: {where: {role: Baristas}, columns: [forecast_year_end, planned_year_end], step_type: delta}
+              Shift supervisors: {where: {role: Shift supervisors}, columns: [forecast_year_end, planned_year_end], step_type: delta}
+              Store managers: {where: {role: Store managers}, columns: [forecast_year_end, planned_year_end], step_type: delta}
+
+  - arc: appendix
+    layout: diagram
+    title: Hiring in two waves is the longest step.
+    tie: [Hiring in two waves]
+    tie_link: focal step
+    pass1: Regional directors asked how the 22 open barista roles get filled and which step takes the longest.
+    question: How do the 22 barista roles get filled?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked how the 22 barista roles get filled so they can plan store coverage.
+    footnote: 'Source: Copperleaf recruiting plan, FY2026.'
+    g3: {selected: Five-step process flow, shows: The order of the recruiting plan and the step that takes longest., obscures: The exact length of each step., rejected: [Bulleted list, Table of dates]}
+    claim: {construct: order of the recruiting plan, metric: 'Steps of the recruiting plan for the 22 barista roles'}
+    diagram:
+      type: process_flow
+      title: Recruiting plan for the 22 barista roles
+      alt: A five-step process from budget approval through two hiring waves and training to all 22 roles filled; hiring in two waves is highlighted.
+      process_flow:
+        style: boxes
+        steps:
+          - {step_id: budget, label: Approve budget, sublabel: 15 Jan, source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+          - {step_id: open_roles, label: Open the roles, sublabel: 1 Feb, source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+          - {step_id: hire, label: Hire in two waves, sublabel: 15 Mar and 30 Apr, focal: true, source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+          - {step_id: train, label: Train on shift, sublabel: Two weeks each}
+          - {step_id: filled, label: All roles filled, sublabel: 30 Jun, source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+
+  - arc: appendix
+    layout: diagram
+    title: All 22 barista roles are filled by 30 June.
+    tie: [All 22 barista roles]
+    tie_link: focal milestone
+    pass1: Regional directors asked when the 22 open barista roles will be filled and when each hiring wave starts.
+    question: When are the 22 barista roles filled?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked for the dates of the recruiting plan so they can schedule store coverage.
+    footnote: 'Source: Copperleaf recruiting plan, FY2026.'
+    g3: {selected: Milestone timeline on a dated axis, shows: When each recruiting milestone falls and how close the two hiring waves sit., obscures: How long each step runs., rejected: [Table of dates, Gantt bars]}
+    claim: {construct: dates of the recruiting plan, metric: 'Milestone dates of the recruiting plan for the 22 barista roles'}
+    diagram:
+      type: timeline
+      title: Recruiting plan for the 22 barista roles, 2026
+      alt: A 2026 timeline of seven milestones from budget approval on 15 January to the 90-day review on 15 September; all 22 roles filled on 30 June is highlighted.
+      timeline:
+        form: milestones
+        start: '2026-01-01'
+        end: '2026-09-30'
+        unit: month
+        items:
+          - {item_id: budget, label: Budget approved, date: '2026-01-15', source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+          - {item_id: open_roles, label: Roles open, date: '2026-02-01', source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+          - {item_id: wave1, label: Wave 1 starts, date: '2026-03-15', source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+          - {item_id: trained, label: Wave 1 trained, date: '2026-03-31', source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+          - {item_id: wave2, label: Wave 2 starts, date: '2026-04-30', source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+          - {item_id: filled, label: All 22 roles filled, date: '2026-06-30', focal: true, source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+          - {item_id: review, label: 90-day review, date: '2026-09-15', source_cell_ref: 'source_report.md!Recruiting plan for the 22 open barista roles'}
+
+  - arc: appendix
+    layout: diagram
+    title: Filling barista roles recovers the most for modest effort.
+    tie: [Filling barista roles]
+    tie_link: focal item
+    pass1: Regional directors asked which of the six recovery initiatives to start first, given the effort each takes.
+    question: Which recovery initiative should start first?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked how the six recovery initiatives compare on effort and sales recovery so they can sequence the work.
+    footnote: 'Source: Copperleaf operations effort ratings and sales recovery model, FY2026.'
+    g3: {selected: Positioning matrix of effort against sales recovery, shows: Which initiatives give the most recovery for the least effort., obscures: The exact scores (in the data file)., rejected: [Two bar charts, Table of scores]}
+    claim: {construct: effort and sales recovery of six initiatives, metric: 'Effort rating (1 to 6) and modeled FY2026 sales recovery by initiative'}
+    diagram:
+      type: matrix_2x2
+      title: Recovery initiatives by effort and modeled sales recovery
+      alt: A grid of six recovery initiatives by effort and sales recovery; filling 22 barista roles sits in the low-effort, high-recovery corner and is highlighted.
+      matrix_2x2:
+        variant: positioning
+        x_axis: {title: Effort, low_label: Low, high_label: High}
+        y_axis: {title: Sales recovery, low_label: Low, high_label: High}
+        items:
+          - {item_id: fill_roles, label: Fill 22 barista roles, x: 0.33, y: 0.68, focal: true, placement_basis: data, source_cell_ref: 'initiatives.csv!R2C2:R2C3'}
+          - {item_id: seasonal, label: Refresh two seasonal drinks, x: 0.17, y: 0.41, placement_basis: data, source_cell_ref: 'initiatives.csv!R3C2:R3C3'}
+          - {item_id: evenings, label: Extend evening hours, x: 0.33, y: 0.18, placement_basis: data, source_cell_ref: 'initiatives.csv!R4C2:R4C3'}
+          - {item_id: loyalty, label: Loyalty app, x: 0.67, y: 0.32, placement_basis: data, source_cell_ref: 'initiatives.csv!R5C2:R5C3'}
+          - {item_id: remodel, label: Remodel flagships, x: 0.83, y: 0.14, placement_basis: data, source_cell_ref: 'initiatives.csv!R6C2:R6C3'}
+          - {item_id: pricing, label: Price changes, x: 0.67, y: 0.64, placement_basis: data, source_cell_ref: 'initiatives.csv!R7C2:R7C3'}
+
+  - arc: appendix
+    layout: diagram
+    title: Applicants without barista experience reach the trial shift through a training cohort.
+    tie: [training cohort]
+    tie_link: focal node
+    pass1: Regional directors asked whether applicants without barista experience can be hired, and how.
+    question: How do applicants without barista experience get hired?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked how applicants without barista experience are screened so they can widen the applicant pool.
+    footnote: 'Source: Copperleaf recruiting plan, FY2026.'
+    g3: {selected: Decision flowchart with the main path left to right, shows: Where the screening branches and how the training cohort rejoins the trial shift., obscures: How many applicants take each path., rejected: [Bulleted list, Process flow without branches]}
+    claim: {construct: screening path of barista applicants, metric: 'Screening steps and decisions for barista applicants'}
+    diagram:
+      type: decision_flow
+      title: Screening of barista applicants
+      alt: A flowchart from application to offer; applicants without barista experience join a two-week training cohort, highlighted, before the trial shift, and those who fail the trial are invited to reapply.
+      decision_flow:
+        nodes:
+          - {node_id: applied, kind: start, label: Application received}
+          - {node_id: experienced, kind: decision, label: 'Barista experience?'}
+          - {node_id: trial, kind: step, label: Trial shift, sublabel: '4 hours, paid', source_cell_ref: 'source_report.md!Applicant screening'}
+          - {node_id: passed, kind: decision, label: 'Passed trial?'}
+          - {node_id: offer, kind: end, label: Offer}
+          - {node_id: cohort, kind: step, label: Training cohort, sublabel: Two weeks, focal: true, source_cell_ref: 'source_report.md!Applicant screening'}
+          - {node_id: reapply, kind: end, label: Invite to reapply}
+        edges:
+          - {from: applied, to: experienced}
+          - {from: experienced, to: trial, answer: 'Yes'}
+          - {from: experienced, to: cohort, answer: 'No'}
+          - {from: trial, to: passed}
+          - {from: passed, to: offer, answer: 'Yes'}
+          - {from: passed, to: reapply, answer: 'No'}
+          - {from: cohort, to: trial}
+
+  - arc: appendix
+    layout: diagram
+    title: Waiting for a regional trainer is the slowest hand-off in hiring.
+    tie: [Waiting for a regional trainer]
+    tie_link: focal hand-off
+    pass1: Regional directors asked who owns each hiring step and where applicants wait longest.
+    question: Where do applicants wait longest between hiring steps?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked who owns each hiring step and where applicants wait so they can shorten the slowest hand-off.
+    footnote: 'Source: Copperleaf recruiting plan, FY2026.'
+    g3: {selected: Swimlane with one lane per owner, shows: Who owns each step and which hand-off is slowest., obscures: The waits at the other hand-offs., rejected: [Process flow without owners, Table of steps and owners]}
+    claim: {construct: owners and hand-offs of the hiring steps, metric: 'Hiring steps by owner and the median wait for a regional trainer'}
+    diagram:
+      type: swimlane
+      title: Hiring steps by owner
+      alt: A swimlane of six hiring steps across the store manager, HR and a regional trainer; the hand-off from HR screening to the trainer's trial shift, a five-day wait, is highlighted.
+      swimlane:
+        lanes:
+          - {lane_id: manager, name: Store manager}
+          - {lane_id: hr, name: HR}
+          - {lane_id: trainer, name: Regional trainer}
+        steps:
+          - {step_id: request, lane_id: manager, label: Request hire}
+          - {step_id: post, lane_id: hr, label: Post role}
+          - {step_id: screen, lane_id: hr, label: Screen applicants}
+          - {step_id: trial, lane_id: trainer, label: Trial shift}
+          - {step_id: decide, lane_id: manager, label: Decide}
+          - {step_id: offer, lane_id: hr, label: Send offer}
+        focal_handoff: {from: screen, to: trial, label: 5-day wait, source_cell_ref: 'source_report.md!Hiring hand-offs'}
+
+  - arc: appendix
+    layout: diagram
+    title: Baristas make up 22 of the 30 roles short at year end.
+    tie: [Baristas]
+    tie_link: focal leaf
+    pass1: Regional directors asked which roles make up the year-end staffing gap.
+    question: Which roles make up the year-end staffing gap?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked how the year-end staffing gap splits by role so they can target hiring.
+    footnote: 'Source: Copperleaf staffing plan and forecast, FY2026.'
+    g3: {selected: Driver tree from the total gap to each role, shows: How the 30-role gap splits by role and that baristas dominate it., obscures: The planned and forecast counts behind each gap (in the data file)., rejected: [Waterfall of the same gap, Table of roles]}
+    claim: {construct: year-end staffing gap by role, metric: 'Planned minus forecast year-end headcount by role'}
+    diagram:
+      type: tree
+      title: Year-end staffing gap by role, planned minus forecast
+      alt: A tree splitting the 30-role year-end staffing gap into baristas 22, shift supervisors 6, store managers 2 and bakers 0; baristas are highlighted.
+      tree:
+        direction: right
+        additive: true
+        nodes:
+          - {node_id: gap, label: Roles short, value: 30, value_label: '30 roles', source_cell_ref: 'roles.csv!R2C2:R5C3', aggregation: diff}
+          - {node_id: baristas, parent: gap, label: Baristas, value: 22, value_label: '22 roles', focal: true, source_cell_ref: 'roles.csv!R2C2:R2C3', aggregation: diff}
+          - {node_id: supervisors, parent: gap, label: Shift supervisors, value: 6, value_label: '6 roles', source_cell_ref: 'roles.csv!R3C2:R3C3', aggregation: diff}
+          - {node_id: managers, parent: gap, label: Store managers, value: 2, value_label: '2 roles', source_cell_ref: 'roles.csv!R4C2:R4C3', aggregation: diff}
+          - {node_id: bakers, parent: gap, label: Bakers, value: 0, value_label: '0 roles', source_cell_ref: 'roles.csv!R5C2:R5C3', aggregation: diff}
+
+  - arc: appendix
+    layout: one_sided_right_text
+    title: Harbor Street is in the slowest fifth at every daypart.
+    tie: [Harbor Street]
+    pass1: Across all 48 stores, Harbor Street's waits fall in the slowest fifth in the morning rush, at midday and in the evening.
+    question: Is Harbor Street slow only in the morning rush?
+    stakeholder: Amara Diallo (Regional Operations Director)
+    audience_need: Regional directors asked whether Harbor Street's long waits are a morning problem or an all-day one.
+    chart_title: Average wait by daypart (min), all 48 stores, FY2025
+    rec: {text: 'Staff Harbor Street for the whole day, not only the morning rush.'}
+    footnote: 'Source: Copperleaf point-of-sale timestamps, FY2025 (48 stores).'
+    g3: {selected: Strip plot of 48 stores per daypart with the slowest fifth shaded, shows: Where Harbor Street sits among all stores at each daypart., obscures: Which store each grey dot is (in the data file)., rejected: [Bar chart of 48 stores, Harbor Street against the median only]}
+    claim: {construct: Harbor Street in the slowest fifth, metric: 'Average wait (min) by store and daypart'}
+    reveal:
+      - {step_number: 1, visible_panel_ids: [panel_waits], visible_series_roles: [context_greyscale, focal_primary_tier1], show_annotations: true, show_recommendation_callout: true, speaker_notes: 'Each dot is one of our 48 stores; Harbor Street is the orange one. The grey band in each row is the slowest fifth of stores, and Harbor Street sits inside it at every daypart.'}
+    panels:
+      - id: panel_waits
+        family: strip_plot
+        title: Each dot is one store
+        categories: [Morning rush, Midday, Evening]
+        y: [0, 12]
+        format: '0'
+        y_title: Average wait (min)
+        median_line: true
+        highlight_band: top_fifth
+        highlight_band_label: Slowest fifth
+        series:
+          - name: Other stores
+            role: context
+            strip: {dataset: network_waits, key: store, items: [Alder Park, Bayview, Bridgeport, Canal Walk, Cedar Point, Chapel Hill, Clifton, Copper Row, Dockside, Eastgate, Elm Court, Fairfield, Ferry Lane, Foundry, Garden Row, Glenwood, Granary, Greenway, Highbury, Hillcrest, Ivy Bridge, Kingsway, Lakeview, Larkspur, Market Hall, Mill Pond, Northfield, Oakmont, Old Town, Orchard, Parkside, Quayside, Redwood, Riverside, Rosemont, Southbank, Station Plaza, Stonegate, Tanner Yard, Thornbury, Union Square, University, Valley Road, Westbrook, Willow Bend, Windmill, Yardley], columns: {Morning rush: wait_morning_min, Midday: wait_midday_min, Evening: wait_evening_min}, label: '{v:.1f}'}
+          - name: Harbor Street
+            role: focal
+            strip: {dataset: network_waits, key: store, items: [Harbor Street], columns: {Morning rush: wait_morning_min, Midday: wait_midday_min, Evening: wait_evening_min}, label: '{v:.1f} min'}

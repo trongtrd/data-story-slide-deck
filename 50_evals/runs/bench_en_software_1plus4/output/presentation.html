@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="slide-spec-sha256" content="a07c0059ef927303a1e3cf1cfa9955348d1eb128b26e8c60687eb5373c82664c" />
+  <title>bench_en_software_1plus4</title>
+  <script>
+      // D-048 X1: page errors are kept for the `#qa` report (html_qa.py)
+      window.qaErrors = [];
+      window.addEventListener('error', e => window.qaErrors.push(String(e.message || e)));
+    </script>
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --text-primary: #1F2937;
+      --text-muted: #6B7280;
+      --panel-bg: #F3F4F6;
+      --accent: #2B5C8F;
+      --shaded: #DCE8F4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;  /* D-029: the brand font from the G1 profile */
+      background: #111827;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .deck-viewport {
+      container-type: inline-size;  /* B-8: text is sized as a share of the slide width, like the PPTX */
+      width: min(96vw, calc(90vh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: var(--bg);
+      border-radius: 8px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+      position: relative;
+      overflow: hidden;
+    }
+    .slide {
+      --pt: calc(100cqw / 960);
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 2.6% 4.5% 2.2% 4.5%;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .slide.active { display: flex; }
+    /* D-063: key slides on the dark background; cards keep their light fills and text */
+    .slide.key { background: #1E2A38; }
+    .slide.key .takeaway-title { color: #F3F4F6; }
+    .slide.key .descriptive-chart-title, .slide.key .reading-note, .slide.key .slide-footer { color: #AEB8C4; }
+    .slide.key .slide-header { border-bottom-color: #3B4A5C; }
+    .divider-block { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .title-block { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 82%; }
+    .slide.title-slide .deck-title {
+      font-size: calc(var(--pt) * 36);
+      font-family: "Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text-primary);
+    }
+    .title-audience { margin-top: 14px; font-size: calc(var(--pt) * 20); color: var(--text-muted); }
+    .title-rule { width: 30%; margin: 22px 0 14px; border-top: 1.5pt solid var(--accent); }
+    .title-meta { font-size: calc(var(--pt) * 16); color: var(--text-muted); }
+    .section-number {
+      font-size: calc(var(--pt) * 79.2);
+      font-weight: 700;
+      line-height: 1.1;
+      color: #86B0DA;
+    }
+    .slide.divider .takeaway-title { font-size: calc(var(--pt) * 36); }
+    .section-question { font-size: calc(var(--pt) * 20); color: #AEB8C4; line-height: 1.3; }
+    .slide-header {
+      border-bottom: 1.5px solid #E5E7EB;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .takeaway-title {
+      font-family: "Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: calc(var(--pt) * 24);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .descriptive-chart-title {
+      font-size: calc(var(--pt) * 16);
+      color: var(--text-muted);
+    }
+    .slide-body {
+      flex: 1;
+      display: grid;
+      gap: 20px;
+      min-height: 0;
+      align-items: stretch;
+    }
+    .layout-one_sided_right_text { grid-template-columns: 68% 1fr; }
+    .layout-one_sided_left_text { grid-template-columns: 32% 1fr; }
+    .layout-two_sided_paired_views,
+    .layout-two_sided_comparison,
+    .layout-small_multiples_grid,
+    .layout-1_plus_4_grid {
+      grid-template-rows: 1fr auto;
+    }
+    .layout-diagram { grid-template-rows: 1fr auto; }
+    .layout-diagram .side-zone { flex-direction: row; }
+    .layout-diagram .side-zone > div { flex: 1 1 0; min-width: 0; }
+    .diagram-zone { min-height: 0; overflow: hidden; }
+    .diagram-svg { width: 100%; height: 100%; display: block; }
+    .layout-data_table { grid-template-rows: 1fr auto; }
+    .layout-data_table .side-zone { flex-direction: row; }
+    .layout-data_table .side-zone > div { flex: 1 1 0; min-width: 0; }
+    .table-zone { min-height: 0; overflow: hidden; }
+    .data-table {
+      border-collapse: collapse;
+      min-width: 60%;
+      font-size: calc(var(--pt) * 14);
+      line-height: 1.25;
+      color: var(--text-primary);
+    }
+    .data-table caption {
+      caption-side: top;
+      text-align: left;
+      font-size: calc(var(--pt) * 16);
+      font-weight: 700;
+      padding-bottom: 10px;
+    }
+    .data-table th, .data-table td { padding: 0.35em 0.7em; text-align: left; vertical-align: bottom; font-weight: 400; }
+    .data-table thead th { font-weight: 700; border-bottom: 1pt solid var(--text-primary); }
+    .data-table .group-row th { text-align: center; color: var(--text-muted); border-bottom: 0.75pt solid #9CA3AF; }
+    .data-table .group-row td { border: none; }
+    .data-table tbody tr td, .data-table tbody tr th { border-bottom: 0.5pt solid #D1D5DB; }
+    .data-table tbody tr:last-child td, .data-table tbody tr:last-child th { border-bottom: none; }
+    .data-table tfoot td, .data-table tfoot th { font-weight: 700; border-top: 1pt solid var(--text-primary); }
+    .data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .data-table .focal { color: var(--table-focal); }
+    .data-table .strong { font-weight: 700; }
+    .data-table.heat tbody td, .data-table.heat tbody th { border-bottom: none; }
+    .data-table.heat tbody td { border: 2px solid var(--bg); }
+    .data-table.heat tbody tr:first-child td, .data-table.heat tbody tr:first-child th { border-top: 1pt solid var(--text-primary); }
+    .heat-key { display: flex; justify-content: flex-end; align-items: flex-start; gap: 0.6em; margin-bottom: 0.5em; font-size: calc(var(--pt) * 12); color: var(--text-muted); }
+    .heat-scale { position: relative; padding-bottom: 1.5em; margin-right: 0.8em; }
+    .heat-swatches { display: flex; }
+    .heat-swatch { display: block; width: 3.4em; height: 1.1em; }
+    .heat-tick { position: absolute; top: 1.3em; transform: translateX(-50%); white-space: nowrap; }
+    .heat-unit { padding-top: 0; }
+    .panels-zone {
+      display: grid;
+      gap: 16px;
+      min-height: 0;
+      align-items: stretch;
+    }
+    .panels-count-1 { grid-template-columns: 1fr; }
+    .panels-count-2 { grid-template-columns: 1fr 1fr; }
+    .panels-count-3 { grid-template-columns: repeat(3, 1fr); }
+    .panels-count-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .layout-1_plus_4_grid .panels-count-5 {
+      grid-template-columns: 42% 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+    .layout-1_plus_4_grid .panels-count-5 .role-hero_total_left {
+      grid-row: 1 / span 2;
+      grid-column: 1;
+    }
+    .chart-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 8px 10px;
+      border-radius: 8px;
+      min-height: 0;
+    }
+    .chart-panel.panel-shaded { background: var(--panel-bg); }
+    .swd-chart-svg { overflow: visible; }  /* enlarged tick labels may reach into the panel padding */
+    .panel-title {
+      font-size: calc(var(--pt) * 16);
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+    .panel-title-quiet { font-weight: 400; color: var(--text-muted); }
+    .summary-rows { display: flex; flex-direction: column; justify-content: space-evenly; height: 100%; }
+    .summary-row {
+      display: grid;
+      grid-template-columns: 6% 1fr 16%;
+      align-items: center;
+      gap: 2%;
+      padding: 14px 0;
+      border-bottom: 0.75pt solid var(--rule, #E5E7EB);
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-number {
+      font-size: calc(var(--pt) * 24);
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .summary-text { font-size: calc(var(--pt) * 20); line-height: 1.3; color: var(--text-primary); }
+    .summary-ref { font-size: calc(var(--pt) * 16); color: var(--text-muted); text-align: right; }
+    .panels-zone.has-findings { grid-template-rows: auto 1fr; row-gap: 6px; }
+    .panel-finding { padding: 0 10px; }
+    .layout-evidence_columns { grid-template-rows: 1fr auto; row-gap: 14px; }
+    .layout-evidence_columns .panels-zone { column-gap: 36px; }
+    .rec-line {
+      border-left: 6px solid var(--accent);
+      padding: 4px 0 4px 16px;
+      font-size: calc(var(--pt) * 20);
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+    .column-heading {
+      font-size: calc(var(--pt) * 16);
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1pt solid var(--rule, #D1D5DB);
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    .panel-headline {
+      font-size: calc(var(--pt) * 20);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .panel-text {
+      font-size: calc(var(--pt) * 16);
+      margin-top: 4px;
+      color: var(--text-primary);
+    }
+    .side-zone {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: flex-start;
+    }
+    .layout-small_multiples_grid .side-zone,
+    .layout-two_sided_paired_views .panels-count-2 + .side-zone {
+      flex-direction: row;
+    }
+    .ann-card, .rec-card {
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: calc(var(--pt) * 16);
+      line-height: 1.25;  /* PRIN-DSN-005: 1.1–1.3 */
+      flex: 0 0 auto;  /* cards follow their text; no stretched empty card */
+    }
+    .layout-small_multiples_grid .side-zone > div,
+    .layout-two_sided_paired_views .panels-count-2 + .side-zone > div {
+      flex: 1 1 0;  /* a row of cards shares the width and wraps its text instead of running off the slide */
+      min-width: 0;
+    }
+    .ann-card {
+      background: var(--panel-bg);  /* fill only, no outline (ANTI-DSN-002) */
+    }
+    .ann-anchor {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+      font-size: 0.92em;
+    }
+    .rec-card {
+      background: var(--shaded);
+    }
+    .rec-label {
+      font-weight: 700;
+      font-size: calc(var(--pt) * 12);
+      color: var(--accent);
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+    .statement-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      justify-content: center;
+    }
+    .hero-action-box {
+      background: var(--shaded);
+      border-radius: 10px;
+      padding: 24px 28px;
+    }
+    .hero-action-text {
+      font-size: calc(var(--pt) * 20);
+      line-height: 1.25;
+      margin-top: 8px;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .pillar-card {
+      background: var(--panel-bg);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .hero-action-box .rec-label { font-size: calc(var(--pt) * 14); }
+    .pillar-card h4 { margin-bottom: 8px; font-size: calc(var(--pt) * 16); }
+    .pillar-card p { font-size: calc(var(--pt) * 16); line-height: 1.25; color: #374151; }
+    /* D-064: the main card spans all grid columns but the last; tiles, the side image and step rows share the grid */
+    .statement-grid { flex: 1; display: grid; gap: 18px; align-content: center; }
+    .tile-number { font-size: calc(var(--pt) * 54); font-weight: 700; line-height: 1; margin-bottom: 10px; color: var(--text-primary); }
+    .tile-number.focal { color: var(--accent); }
+    .pillar-card.tile p, .statement-grid.tiles .rec-label { font-size: calc(var(--pt) * 16); }
+    .side-image { background: var(--panel-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .side-image img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .slide.spotlight { background: #2B5C8F; }
+    .slide.spotlight, .slide.spotlight * { color: #FFFFFF !important; }
+    .slide.spotlight .hero-action-box, .slide.spotlight .pillar-card { background: transparent; }
+    .slide.spotlight .slide-header { border-bottom-color: #FFFFFF; }
+    .reading-note {
+      padding-top: 8px;
+      font-size: calc(var(--pt) * 10);
+      color: var(--text-muted);
+    }
+    .rec-card.implication { background: var(--panel-bg, #F3F4F6); }
+    .rec-card.implication .rec-label { color: var(--text-primary, #1F2937); }
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      font-size: calc(var(--pt) * 10);
+      color: var(--text-muted);
+    }
+    .hud-bar {
+      margin-top: 10px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: #E5E7EB;
+      font-size: 13px;
+    }
+    .hud-btn {
+      background: #374151;
+      color: #FFF;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12.5px;
+    }
+    .hud-btn:hover { background: #4B5563; }
+    .speaker-notes-drawer {
+      margin-top: 8px;
+      width: min(96vw, calc(90vh * 16 / 9));
+      background: #1F2937;
+      color: #F9FAFB;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 1.45;
+      border-left: 4px solid var(--accent);
+    }
+    .hidden-reveal { opacity: 0.08; pointer-events: none; transition: opacity 0.25s ease; }
+    /* D-048 X2: printing gives one slide per page at its final reveal state, without the HUD or notes */
+    body.print-all .slide { display: flex; }
+    /* `#shot`: the slide fills the window, for headless screenshots (html_qa.py) */
+    body.shot { padding: 0; background: var(--bg); }
+    body.shot .hud-bar { display: none; }
+    body.shot .deck-viewport { width: 100vw; border-radius: 0; box-shadow: none; }
+    @media print {
+      @page { size: 13.333in 7.5in; margin: 0; }
+      body { background: #FFFFFF; padding: 0; display: block; min-height: 0; }
+      .hud-bar, .speaker-notes-drawer { display: none !important; }
+      .deck-viewport { width: 100%; aspect-ratio: auto; border-radius: 0; box-shadow: none; overflow: visible; }
+      .slide { display: flex; aspect-ratio: 16 / 9; height: auto; break-after: page; overflow: hidden; }
+      .hidden-reveal { opacity: 1 !important; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="deck-viewport">
+    <section class="slide title-slide active" id="title_slide" data-slide-index="title" data-counter="Title" data-reveal='{"enabled": false, "reveal_steps": []}'><div class="title-block"><h1 class="deck-title">Shift $12M from Harbor renewals to Skyline adoption</h1><div class="title-audience">Decision for the Portfolio Committee</div><div class="title-rule"></div><div class="title-meta">January 2025 · Skyline General Manager</div></div><footer class="slide-footer"><span class="source-footnote"></span><span class="slide-counter"></span></footer></section>
+            <section class="slide " id="slide_01" data-slide-index="0" data-counter="Slide 1 / 4" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Revenue growth now depends on <span class="color-tie" style="color:#2B5C8F;font-weight:inherit;">Skyline cloud subscriptions</span>.</h1>
+                <div class="descriptive-chart-title">Annual revenue by product ($M), 2020–2024 actuals</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_mix"><div class="panel-title">Harbor and Skyline revenue</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_mix">
+<line x1="56.0" y1="366.0" x2="712.0" y2="366.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="370.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">0</text>
+<line x1="56.0" y1="282.0" x2="712.0" y2="282.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="286.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">200</text>
+<line x1="56.0" y1="198.0" x2="712.0" y2="198.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="202.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">400</text>
+<line x1="56.0" y1="114.0" x2="712.0" y2="114.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="118.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">600</text>
+<line x1="56.0" y1="30.1" x2="712.0" y2="30.1" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="34.1" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">800</text>
+<line x1="56.0" y1="366.0" x2="712.0" y2="366.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="121.6" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">2020</text>
+<text x="252.8" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">2021</text>
+<text x="384.0" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">2022</text>
+<text x="515.2" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">2023</text>
+<text x="646.4" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">2024</text>
+<rect class="stack-segment series-role-focal_primary_tier1" x="85.5" y="340.8" width="72.2" height="25.2" fill="#2B5C8F" stroke="#FFFFFF" stroke-width="1.04" />
+<rect class="stack-segment series-role-context_greyscale" x="85.5" y="181.2" width="72.2" height="159.6" fill="#8C8C8C" stroke="#FFFFFF" stroke-width="1.04" />
+<text class="series-role-focal_primary_tier1" x="121.6" y="359.2" text-anchor="middle" fill="#FFFFFF" font-size="16.7" data-pt="12.0" font-weight="700">$60M</text>
+<text class="series-role-context_greyscale" x="121.6" y="266.9" text-anchor="middle" fill="#1F2937" font-size="16.7" data-pt="12.0" font-weight="500">$380M</text>
+<rect class="stack-segment series-role-focal_primary_tier1" x="216.7" y="321.9" width="72.2" height="44.1" fill="#2B5C8F" stroke="#FFFFFF" stroke-width="1.04" />
+<rect class="stack-segment series-role-context_greyscale" x="216.7" y="149.7" width="72.2" height="172.2" fill="#8C8C8C" stroke="#FFFFFF" stroke-width="1.04" />
+<text class="series-role-focal_primary_tier1" x="252.8" y="349.8" text-anchor="middle" fill="#FFFFFF" font-size="16.7" data-pt="12.0" font-weight="700">$105M</text>
+<text class="series-role-context_greyscale" x="252.8" y="241.7" text-anchor="middle" fill="#1F2937" font-size="16.7" data-pt="12.0" font-weight="500">$410M</text>
+<rect class="stack-segment series-role-focal_primary_tier1" x="347.9" y="294.6" width="72.2" height="71.4" fill="#2B5C8F" stroke="#FFFFFF" stroke-width="1.04" />
+<rect class="stack-segment series-role-context_greyscale" x="347.9" y="114.0" width="72.2" height="180.6" fill="#8C8C8C" stroke="#FFFFFF" stroke-width="1.04" />
+<text class="series-role-focal_primary_tier1" x="384.0" y="336.2" text-anchor="middle" fill="#FFFFFF" font-size="16.7" data-pt="12.0" font-weight="700">$170M</text>
+<text class="series-role-context_greyscale" x="384.0" y="210.2" text-anchor="middle" fill="#1F2937" font-size="16.7" data-pt="12.0" font-weight="500">$430M</text>
+<rect class="stack-segment series-role-focal_primary_tier1" x="479.1" y="261.0" width="72.2" height="105.0" fill="#2B5C8F" stroke="#FFFFFF" stroke-width="1.04" />
+<rect class="stack-segment series-role-context_greyscale" x="479.1" y="76.3" width="72.2" height="184.8" fill="#8C8C8C" stroke="#FFFFFF" stroke-width="1.04" />
+<text class="series-role-focal_primary_tier1" x="515.2" y="319.4" text-anchor="middle" fill="#FFFFFF" font-size="16.7" data-pt="12.0" font-weight="700">$250M</text>
+<text class="series-role-context_greyscale" x="515.2" y="174.5" text-anchor="middle" fill="#1F2937" font-size="16.7" data-pt="12.0" font-weight="500">$440M</text>
+<rect class="stack-segment series-role-focal_primary_tier1" x="610.3" y="221.1" width="72.2" height="144.9" fill="#2B5C8F" stroke="#FFFFFF" stroke-width="1.04" />
+<rect class="stack-segment series-role-context_greyscale" x="610.3" y="38.5" width="72.2" height="182.7" fill="#8C8C8C" stroke="#FFFFFF" stroke-width="1.04" />
+<text class="series-role-focal_primary_tier1" x="646.4" y="299.4" text-anchor="middle" fill="#FFFFFF" font-size="16.7" data-pt="12.0" font-weight="700">$345M</text>
+<text class="series-role-context_greyscale" x="646.4" y="135.6" text-anchor="middle" fill="#1F2937" font-size="16.7" data-pt="12.0" font-weight="500">$435M</text>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">Skyline grew from <span class="color-tie" style="color:#2B5C8F;font-weight:700;">$60M to $345M</span> while Harbor stayed near $435M.</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Plan FY2025 budgets around Skyline growth, not Harbor renewals.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Kestrel finance ledger, 2020–2024.</span>
+                <span class="slide-counter">1</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_02" data-slide-index="1" data-counter="Slide 2 / 4" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Harbor licences have peaked and fall fastest in <span class="color-tie" style="color:#2B5C8F;font-weight:inherit;">Europe</span> and <span class="color-tie" style="color:#4787C7;font-weight:inherit;">Asia Pacific</span>.</h1>
+                <div class="descriptive-chart-title">Harbor revenue by region ($M), 2023 peak vs. 2026 forecast</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_harbor_regions"><div class="panel-title">Four regions</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_harbor_regions">
+<line x1="56.0" y1="366.0" x2="569.6179562125853" y2="366.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="370.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">0</text>
+<line x1="56.0" y1="298.8" x2="569.6179562125853" y2="298.8" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="302.8" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">50</text>
+<line x1="56.0" y1="231.6" x2="569.6179562125853" y2="231.6" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="235.6" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">100</text>
+<line x1="56.0" y1="164.4" x2="569.6179562125853" y2="164.4" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="168.4" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">150</text>
+<line x1="56.0" y1="97.2" x2="569.6179562125853" y2="97.2" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="101.2" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">200</text>
+<line x1="56.0" y1="30.1" x2="569.6179562125853" y2="30.1" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="34.1" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">250</text>
+<line x1="56.0" y1="366.0" x2="569.6179562125853" y2="366.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="84.0" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">2023 peak</text>
+<text x="541.6" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">2026F</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="84.0" y1="70.4" x2="541.6" y2="97.2" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="70.4" r="3.5" fill="#8C8C8C" />
+<circle cx="541.6" cy="97.2" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-context_greyscale">
+<line x1="84.0" y1="325.7" x2="541.6" y2="333.7" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="325.7" r="3.5" fill="#8C8C8C" />
+<circle cx="541.6" cy="333.7" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-focal_secondary_tier2">
+<line x1="84.0" y1="276.0" x2="541.6" y2="298.8" stroke="#86B0DA" stroke-width="2.88" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="276.0" r="3.5" fill="#86B0DA" />
+<circle cx="541.6" cy="298.8" r="3.5" fill="#86B0DA" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="84.0" y1="200.7" x2="541.6" y2="247.7" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="200.7" r="5.0" fill="#2B5C8F" />
+<circle cx="541.6" cy="247.7" r="5.0" fill="#2B5C8F" />
+</g>
+<text class="chart-series series-role-context_greyscale" x="76.0" y="74.4" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">$220M</text>
+<text class="chart-series series-role-focal_primary_tier1" x="76.0" y="204.7" text-anchor="end" fill="#2B5C8F" font-size="16.7" data-pt="12.0" font-weight="700">$123M</text>
+<text class="chart-series series-role-focal_secondary_tier2" x="76.0" y="280.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">$67M</text>
+<text class="chart-series series-role-context_greyscale" x="76.0" y="329.7" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">$30M</text>
+<text class="chart-series series-role-context_greyscale" x="549.6" y="101.2" text-anchor="start" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">$200M · Americas</text>
+<text class="chart-series series-role-focal_primary_tier1" x="549.6" y="251.7" text-anchor="start" fill="#2B5C8F" font-size="16.7" data-pt="12.0" font-weight="700">$88M · Europe</text>
+<text class="chart-series series-role-focal_secondary_tier2" x="549.6" y="302.8" text-anchor="start" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">$50M · Asia Pacific</text>
+<text class="chart-series series-role-context_greyscale" x="549.6" y="337.7" text-anchor="start" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">$24M · MEA</text>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body"><span class="color-tie" style="color:#2B5C8F;font-weight:700;">Europe falls 28%</span> ($123M to $88M) and Asia Pacific 25% ($67M to $50M).</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Stop adding renewal effort where Harbor customers are already moving to the cloud.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Kestrel regional forecast, 2023 actuals and 2026 forecast.</span>
+                <span class="slide-counter">2</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_03" data-slide-index="2" data-counter="Slide 3 / 4" data-reveal='{&quot;enabled&quot;: true, &quot;standalone_self_sufficient_verified&quot;: true, &quot;reveal_steps&quot;: [{&quot;step_number&quot;: 1, &quot;visible_panel_ids&quot;: [&quot;panel_total&quot;, &quot;panel_am&quot;, &quot;panel_eu&quot;, &quot;panel_ap&quot;, &quot;panel_mea&quot;], &quot;visible_series_roles&quot;: [&quot;context_greyscale&quot;], &quot;show_annotations&quot;: false, &quot;show_recommendation_callout&quot;: false, &quot;speaker_notes&quot;: &quot;Harbor flattens and then declines in every region.&quot;}, {&quot;step_number&quot;: 2, &quot;visible_panel_ids&quot;: [&quot;panel_total&quot;, &quot;panel_am&quot;, &quot;panel_eu&quot;, &quot;panel_ap&quot;, &quot;panel_mea&quot;], &quot;visible_series_roles&quot;: [&quot;context_greyscale&quot;, &quot;focal_primary_tier1&quot;], &quot;show_annotations&quot;: true, &quot;show_recommendation_callout&quot;: true, &quot;speaker_notes&quot;: &quot;Skyline crosses Harbor in 2025 and opens a $198M lead by 2026. The two shaded panels are Europe and Asia Pacific, where Harbor falls fastest, so that is where field support moves first.&quot;}]}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#2B5C8F;font-weight:inherit;">Skyline growth</span> is expected to more than offset Harbor’s decline.</h1>
+                <div class="descriptive-chart-title">Revenue ($M) by product, total and by region, 2020–2024 actuals (solid) and 2025–2026 forecast (dashed)</div>
+              </header>
+              <div class="slide-body layout-1_plus_4_grid"><div class="panels-zone panels-count-5"><div class="chart-panel  role-hero_total_left" data-panel-id="panel_total"><div class="panel-title">Total ($M)</div><svg viewBox="0 0 540 380" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_total">
+<line x1="58.23261210838851" y1="330.1" x2="365.62770459354306" y2="330.1" stroke="#E5E7EB" stroke-width="0.80" />
+<text x="48.23261210838851" y="334.1" text-anchor="end" fill="#6B7280" font-size="19.2" data-pt="12.0">0</text>
+<line x1="58.23261210838851" y1="34.6" x2="365.62770459354306" y2="34.6" stroke="#E5E7EB" stroke-width="0.80" />
+<text x="48.23261210838851" y="38.6" text-anchor="end" fill="#6B7280" font-size="19.2" data-pt="12.0">600</text>
+<line x1="58.23261210838851" y1="330.1" x2="365.62770459354306" y2="330.1" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="72.2" y="360.8" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.2" data-pt="12.0">&#x27;20</text>
+<text x="118.8" y="360.8" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.2" data-pt="12.0">&#x27;21</text>
+<text x="165.4" y="360.8" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.2" data-pt="12.0">&#x27;22</text>
+<text x="211.9" y="360.8" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.2" data-pt="12.0">&#x27;23</text>
+<text x="258.5" y="360.8" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.2" data-pt="12.0">&#x27;24</text>
+<text x="305.1" y="360.8" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.2" data-pt="12.0">&#x27;25F</text>
+<text x="351.6" y="360.8" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.2" data-pt="12.0">&#x27;26F</text>
+<polygon class="series-role-focal_primary_tier1" points="305.1,108.4 351.6,54.3 351.6,151.8 305.1,130.6" fill="#DCE8F4" fill-opacity="0.75" stroke="#D95F02" stroke-width="1" stroke-dasharray="3,2" />
+<g class="chart-series series-role-context_greyscale">
+<line x1="72.2" y1="142.9" x2="118.8" y2="128.1" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="118.8" y1="128.1" x2="165.4" y2="118.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="165.4" y1="118.3" x2="211.9" y2="113.4" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="211.9" y1="113.4" x2="258.5" y2="115.8" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="258.5" y1="115.8" x2="305.1" y2="130.6" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="305.1" y1="130.6" x2="351.6" y2="151.8" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="72.2" y1="300.5" x2="118.8" y2="278.4" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="118.8" y1="278.4" x2="165.4" y2="246.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="165.4" y1="246.3" x2="211.9" y2="206.9" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="211.9" y1="206.9" x2="258.5" y2="160.2" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="258.5" y1="160.2" x2="305.1" y2="108.4" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="305.1" y1="108.4" x2="351.6" y2="54.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="72.2" cy="300.5" r="5.0" fill="#2B5C8F" />
+<circle cx="118.8" cy="278.4" r="5.0" fill="#2B5C8F" />
+<circle cx="165.4" cy="246.3" r="5.0" fill="#2B5C8F" />
+<circle cx="211.9" cy="206.9" r="5.0" fill="#2B5C8F" />
+<circle cx="258.5" cy="160.2" r="5.0" fill="#2B5C8F" />
+<circle cx="305.1" cy="108.4" r="5.0" fill="#2B5C8F" />
+<circle cx="351.6" cy="54.3" r="5.0" fill="#2B5C8F" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="359.6" y="58.3" text-anchor="start" fill="#2B5C8F" font-size="19.2" data-pt="12.0" font-weight="700">$560M · Skyline</text>
+<text class="chart-series series-role-context_greyscale" x="359.6" y="155.8" text-anchor="start" fill="#6B7280" font-size="19.2" data-pt="12.0" font-weight="500">$362M · Harbor</text>
+<text class="series-role-focal_primary_tier1" x="228.4" y="25.1" text-anchor="middle" fill="#D95F02" font-size="19.2" data-pt="12.0" font-weight="700">+$198M Skyline lead (&#x27;26F)</text>
+</svg></div><div class="chart-panel  role-small_multiple_cell" data-panel-id="panel_am"><div class="panel-title">Americas</div><svg viewBox="0 0 380 180" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_am">
+<line x1="59.041665980196726" y1="155.3" x2="202.59375257426228" y2="155.3" stroke="#E5E7EB" stroke-width="0.82" />
+<text x="49.041665980196726" y="159.3" text-anchor="end" fill="#6B7280" font-size="19.6" data-pt="12.0">0</text>
+<line x1="59.041665980196726" y1="35.3" x2="202.59375257426228" y2="35.3" stroke="#E5E7EB" stroke-width="0.82" />
+<text x="49.041665980196726" y="39.3" text-anchor="end" fill="#6B7280" font-size="19.6" data-pt="12.0">300</text>
+<line x1="59.041665980196726" y1="155.3" x2="202.59375257426228" y2="155.3" stroke="#D1D5DB" stroke-width="1.25" />
+<g class="chart-series series-role-context_greyscale">
+<line x1="73.0" y1="79.3" x2="92.3" y2="73.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="92.3" y1="73.3" x2="111.6" y2="69.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="111.6" y1="69.3" x2="130.8" y2="67.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="130.8" y1="67.3" x2="150.1" y2="67.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="150.1" y1="67.3" x2="169.3" y2="70.5" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="169.3" y1="70.5" x2="188.6" y2="75.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="73.0" y1="141.3" x2="92.3" y2="131.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="92.3" y1="131.3" x2="111.6" y2="117.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="111.6" y1="117.3" x2="130.8" y2="99.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="130.8" y1="99.3" x2="150.1" y2="79.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="150.1" y1="79.3" x2="169.3" y2="59.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="169.3" y1="59.3" x2="188.6" y2="39.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="73.0" cy="141.3" r="5.0" fill="#2B5C8F" />
+<circle cx="92.3" cy="131.3" r="5.0" fill="#2B5C8F" />
+<circle cx="111.6" cy="117.3" r="5.0" fill="#2B5C8F" />
+<circle cx="130.8" cy="99.3" r="5.0" fill="#2B5C8F" />
+<circle cx="150.1" cy="79.3" r="5.0" fill="#2B5C8F" />
+<circle cx="169.3" cy="59.3" r="5.0" fill="#2B5C8F" />
+<circle cx="188.6" cy="39.3" r="5.0" fill="#2B5C8F" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="196.6" y="43.3" text-anchor="start" fill="#2B5C8F" font-size="19.6" data-pt="12.0" font-weight="700">$290M · Skyline</text>
+<text class="chart-series series-role-context_greyscale" x="196.6" y="79.3" text-anchor="start" fill="#6B7280" font-size="19.6" data-pt="12.0" font-weight="500">$200M · Harbor</text>
+</svg></div><div class="chart-panel panel-shaded role-small_multiple_cell" data-panel-id="panel_eu"><div class="panel-title">Europe</div><svg viewBox="0 0 380 180" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_eu">
+<line x1="59.041665980196726" y1="155.3" x2="202.59375257426228" y2="155.3" stroke="#E5E7EB" stroke-width="0.82" />
+<text x="49.041665980196726" y="159.3" text-anchor="end" fill="#6B7280" font-size="19.6" data-pt="12.0">0</text>
+<line x1="59.041665980196726" y1="35.3" x2="202.59375257426228" y2="35.3" stroke="#E5E7EB" stroke-width="0.82" />
+<text x="49.041665980196726" y="39.3" text-anchor="end" fill="#6B7280" font-size="19.6" data-pt="12.0">160</text>
+<line x1="59.041665980196726" y1="155.3" x2="202.59375257426228" y2="155.3" stroke="#D1D5DB" stroke-width="1.25" />
+<g class="chart-series series-role-context_greyscale">
+<line x1="73.0" y1="72.8" x2="92.3" y2="66.8" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="92.3" y1="66.8" x2="111.6" y2="63.8" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="111.6" y1="63.8" x2="130.8" y2="63.0" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="130.8" y1="63.0" x2="150.1" y2="66.8" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="150.1" y1="66.8" x2="169.3" y2="76.5" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="169.3" y1="76.5" x2="188.6" y2="89.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="73.0" y1="144.0" x2="92.3" y2="134.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="92.3" y1="134.3" x2="111.6" y2="121.5" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="111.6" y1="121.5" x2="130.8" y2="106.5" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="130.8" y1="106.5" x2="150.1" y2="87.8" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="150.1" y1="87.8" x2="169.3" y2="65.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="169.3" y1="65.3" x2="188.6" y2="42.8" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="73.0" cy="144.0" r="5.0" fill="#2B5C8F" />
+<circle cx="92.3" cy="134.3" r="5.0" fill="#2B5C8F" />
+<circle cx="111.6" cy="121.5" r="5.0" fill="#2B5C8F" />
+<circle cx="130.8" cy="106.5" r="5.0" fill="#2B5C8F" />
+<circle cx="150.1" cy="87.8" r="5.0" fill="#2B5C8F" />
+<circle cx="169.3" cy="65.3" r="5.0" fill="#2B5C8F" />
+<circle cx="188.6" cy="42.8" r="5.0" fill="#2B5C8F" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="196.6" y="46.8" text-anchor="start" fill="#2B5C8F" font-size="19.6" data-pt="12.0" font-weight="700">$150M · Skyline</text>
+<text class="chart-series series-role-context_greyscale" x="196.6" y="93.3" text-anchor="start" fill="#6B7280" font-size="19.6" data-pt="12.0" font-weight="500">$88M · Harbor</text>
+</svg></div><div class="chart-panel panel-shaded role-small_multiple_cell" data-panel-id="panel_ap"><div class="panel-title">Asia Pacific</div><svg viewBox="0 0 380 180" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_ap">
+<line x1="59.041665980196726" y1="155.3" x2="213.35416906931147" y2="155.3" stroke="#E5E7EB" stroke-width="0.82" />
+<text x="49.041665980196726" y="159.3" text-anchor="end" fill="#6B7280" font-size="19.6" data-pt="12.0">0</text>
+<line x1="59.041665980196726" y1="35.3" x2="213.35416906931147" y2="35.3" stroke="#E5E7EB" stroke-width="0.82" />
+<text x="49.041665980196726" y="39.3" text-anchor="end" fill="#6B7280" font-size="19.6" data-pt="12.0">100</text>
+<line x1="59.041665980196726" y1="155.3" x2="213.35416906931147" y2="155.3" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="73.0" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;20</text>
+<text x="94.1" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;21</text>
+<text x="115.1" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;22</text>
+<text x="136.2" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;23</text>
+<text x="157.3" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;24</text>
+<text x="178.3" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;25F</text>
+<text x="199.4" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;26F</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="73.0" y1="89.3" x2="94.1" y2="83.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="94.1" y1="83.3" x2="115.1" y2="78.5" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="115.1" y1="78.5" x2="136.2" y2="74.9" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="136.2" y1="74.9" x2="157.3" y2="74.9" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="157.3" y1="74.9" x2="178.3" y2="83.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="178.3" y1="83.3" x2="199.4" y2="95.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="73.0" y1="146.9" x2="94.1" y2="140.9" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="94.1" y1="140.9" x2="115.1" y2="128.9" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="115.1" y1="128.9" x2="136.2" y2="116.9" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="136.2" y1="116.9" x2="157.3" y2="101.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="157.3" y1="101.3" x2="178.3" y2="77.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="178.3" y1="77.3" x2="199.4" y2="53.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="73.0" cy="146.9" r="5.0" fill="#2B5C8F" />
+<circle cx="94.1" cy="140.9" r="5.0" fill="#2B5C8F" />
+<circle cx="115.1" cy="128.9" r="5.0" fill="#2B5C8F" />
+<circle cx="136.2" cy="116.9" r="5.0" fill="#2B5C8F" />
+<circle cx="157.3" cy="101.3" r="5.0" fill="#2B5C8F" />
+<circle cx="178.3" cy="77.3" r="5.0" fill="#2B5C8F" />
+<circle cx="199.4" cy="53.3" r="5.0" fill="#2B5C8F" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="207.4" y="57.3" text-anchor="start" fill="#2B5C8F" font-size="19.6" data-pt="12.0" font-weight="700">$85M · Skyline</text>
+<text class="chart-series series-role-context_greyscale" x="207.4" y="99.3" text-anchor="start" fill="#6B7280" font-size="19.6" data-pt="12.0" font-weight="500">$50M · Harbor</text>
+</svg></div><div class="chart-panel  role-small_multiple_cell" data-panel-id="panel_mea"><div class="panel-title">Middle East &amp; Africa</div><svg viewBox="0 0 380 180" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_mea">
+<line x1="59.041665980196726" y1="155.3" x2="213.35416906931147" y2="155.3" stroke="#E5E7EB" stroke-width="0.82" />
+<text x="49.041665980196726" y="159.3" text-anchor="end" fill="#6B7280" font-size="19.6" data-pt="12.0">0</text>
+<line x1="59.041665980196726" y1="35.3" x2="213.35416906931147" y2="35.3" stroke="#E5E7EB" stroke-width="0.82" />
+<text x="49.041665980196726" y="39.3" text-anchor="end" fill="#6B7280" font-size="19.6" data-pt="12.0">40</text>
+<line x1="59.041665980196726" y1="155.3" x2="213.35416906931147" y2="155.3" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="73.0" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;20</text>
+<text x="94.1" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;21</text>
+<text x="115.1" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;22</text>
+<text x="136.2" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;23</text>
+<text x="157.3" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;24</text>
+<text x="178.3" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;25F</text>
+<text x="199.4" y="186.6" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="19.6" data-pt="12.0">&#x27;26F</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="73.0" y1="80.3" x2="94.1" y2="74.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="94.1" y1="74.3" x2="115.1" y2="68.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="115.1" y1="68.3" x2="136.2" y2="65.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="136.2" y1="65.3" x2="157.3" y2="65.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="157.3" y1="65.3" x2="178.3" y2="71.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="178.3" y1="71.3" x2="199.4" y2="83.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="73.0" y1="146.3" x2="94.1" y2="140.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="94.1" y1="140.3" x2="115.1" y2="131.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="115.1" y1="131.3" x2="136.2" y2="116.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="136.2" y1="116.3" x2="157.3" y2="95.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="157.3" y1="95.3" x2="178.3" y2="80.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="178.3" y1="80.3" x2="199.4" y2="50.3" stroke="#2B5C8F" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="73.0" cy="146.3" r="5.0" fill="#2B5C8F" />
+<circle cx="94.1" cy="140.3" r="5.0" fill="#2B5C8F" />
+<circle cx="115.1" cy="131.3" r="5.0" fill="#2B5C8F" />
+<circle cx="136.2" cy="116.3" r="5.0" fill="#2B5C8F" />
+<circle cx="157.3" cy="95.3" r="5.0" fill="#2B5C8F" />
+<circle cx="178.3" cy="80.3" r="5.0" fill="#2B5C8F" />
+<circle cx="199.4" cy="50.3" r="5.0" fill="#2B5C8F" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="207.4" y="54.3" text-anchor="start" fill="#2B5C8F" font-size="19.6" data-pt="12.0" font-weight="700">$35M · Skyline</text>
+<text class="chart-series series-role-context_greyscale" x="207.4" y="87.3" text-anchor="start" fill="#6B7280" font-size="19.6" data-pt="12.0" font-weight="500">$24M · Harbor</text>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">Skyline overtakes Harbor in 2025F ($450M vs. $405M) and <span class="color-tie" style="color:#2B5C8F;font-weight:700;">leads by $198M in 2026F</span>.</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Shift field support toward Skyline in Europe and Asia Pacific.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Kestrel global and regional forecast, 2020–2026. Regional panels use their own scales.</span>
+                <span class="slide-counter">3</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_04" data-slide-index="3" data-counter="Slide 4 / 4" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Move $12M from Harbor to Skyline to <span class="color-tie" style="color:#2B5C8F;font-weight:inherit;">add $95M by 2026</span>.</h1>
+                <div class="descriptive-chart-title">Budget moved and added Skyline revenue ($M)</div>
+              </header>
+              <div class="slide-body layout-one_sided_left_text"><div class="side-zone"><div class="ann-card"><div class="ann-body">The $12M comes from Harbor renewal budget, so <span class="color-tie" style="color:#2B5C8F;font-weight:700;">operating expense stays flat</span>.</div></div><div class="rec-card"><div class="rec-label">DECISION REQUESTED TODAY</div><div class="rec-body">Approve the $12M move for Europe and Asia Pacific (fallback: $6M in Europe first, the rest after the Q2 review).</div></div></div><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_return"><div class="panel-title">Return on the shift</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_return">
+<line x1="351.4" y1="30.06" x2="351.4" y2="366.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="202.7380483966162" y="90.0" text-anchor="end" fill="#1F2937" font-size="16.7" data-pt="12.0">Budget moved (FY2025)</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="309.8" y="71.8" width="41.6" height="28.6" rx="3" fill="#8C8C8C" />
+<text x="301.8" y="90.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">-$12M</text>
+</g>
+<text x="202.7380483966162" y="202.0" text-anchor="end" fill="#1F2937" font-size="16.7" data-pt="12.0">Added revenue (2025F)</text>
+<g class="chart-series series-role-focal_secondary_tier2">
+<rect x="351.4" y="183.8" width="138.7" height="28.6" rx="3" fill="#86B0DA" />
+<text x="498.1" y="202.0" text-anchor="start" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">+$40M</text>
+</g>
+<text x="202.7380483966162" y="314.0" text-anchor="end" fill="#1F2937" font-size="16.7" data-pt="12.0">Added revenue (2026F)</text>
+<g class="chart-series series-role-focal_primary_tier1">
+<rect x="351.4" y="295.7" width="329.4" height="28.6" rx="3" fill="#2B5C8F" />
+<text x="688.8" y="314.0" text-anchor="start" fill="#2B5C8F" font-size="16.7" data-pt="12.0" font-weight="700">+$95M</text>
+</g>
+</svg></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Kestrel FY2025 budget model and Skyline revenue forecast.</span>
+                <span class="slide-counter">4</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_05" data-slide-index="4" data-counter="Appendix 1" data-reveal='{&quot;enabled&quot;: true, &quot;standalone_self_sufficient_verified&quot;: true, &quot;reveal_steps&quot;: [{&quot;step_number&quot;: 1, &quot;visible_panel_ids&quot;: [&quot;panel_gap&quot;], &quot;visible_series_roles&quot;: [&quot;context_greyscale&quot;], &quot;show_annotations&quot;: false, &quot;show_recommendation_callout&quot;: false, &quot;speaker_notes&quot;: &quot;Each grey dot is Harbor’s 2025 forecast revenue in one region.&quot;}, {&quot;step_number&quot;: 2, &quot;visible_panel_ids&quot;: [&quot;panel_gap&quot;], &quot;visible_series_roles&quot;: [&quot;context_greyscale&quot;, &quot;focal_secondary_tier2&quot;, &quot;focal_primary_tier1&quot;], &quot;show_annotations&quot;: true, &quot;show_recommendation_callout&quot;: true, &quot;speaker_notes&quot;: &quot;Each line joins it to Skyline’s forecast, and the regions are sorted by Skyline’s lead. Middle East and Africa is the one region where Harbor stays ahead.&quot;}]}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Skyline overtakes Harbor in 2025 <span class="color-tie" style="color:#2B5C8F;font-weight:inherit;">except across the Middle East and Africa</span>.</h1>
+                <div class="descriptive-chart-title">2025 forecast revenue by region ($M), Harbor vs. Skyline</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_gap"><div class="panel-title">Four regions, 2025 forecast</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_gap"><line x1="257.4500576150192" y1="54.4" x2="702.1099884769961" y2="54.4" stroke="#E5E7EB" stroke-width="0.70" /><text x="193.6" y="60.3" text-anchor="end" fill="#1F2937" font-size="16.7" data-pt="12.0">Americas</text><line x1="257.4500576150192" y1="143.2" x2="702.1099884769961" y2="143.2" stroke="#E5E7EB" stroke-width="0.70" /><text x="193.6" y="149.1" text-anchor="end" fill="#1F2937" font-size="16.7" data-pt="12.0">Europe</text><line x1="257.4500576150192" y1="232.0" x2="702.1099884769961" y2="232.0" stroke="#E5E7EB" stroke-width="0.70" /><text x="193.6" y="237.9" text-anchor="end" fill="#1F2937" font-size="16.7" data-pt="12.0">Asia Pacific</text><line x1="257.4500576150192" y1="320.9" x2="702.1099884769961" y2="320.9" stroke="#E5E7EB" stroke-width="0.70" /><text x="193.6" y="326.7" text-anchor="end" fill="#1F2937" font-size="16.7" data-pt="12.0">Middle East &amp; Africa</text><line x1="257.4500576150192" y1="365.3" x2="702.1099884769961" y2="365.3" stroke="#D1D5DB" stroke-width="1.25" /><text x="257.5" y="390.3" text-anchor="middle" fill="#6B7280" font-size="16.7" data-pt="12.0">$0M</text><text x="346.4" y="390.3" text-anchor="middle" fill="#6B7280" font-size="16.7" data-pt="12.0">$50M</text><text x="435.3" y="390.3" text-anchor="middle" fill="#6B7280" font-size="16.7" data-pt="12.0">$100M</text><text x="524.2" y="390.3" text-anchor="middle" fill="#6B7280" font-size="16.7" data-pt="12.0">$150M</text><text x="613.2" y="390.3" text-anchor="middle" fill="#6B7280" font-size="16.7" data-pt="12.0">$200M</text><text x="702.1" y="390.3" text-anchor="middle" fill="#6B7280" font-size="16.7" data-pt="12.0">$250M</text><line class="dot-connector" x1="634.5" y1="54.4" x2="684.3" y2="54.4" stroke="#8C8C8C" stroke-width="2.43" /><line class="dot-connector" x1="444.2" y1="143.2" x2="470.9" y2="143.2" stroke="#8C8C8C" stroke-width="2.43" /><line class="dot-connector" x1="364.2" y1="232.0" x2="373.1" y2="232.0" stroke="#8C8C8C" stroke-width="2.43" /><line class="dot-connector" x1="307.3" y1="320.9" x2="301.9" y2="320.9" stroke="#8C8C8C" stroke-width="2.43" /><circle cx="634.5" cy="54.4" r="4.0" fill="#8C8C8C" /><text x="624.5" y="60.3" text-anchor="end" fill="#8C8C8C" font-size="16.7" data-pt="12.0" font-weight="500">$212M</text><circle cx="444.2" cy="143.2" r="4.0" fill="#8C8C8C" /><text x="434.2" y="149.1" text-anchor="end" fill="#8C8C8C" font-size="16.7" data-pt="12.0" font-weight="500">$105M</text><circle cx="364.2" cy="232.0" r="4.0" fill="#8C8C8C" /><text x="354.2" y="237.9" text-anchor="end" fill="#8C8C8C" font-size="16.7" data-pt="12.0" font-weight="500">$60M</text><circle cx="307.3" cy="320.9" r="4.0" fill="#8C8C8C" /><text x="317.3" y="326.7" text-anchor="start" fill="#8C8C8C" font-size="16.7" data-pt="12.0" font-weight="500">$28M</text><circle cx="684.3" cy="54.4" r="4.0" fill="#86B0DA" /><text x="694.3" y="60.3" text-anchor="start" fill="#5F96CE" font-size="16.7" data-pt="12.0" font-weight="500">$240M</text><circle cx="470.9" cy="143.2" r="4.0" fill="#86B0DA" /><text x="480.9" y="149.1" text-anchor="start" fill="#5F96CE" font-size="16.7" data-pt="12.0" font-weight="500">$120M</text><circle cx="373.1" cy="232.0" r="4.0" fill="#86B0DA" /><text x="383.1" y="237.9" text-anchor="start" fill="#5F96CE" font-size="16.7" data-pt="12.0" font-weight="500">$65M</text><circle cx="301.9" cy="320.9" r="5.0" fill="#2B5C8F" /><text x="291.9" y="326.7" text-anchor="end" fill="#2B5C8F" font-size="16.7" data-pt="12.0" font-weight="700">$25M</text></svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">Keep Harbor renewal effort in <span class="color-tie" style="color:#2B5C8F;font-weight:700;">Middle East &amp; Africa</span> for 2025, and shift it to Skyline in the other three regions.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Kestrel revenue forecast by product and region, 2025F.</span>
+                <span class="slide-counter">Appendix 1</span>
+              </footer>
+            </section>
+            
+  </div>
+  <div class="hud-bar">
+    <button class="hud-btn" onclick="prevStep()">← Prev</button>
+    <span id="hud-status">Slide 1</span>
+    <button class="hud-btn" onclick="nextStep()">Next →</button>
+    <button class="hud-btn" onclick="toggleRevealMode()" id="reveal-btn">Progressive Reveal: ON</button>
+    <button class="hud-btn" onclick="toggleNotes()" id="notes-btn">Speaker notes: OFF (N)</button>
+  </div>
+  <div class="speaker-notes-drawer" id="speaker-notes" hidden>Speaker Notes</div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let curSlide = 0;
+    let curStepIdx = 0;
+    let revealEnabled = true;
+
+    function applyState() {
+      requestAnimationFrame(fitChartText);
+      slides.forEach((s, i) => s.classList.toggle('active', i === curSlide));
+      const active = slides[curSlide];
+      const pr = JSON.parse(active.getAttribute('data-reveal') || '{}');
+      const steps = (revealEnabled && pr.enabled && pr.reveal_steps && pr.reveal_steps.length) ? pr.reveal_steps : null;
+
+      if (!steps) {
+        active.querySelectorAll('.hidden-reveal').forEach(el => el.classList.remove('hidden-reveal'));
+        document.getElementById('hud-status').textContent = `${active.dataset.counter} (Full View)`;
+        const allNotes = (pr.reveal_steps || []).map(st => `[Beat ${st.step_number}] ${st.speaker_notes || ''}`).join(' ');
+        document.getElementById('speaker-notes').textContent = allNotes || 'No speaker notes for this slide.';
+        return;
+      }
+
+      const st = steps[Math.min(curStepIdx, steps.length - 1)];
+      const visPanels = new Set(st.visible_panel_ids || []);
+      const visRoles = new Set(st.visible_series_roles || []);
+
+      active.querySelectorAll('.chart-panel, .panel-finding').forEach(p => {
+        const pid = p.getAttribute('data-panel-id');
+        p.classList.toggle('hidden-reveal', !visPanels.has(pid));
+      });
+      ['context_greyscale', 'focal_secondary_tier2', 'focal_primary_tier1'].forEach(role => {
+        active.querySelectorAll(`.series-role-${role}`).forEach(el => {
+          el.classList.toggle('hidden-reveal', !visRoles.has(role));
+        });
+      });
+      if (st.visible_item_ids && st.visible_item_ids.length) {
+        const visItems = new Set(st.visible_item_ids);
+        active.querySelectorAll('[data-item]').forEach(el => el.classList.toggle('hidden-reveal', !visItems.has(el.getAttribute('data-item'))));
+      }
+      active.querySelectorAll('.ann-card, .ann-note').forEach(el => el.classList.toggle('hidden-reveal', !st.show_annotations));
+      active.querySelectorAll('.rec-card, .rec-line').forEach(el => el.classList.toggle('hidden-reveal', !st.show_recommendation_callout));
+
+      document.getElementById('hud-status').textContent = `${active.dataset.counter} · Reveal Step ${st.step_number}/${steps.length}`;
+      document.getElementById('speaker-notes').textContent = `[Beat ${st.step_number}] ${st.speaker_notes || ''}`;
+    }
+
+    function nextStep() {
+      const active = slides[curSlide];
+      const pr = JSON.parse(active.getAttribute('data-reveal') || '{}');
+      const steps = (revealEnabled && pr.enabled && pr.reveal_steps) ? pr.reveal_steps : [];
+      if (steps.length && curStepIdx < steps.length - 1) {
+        curStepIdx++;
+      } else if (curSlide < slides.length - 1) {
+        curSlide++;
+        curStepIdx = 0;
+      }
+      applyState();
+    }
+
+    function prevStep() {
+      if (curStepIdx > 0) {
+        curStepIdx--;
+      } else if (curSlide > 0) {
+        curSlide--;
+        const pr = JSON.parse(slides[curSlide].getAttribute('data-reveal') || '{}');
+        const steps = (revealEnabled && pr.enabled && pr.reveal_steps) ? pr.reveal_steps : [];
+        curStepIdx = Math.max(0, steps.length - 1);
+      }
+      applyState();
+    }
+
+    function toggleRevealMode() {
+      revealEnabled = !revealEnabled;
+      document.getElementById('reveal-btn').textContent = `Progressive Reveal: ${revealEnabled ? 'ON' : 'OFF'}`;
+      applyState();
+    }
+
+    // B-8: chart text keeps its slide-point size whatever scale the browser gives each SVG; then crowded
+    // category labels are thinned (every k-th, D-029) and the viewBox grows to hold every label.
+    function overlaps(a, b) { return a.left < b.right + 2 && b.left < a.right + 2 && a.top < b.bottom && b.top < a.bottom; }
+    function fitChartText() {
+      const vp = document.querySelector('.deck-viewport').getBoundingClientRect().width;
+      const scope = document.body.classList.contains('print-all') ? '.slide' : '.slide.active';
+      document.querySelectorAll(`${scope} svg.swd-chart-svg`).forEach(svg => {
+        if (!svg.dataset.vb) svg.dataset.vb = svg.getAttribute('viewBox');
+        svg.setAttribute('viewBox', svg.dataset.vb);
+        const setSizes = () => {
+          const ctm = svg.getScreenCTM();
+          if (!ctm || !ctm.a) return false;
+          svg.querySelectorAll('text[data-pt]').forEach(t => {
+            t.setAttribute('font-size', (parseFloat(t.dataset.pt) * vp / 960 / ctm.a).toFixed(2));
+          });
+          return true;
+        };
+        for (let pass = 0; pass < 3; pass++) {
+          if (!setSizes()) return;
+          const ticks = [...svg.querySelectorAll('text.cat-tick')];
+          for (let k = 1; k <= ticks.length; k++) {
+            ticks.forEach((t, i) => t.style.display = (i % k === 0) ? '' : 'none');
+            const shown = ticks.filter(t => t.style.display !== 'none').map(t => t.getBoundingClientRect());
+            if (shown.every((r, i) => i === 0 || !overlaps(shown[i - 1], r))) break;
+          }
+          const [x0, y0, w0, h0] = svg.dataset.vb.split(' ').map(Number);
+          const bb = svg.getBBox();
+          const x1 = Math.min(x0, bb.x), y1 = Math.min(y0, bb.y);
+          const x2 = Math.max(x0 + w0, bb.x + bb.width), y2 = Math.max(y0 + h0, bb.y + bb.height);
+          svg.setAttribute('viewBox', `${x1} ${y1} ${x2 - x1} ${y2 - y1}`);
+        }
+        setSizes();  // the grown viewBox shrinks the scale a little; restore the slide-point sizes
+      });
+    }
+    window.addEventListener('resize', fitChartText);
+    // Sizes are a ratio of the slide width, so fitting every slide on screen holds for the printed page
+    window.addEventListener('beforeprint', () => { document.body.classList.add('print-all'); fitChartText(); });
+    window.addEventListener('afterprint', () => { document.body.classList.remove('print-all'); applyState(); });
+
+    function toggleNotes() {
+      const drawer = document.getElementById('speaker-notes');
+      drawer.hidden = !drawer.hidden;
+      document.getElementById('notes-btn').textContent = `Speaker notes: ${drawer.hidden ? 'OFF' : 'ON'} (N)`;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'n' || e.key === 'N') { toggleNotes(); }
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextStep(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prevStep(); }
+    });
+    // `#slide=3` opens a slide, `&full` shows every reveal step at once (bookmarks and browser screenshots)
+    const hashArgs = new URLSearchParams(location.hash.slice(1));
+    if (hashArgs.has('slide')) curSlide = Math.min(Math.max(parseInt(hashArgs.get('slide'), 10) - 1 || 0, 0), slides.length - 1);
+    if (hashArgs.has('full')) revealEnabled = false;
+    if (hashArgs.has('shot')) document.body.classList.add('shot');
+    applyState();
+
+    // D-048 X1: `#qa` measures every slide at its final state and writes a JSON report into the page
+    function qaReport() {
+      const keep = [curSlide, revealEnabled];
+      revealEnabled = false;
+      const report = { errors: window.qaErrors.slice(), slides: [] };
+      slides.forEach((s, i) => {
+        curSlide = i;
+        applyState();
+        fitChartText();
+        const frame = s.getBoundingClientRect();
+        const foot = s.querySelector('.slide-footer').getBoundingClientRect();
+        const issues = [], flagged = [];
+        const flag = (el, what) => {
+          if (flagged.some(f => f.contains(el))) return;  // report the outermost element only
+          flagged.push(el);
+          issues.push(`${what}: ${name(el)}`);
+        };
+        const name = el => (el.className && el.className.baseVal !== undefined ? el.className.baseVal : el.className) || el.tagName.toLowerCase();
+        s.querySelectorAll('*').forEach(el => {
+          if (el.closest('svg') && el.tagName.toLowerCase() !== 'svg') return;
+          const r = el.getBoundingClientRect();
+          if (!r.width || !r.height) return;
+          if (r.left < frame.left - 1 || r.right > frame.right + 1 || r.top < frame.top - 1 || r.bottom > frame.bottom + 1) {
+            flag(el, 'outside the slide frame');
+          } else if (!el.closest('.slide-footer') && el.parentElement === s && r.bottom > foot.top + 1) {
+            flag(el, 'runs into the footer');
+          }
+          const st = getComputedStyle(el);
+          if (/hidden|clip/.test(st.overflow) && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1) && el !== s) {
+            flag(el, 'content clipped inside');
+          }
+        });
+        report.slides.push({ index: i + 1, id: s.id, counter: s.dataset.counter, issues });
+      });
+      [curSlide, revealEnabled] = keep;
+      applyState();
+      const out = document.createElement('script');
+      out.type = 'application/json';
+      out.id = 'qa-report';
+      out.textContent = JSON.stringify(report);
+      document.body.appendChild(out);
+    }
+    if (hashArgs.has('qa')) qaReport();
+  </script>
+</body>
+</html>

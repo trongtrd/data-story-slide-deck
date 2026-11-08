@@ -1,0 +1,57 @@
+product,region,year,revenue_usd_m
+Harbor,Americas,2020,190
+Harbor,Americas,2021,205
+Harbor,Americas,2022,215
+Harbor,Americas,2023,220
+Harbor,Americas,2024,220
+Harbor,Americas,2025,212
+Harbor,Americas,2026,200
+Harbor,Europe,2020,110
+Harbor,Europe,2021,118
+Harbor,Europe,2022,122
+Harbor,Europe,2023,123
+Harbor,Europe,2024,118
+Harbor,Europe,2025,105
+Harbor,Europe,2026,88
+Harbor,Asia Pacific,2020,55
+Harbor,Asia Pacific,2021,60
+Harbor,Asia Pacific,2022,64
+Harbor,Asia Pacific,2023,67
+Harbor,Asia Pacific,2024,67
+Harbor,Asia Pacific,2025,60
+Harbor,Asia Pacific,2026,50
+Harbor,Middle East & Africa,2020,25
+Harbor,Middle East & Africa,2021,27
+Harbor,Middle East & Africa,2022,29
+Harbor,Middle East & Africa,2023,30
+Harbor,Middle East & Africa,2024,30
+Harbor,Middle East & Africa,2025,28
+Harbor,Middle East & Africa,2026,24
+Skyline,Americas,2020,35
+Skyline,Americas,2021,60
+Skyline,Americas,2022,95
+Skyline,Americas,2023,140
+Skyline,Americas,2024,190
+Skyline,Americas,2025,240
+Skyline,Americas,2026,290
+Skyline,Europe,2020,15
+Skyline,Europe,2021,28
+Skyline,Europe,2022,45
+Skyline,Europe,2023,65
+Skyline,Europe,2024,90
+Skyline,Europe,2025,120
+Skyline,Europe,2026,150
+Skyline,Asia Pacific,2020,7
+Skyline,Asia Pacific,2021,12
+Skyline,Asia Pacific,2022,22
+Skyline,Asia Pacific,2023,32
+Skyline,Asia Pacific,2024,45
+Skyline,Asia Pacific,2025,65
+Skyline,Asia Pacific,2026,85
+Skyline,Middle East & Africa,2020,3
+Skyline,Middle East & Africa,2021,5
+Skyline,Middle East & Africa,2022,8
+Skyline,Middle East & Africa,2023,13
+Skyline,Middle East & Africa,2024,20
+Skyline,Middle East & Africa,2025,25
+Skyline,Middle East & Africa,2026,35

@@ -1,0 +1,958 @@
+{
+  "timestamp": "2026-11-08T02:52:28Z",
+  "overall_passed": true,
+  "allowed_failures": [],
+  "mean_score": 100.0,
+  "skill_lint": {
+    "valid": true,
+    "kind": "static_lint",
+    "note": "Static lint only. No skill was executed on Antigravity, Claude Code, or Codex by this suite.",
+    "skills_checked": 7,
+    "accepted_kb_cards_count": 82,
+    "bound_kb_cards_count": 82,
+    "skill_reports": [
+      {
+        "skill": "deck-orchestrator",
+        "valid": true,
+        "bound_card_count": 11,
+        "errors": []
+      },
+      {
+        "skill": "deck-context-griller",
+        "valid": true,
+        "bound_card_count": 19,
+        "errors": []
+      },
+      {
+        "skill": "deck-storyline-builder",
+        "valid": true,
+        "bound_card_count": 23,
+        "errors": []
+      },
+      {
+        "skill": "deck-visual-planner",
+        "valid": true,
+        "bound_card_count": 39,
+        "errors": []
+      },
+      {
+        "skill": "deck-builder",
+        "valid": true,
+        "bound_card_count": 43,
+        "errors": []
+      },
+      {
+        "skill": "deck-reviewer",
+        "valid": true,
+        "bound_card_count": 43,
+        "errors": []
+      },
+      {
+        "skill": "deck-finisher",
+        "valid": true,
+        "bound_card_count": 5,
+        "errors": []
+      }
+    ],
+    "errors": []
+  },
+  "negative_tests": {
+    "base_run": "bench_en_software_1plus4",
+    "control_passed": true,
+    "caught": 75,
+    "total": 75,
+    "valid": true,
+    "tests": [
+      {
+        "test": "value_changed_without_source",
+        "caught": true,
+        "expected_issue": "does not match source",
+        "score": 86.5
+      },
+      {
+        "test": "missing_source_file",
+        "caught": true,
+        "expected_issue": "not found",
+        "score": 86.5
+      },
+      {
+        "test": "label_disagrees_with_value",
+        "caught": true,
+        "expected_issue": "formatted_label",
+        "score": 86.5
+      },
+      {
+        "test": "red_green_pair",
+        "caught": true,
+        "expected_issue": "PRIN-DSN-006",
+        "score": 66.5
+      },
+      {
+        "test": "illegible_color_tie",
+        "caught": true,
+        "expected_issue": "WCAG",
+        "score": 86.5
+      },
+      {
+        "test": "jargon_in_footnote",
+        "caught": true,
+        "expected_issue": "leaks",
+        "score": 86.5
+      },
+      {
+        "test": "dangling_card_reference",
+        "caught": true,
+        "expected_issue": "Dangling",
+        "score": 86.5
+      },
+      {
+        "test": "title_case_title",
+        "caught": true,
+        "expected_issue": "Sentence case",
+        "score": 85.5
+      },
+      {
+        "test": "spec_edited_after_render",
+        "caught": true,
+        "expected_issue": "stale",
+        "score": 89.0
+      },
+      {
+        "test": "brief_edited_after_approval",
+        "caught": true,
+        "expected_issue": "after approval",
+        "score": 97.5
+      },
+      {
+        "test": "approval_stamp_removed",
+        "caught": true,
+        "expected_issue": "no `approvals.G",
+        "score": 94.0
+      },
+      {
+        "test": "pillow_renders_for_pptx",
+        "caught": true,
+        "expected_issue": "render_source",
+        "score": 95.0
+      },
+      {
+        "test": "png_replaced_after_render",
+        "caught": true,
+        "expected_issue": "hash recorded",
+        "score": 95.0
+      },
+      {
+        "test": "truncated_bar_axis",
+        "caught": true,
+        "expected_issue": "PRIN-VIS-004",
+        "score": 86.5
+      },
+      {
+        "test": "courtesy_closing_slide",
+        "caught": true,
+        "expected_issue": "Courtesy closer",
+        "score": 83.0
+      },
+      {
+        "test": "footnote_below_size_floor",
+        "caught": true,
+        "expected_issue": "below the 10 pt footnote floor",
+        "score": 94.0
+      },
+      {
+        "test": "card_with_fill_and_outline",
+        "caught": true,
+        "expected_issue": "both a fill and an outline",
+        "score": 94.0
+      },
+      {
+        "test": "text_effect_on_title",
+        "caught": true,
+        "expected_issue": "text effect",
+        "score": 94.0
+      },
+      {
+        "test": "entity_recoloured_across_slides",
+        "caught": true,
+        "expected_issue": "changes colour family",
+        "score": 86.5
+      },
+      {
+        "test": "confusable_colour_pair",
+        "caught": true,
+        "expected_issue": "indistinguishable",
+        "score": 81.5
+      },
+      {
+        "test": "standalone_grey_in_live_deck",
+        "caught": true,
+        "expected_issue": "below the 3:1 floor",
+        "score": 64.0
+      },
+      {
+        "test": "diverging_scale_without_midpoint",
+        "caught": true,
+        "expected_issue": "meaningful midpoint",
+        "score": 86.5
+      },
+      {
+        "test": "over_bolded_annotation",
+        "caught": true,
+        "expected_issue": "are bold",
+        "score": 84.0
+      },
+      {
+        "test": "long_all_caps_header",
+        "caught": true,
+        "expected_issue": "ALL CAPS label",
+        "score": 86.5
+      },
+      {
+        "test": "near_duplicate_font_size",
+        "caught": true,
+        "expected_issue": "under 1.5 pt apart",
+        "score": 94.0
+      },
+      {
+        "test": "rotated_category_labels",
+        "caught": true,
+        "expected_issue": "PAT-DSN-005",
+        "score": 94.0
+      },
+      {
+        "test": "centred_long_annotation",
+        "caught": true,
+        "expected_issue": "left-align it",
+        "score": 94.0
+      },
+      {
+        "test": "colour_kit_mismatch",
+        "caught": true,
+        "expected_issue": "[D-030]",
+        "score": 64.0
+      },
+      {
+        "test": "title_span_regular_weight",
+        "caught": true,
+        "expected_issue": "set to regular weight",
+        "score": 86.5
+      },
+      {
+        "test": "reading_note_too_long",
+        "caught": true,
+        "expected_issue": "Reading note must fit",
+        "score": 86.5
+      },
+      {
+        "test": "appendix_without_audience_need",
+        "caught": true,
+        "expected_issue": "no `audience_need`",
+        "score": 81.5
+      },
+      {
+        "test": "human_g4_without_owner_words",
+        "caught": true,
+        "expected_issue": "human_g4 [D-035]",
+        "score": 86.5
+      },
+      {
+        "test": "speaker_notes_with_trace",
+        "caught": true,
+        "expected_issue": "Notes contain",
+        "score": 83.0
+      },
+      {
+        "test": "no_skeptic_no_assessment",
+        "caught": true,
+        "expected_issue": "resistance_assessment",
+        "score": 95.0
+      },
+      {
+        "test": "title_mixed_weight_in_pptx",
+        "caught": true,
+        "expected_issue": "title mixes bold and regular",
+        "score": 94.0
+      },
+      {
+        "test": "rotated_value_axis_title",
+        "caught": true,
+        "expected_issue": "value-axis title is drawn rotated",
+        "score": 94.0
+      },
+      {
+        "test": "negative_bars_inverted_in_powerpoint",
+        "caught": true,
+        "expected_issue": "invertIfNegative",
+        "score": 94.0
+      },
+      {
+        "test": "interval_excludes_value",
+        "caught": true,
+        "expected_issue": "does not contain the value",
+        "score": 86.5
+      },
+      {
+        "test": "verified_source_missing",
+        "caught": true,
+        "expected_issue": "does not exist in the workspace",
+        "score": 95.0
+      },
+      {
+        "test": "untraced_table_cell",
+        "caught": true,
+        "expected_issue": "Table cell is missing `source_cell_ref`",
+        "score": 83.0
+      },
+      {
+        "test": "table_spec_on_chart_slide",
+        "caught": true,
+        "expected_issue": "`table_spec` belongs only",
+        "score": 86.5
+      },
+      {
+        "test": "matrix_item_on_axis",
+        "caught": true,
+        "expected_issue": "sits on the axis",
+        "score": 83.0
+      },
+      {
+        "test": "matrix_with_two_items",
+        "caught": true,
+        "expected_issue": "at least three items",
+        "score": 83.0
+      },
+      {
+        "test": "matrix_data_placement_untraced",
+        "caught": true,
+        "expected_issue": "needs its `source_cell_ref`",
+        "score": 83.0
+      },
+      {
+        "test": "matrix_scenario_two_focal_cells",
+        "caught": true,
+        "expected_issue": "exactly one cell is focal",
+        "score": 73.0
+      },
+      {
+        "test": "timeline_date_outside_axis",
+        "caught": true,
+        "expected_issue": "lies outside the axis",
+        "score": 75.5
+      },
+      {
+        "test": "timeline_bar_in_milestones_form",
+        "caught": true,
+        "expected_issue": "milestones form takes dated milestones",
+        "score": 78.0
+      },
+      {
+        "test": "timeline_without_focal_item",
+        "caught": true,
+        "expected_issue": "mark one or two focal items",
+        "score": 78.0
+      },
+      {
+        "test": "timeline_untraced_date",
+        "caught": true,
+        "expected_issue": "needs its `source_cell_ref`",
+        "score": 80.5
+      },
+      {
+        "test": "diagram_without_alt_text",
+        "caught": true,
+        "expected_issue": "needs `alt_text`",
+        "score": 80.5
+      },
+      {
+        "test": "diagram_without_focal_step",
+        "caught": true,
+        "expected_issue": "mark one or two focal steps",
+        "score": 83.0
+      },
+      {
+        "test": "diagram_untraced_figure",
+        "caught": true,
+        "expected_issue": "needs its `source_cell_ref`",
+        "score": 83.0
+      },
+      {
+        "test": "diagram_spec_on_chart_slide",
+        "caught": true,
+        "expected_issue": "`diagram_spec` belongs only",
+        "score": 86.5
+      },
+      {
+        "test": "diagram_text_overflows_its_box",
+        "caught": true,
+        "expected_issue": "its text needs",
+        "score": 83.0
+      },
+      {
+        "test": "heatmap_shared_scale_without_unit",
+        "caught": true,
+        "expected_issue": "needs the same `unit` on every shaded column",
+        "score": 83.0
+      },
+      {
+        "test": "heatmap_missing_dark_end",
+        "caught": true,
+        "expected_issue": "state `dark_end`",
+        "score": 80.5
+      },
+      {
+        "test": "heatmap_midpoint_outside_data",
+        "caught": true,
+        "expected_issue": "lies outside the data",
+        "score": 83.0
+      },
+      {
+        "test": "heatmap_on_text_column",
+        "caught": true,
+        "expected_issue": "only number columns can be shaded",
+        "score": 83.0
+      },
+      {
+        "test": "connected_dots_three_series",
+        "caught": true,
+        "expected_issue": "needs exactly two series",
+        "score": 86.5
+      },
+      {
+        "test": "dot_fields_on_other_family",
+        "caught": true,
+        "expected_issue": "apply only to `dot_plot`",
+        "score": 86.5
+      },
+      {
+        "test": "diverging_stack_out_of_order",
+        "caught": true,
+        "expected_issue": "from the most negative answer",
+        "score": 86.5
+      },
+      {
+        "test": "diverging_stack_without_scale",
+        "caught": true,
+        "expected_issue": "needs `colour_scale: diverging`",
+        "score": 86.5
+      },
+      {
+        "test": "defensive_caveat_card",
+        "caught": true,
+        "expected_issue": "defensive method caveat",
+        "score": 84.0
+      },
+      {
+        "test": "encoding_key_card",
+        "caught": true,
+        "expected_issue": "explains how to read the chart",
+        "score": 86.5
+      },
+      {
+        "test": "key_chart_slide",
+        "caught": true,
+        "expected_issue": "only non-chart slides can be key",
+        "score": 84.0
+      },
+      {
+        "test": "spotlight_on_chart_slide",
+        "caught": true,
+        "expected_issue": "only for big-number tile slides",
+        "score": 86.5
+      },
+      {
+        "test": "four_untraced_tiles",
+        "caught": true,
+        "expected_issue": "needs `source_cell_ref`",
+        "score": 74.0
+      },
+      {
+        "test": "scatter_field_on_line_chart",
+        "caught": true,
+        "expected_issue": "apply only to `scatter_plot`",
+        "score": 86.5
+      },
+      {
+        "test": "strip_field_on_line_chart",
+        "caught": true,
+        "expected_issue": "apply only to `strip_plot`",
+        "score": 86.5
+      },
+      {
+        "test": "side_totals_on_line_chart",
+        "caught": true,
+        "expected_issue": "only to horizontal diverging stacks",
+        "score": 86.5
+      },
+      {
+        "test": "side_column_on_line_chart",
+        "caught": true,
+        "expected_issue": "applies only to `horizontal_bar_chart`",
+        "score": 86.5
+      },
+      {
+        "test": "waterfall_does_not_add_up",
+        "caught": true,
+        "expected_issue": "plus the changes gives",
+        "score": 69.0
+      },
+      {
+        "test": "waterfall_truncated_axis",
+        "caught": true,
+        "expected_issue": "value axis must include zero",
+        "score": 64.0
+      },
+      {
+        "test": "waterfall_subtotal",
+        "caught": true,
+        "expected_issue": "no subtotals",
+        "score": 64.0
+      },
+      {
+        "test": "waterfall_field_on_line_chart",
+        "caught": true,
+        "expected_issue": "apply only to `waterfall_chart`",
+        "score": 86.5
+      }
+    ]
+  },
+  "runs": [
+    {
+      "run_id": "bench_en_coffee_two_tier",
+      "deck_id": "bench_en_coffee_two_tier",
+      "language": "en",
+      "language_rule_card": "LANG-EN",
+      "delivery_mode": "standalone",
+      "slides_count": 4,
+      "pillars": {
+        "P1_G1_Context_Brief": {
+          "score": 15.0,
+          "max": 15.0
+        },
+        "P2_G2_G3_Storyline_Visual_Plan": {
+          "score": 20.0,
+          "max": 20.0
+        },
+        "P3_G4_Slide_Spec_Audit": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P4_Native_PPTX_and_HTML": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P5_QA_Render_Provenance": {
+          "score": 15.0,
+          "max": 15.0
+        }
+      },
+      "total_score": 100.0,
+      "max_score": 100.0,
+      "passed": true,
+      "machine_checks": 1300,
+      "self_attested_flags": [
+        "context_brief: brand_profile.palette.colorblind_safe_verified",
+        "context_brief: g1_gate_audit.G1_1_explanatory_mode",
+        "context_brief: g1_gate_audit.G1_2_stakeholder_decomposition",
+        "context_brief: g1_gate_audit.G1_3_unbundled_primary_action",
+        "context_brief: g1_gate_audit.G1_4_dual_sided_stakes",
+        "context_brief: g1_gate_audit.G1_5_single_sentence_big_idea",
+        "context_brief: g1_gate_audit.G1_6_delivery_and_language_meta",
+        "context_brief: strategic_stakes.zero_generic_buzzwords_verified",
+        "slide_spec: slides[].claim_evidence_contract.numeric_source_traceability_verified",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.compound_word_linebreak_safe",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.zero_text_overlap_or_clipping",
+        "slide_spec: slides[].claim_evidence_contract.strict_claim_match_verified",
+        "slide_spec: slides[].layout_spec.grid_alignment_verified",
+        "slide_spec: slides[].progressive_reveal.standalone_self_sufficient_verified",
+        "slide_spec: slides[].word_jobs.no_triple_headline_repetition_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.active_verb_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.sentence_case_verified",
+        "storyline: g2_gate_audit.G2_1_analyst_process_pruning",
+        "storyline: g2_gate_audit.G2_2_complete_narrative_arc",
+        "storyline: g2_gate_audit.G2_3_evidence_before_indictment",
+        "storyline: g2_gate_audit.G2_4_horizontal_logic_verified",
+        "storyline: g2_gate_audit.G2_5_actionable_insight_over_narration",
+        "storyline: g2_gate_audit.G2_6_two_pass_compression_and_lang",
+        "storyline: narrative_architecture.evidence_before_indictment_verified"
+      ],
+      "pptx_stats": {
+        "slides_count": 15,
+        "expected_chart_panels": 9,
+        "native_editable_charts_verified": 9,
+        "static_raster_images_count": 0,
+        "spec_digest_fresh": true
+      },
+      "png_stats": {
+        "verified_1920x1080_pngs": 4,
+        "expected_pngs": 4,
+        "render_source": "pptx_libreoffice"
+      },
+      "issues": []
+    },
+    {
+      "run_id": "bench_en_nurse_staffing",
+      "deck_id": "bench_en_nurse_staffing",
+      "language": "en",
+      "language_rule_card": "LANG-EN",
+      "delivery_mode": "live",
+      "slides_count": 7,
+      "pillars": {
+        "P1_G1_Context_Brief": {
+          "score": 15.0,
+          "max": 15.0
+        },
+        "P2_G2_G3_Storyline_Visual_Plan": {
+          "score": 20.0,
+          "max": 20.0
+        },
+        "P3_G4_Slide_Spec_Audit": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P4_Native_PPTX_and_HTML": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P5_QA_Render_Provenance": {
+          "score": 15.0,
+          "max": 15.0
+        }
+      },
+      "total_score": 100.0,
+      "max_score": 100.0,
+      "passed": true,
+      "machine_checks": 518,
+      "self_attested_flags": [
+        "context_brief: brand_profile.palette.colorblind_safe_verified",
+        "context_brief: g1_gate_audit.G1_1_explanatory_mode",
+        "context_brief: g1_gate_audit.G1_2_stakeholder_decomposition",
+        "context_brief: g1_gate_audit.G1_3_unbundled_primary_action",
+        "context_brief: g1_gate_audit.G1_4_dual_sided_stakes",
+        "context_brief: g1_gate_audit.G1_5_single_sentence_big_idea",
+        "context_brief: g1_gate_audit.G1_6_delivery_and_language_meta",
+        "context_brief: strategic_stakes.zero_generic_buzzwords_verified",
+        "slide_spec: slides[].claim_evidence_contract.numeric_source_traceability_verified",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.compound_word_linebreak_safe",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.zero_text_overlap_or_clipping",
+        "slide_spec: slides[].claim_evidence_contract.strict_claim_match_verified",
+        "slide_spec: slides[].layout_spec.grid_alignment_verified",
+        "slide_spec: slides[].progressive_reveal.standalone_self_sufficient_verified",
+        "slide_spec: slides[].word_jobs.no_triple_headline_repetition_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.active_verb_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.sentence_case_verified",
+        "storyline: g2_gate_audit.G2_1_analyst_process_pruning",
+        "storyline: g2_gate_audit.G2_2_complete_narrative_arc",
+        "storyline: g2_gate_audit.G2_3_evidence_before_indictment",
+        "storyline: g2_gate_audit.G2_4_horizontal_logic_verified",
+        "storyline: g2_gate_audit.G2_5_actionable_insight_over_narration",
+        "storyline: g2_gate_audit.G2_6_two_pass_compression_and_lang",
+        "storyline: narrative_architecture.evidence_before_indictment_verified"
+      ],
+      "pptx_stats": {
+        "slides_count": 8,
+        "expected_chart_panels": 9,
+        "native_editable_charts_verified": 9,
+        "static_raster_images_count": 0,
+        "spec_digest_fresh": true
+      },
+      "png_stats": {
+        "verified_1920x1080_pngs": 7,
+        "expected_pngs": 7,
+        "render_source": "pptx_libreoffice"
+      },
+      "issues": []
+    },
+    {
+      "run_id": "bench_en_software_1plus4",
+      "deck_id": "bench_en_software_1plus4",
+      "language": "en",
+      "language_rule_card": "LANG-EN",
+      "delivery_mode": "live",
+      "slides_count": 4,
+      "pillars": {
+        "P1_G1_Context_Brief": {
+          "score": 15.0,
+          "max": 15.0
+        },
+        "P2_G2_G3_Storyline_Visual_Plan": {
+          "score": 20.0,
+          "max": 20.0
+        },
+        "P3_G4_Slide_Spec_Audit": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P4_Native_PPTX_and_HTML": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P5_QA_Render_Provenance": {
+          "score": 15.0,
+          "max": 15.0
+        }
+      },
+      "total_score": 100.0,
+      "max_score": 100.0,
+      "passed": true,
+      "machine_checks": 660,
+      "self_attested_flags": [
+        "context_brief: brand_profile.palette.colorblind_safe_verified",
+        "context_brief: g1_gate_audit.G1_1_explanatory_mode",
+        "context_brief: g1_gate_audit.G1_2_stakeholder_decomposition",
+        "context_brief: g1_gate_audit.G1_3_unbundled_primary_action",
+        "context_brief: g1_gate_audit.G1_4_dual_sided_stakes",
+        "context_brief: g1_gate_audit.G1_5_single_sentence_big_idea",
+        "context_brief: g1_gate_audit.G1_6_delivery_and_language_meta",
+        "context_brief: strategic_stakes.zero_generic_buzzwords_verified",
+        "slide_spec: slides[].claim_evidence_contract.numeric_source_traceability_verified",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.compound_word_linebreak_safe",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.zero_text_overlap_or_clipping",
+        "slide_spec: slides[].claim_evidence_contract.strict_claim_match_verified",
+        "slide_spec: slides[].layout_spec.grid_alignment_verified",
+        "slide_spec: slides[].progressive_reveal.standalone_self_sufficient_verified",
+        "slide_spec: slides[].word_jobs.no_triple_headline_repetition_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.active_verb_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.sentence_case_verified",
+        "storyline: g2_gate_audit.G2_1_analyst_process_pruning",
+        "storyline: g2_gate_audit.G2_2_complete_narrative_arc",
+        "storyline: g2_gate_audit.G2_3_evidence_before_indictment",
+        "storyline: g2_gate_audit.G2_4_horizontal_logic_verified",
+        "storyline: g2_gate_audit.G2_5_actionable_insight_over_narration",
+        "storyline: g2_gate_audit.G2_6_two_pass_compression_and_lang",
+        "storyline: narrative_architecture.evidence_before_indictment_verified"
+      ],
+      "pptx_stats": {
+        "slides_count": 6,
+        "expected_chart_panels": 9,
+        "native_editable_charts_verified": 9,
+        "static_raster_images_count": 0,
+        "spec_digest_fresh": true
+      },
+      "png_stats": {
+        "verified_1920x1080_pngs": 4,
+        "expected_pngs": 4,
+        "render_source": "pptx_libreoffice"
+      },
+      "issues": []
+    },
+    {
+      "run_id": "bench_vi_bep_giao_do_an",
+      "deck_id": "bench_vi_bep_giao_do_an",
+      "language": "vi",
+      "language_rule_card": "LANG-VI",
+      "delivery_mode": "live",
+      "slides_count": 5,
+      "pillars": {
+        "P1_G1_Context_Brief": {
+          "score": 15.0,
+          "max": 15.0
+        },
+        "P2_G2_G3_Storyline_Visual_Plan": {
+          "score": 20.0,
+          "max": 20.0
+        },
+        "P3_G4_Slide_Spec_Audit": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P4_Native_PPTX_and_HTML": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P5_QA_Render_Provenance": {
+          "score": 15.0,
+          "max": 15.0
+        }
+      },
+      "total_score": 100.0,
+      "max_score": 100.0,
+      "passed": true,
+      "machine_checks": 450,
+      "self_attested_flags": [
+        "context_brief: brand_profile.palette.colorblind_safe_verified",
+        "context_brief: g1_gate_audit.G1_1_explanatory_mode",
+        "context_brief: g1_gate_audit.G1_2_stakeholder_decomposition",
+        "context_brief: g1_gate_audit.G1_3_unbundled_primary_action",
+        "context_brief: g1_gate_audit.G1_4_dual_sided_stakes",
+        "context_brief: g1_gate_audit.G1_5_single_sentence_big_idea",
+        "context_brief: g1_gate_audit.G1_6_delivery_and_language_meta",
+        "context_brief: strategic_stakes.zero_generic_buzzwords_verified",
+        "slide_spec: slides[].claim_evidence_contract.numeric_source_traceability_verified",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.compound_word_linebreak_safe",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.zero_text_overlap_or_clipping",
+        "slide_spec: slides[].claim_evidence_contract.strict_claim_match_verified",
+        "slide_spec: slides[].layout_spec.grid_alignment_verified",
+        "slide_spec: slides[].progressive_reveal.standalone_self_sufficient_verified",
+        "slide_spec: slides[].word_jobs.no_triple_headline_repetition_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.active_verb_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.sentence_case_verified",
+        "storyline: g2_gate_audit.G2_1_analyst_process_pruning",
+        "storyline: g2_gate_audit.G2_2_complete_narrative_arc",
+        "storyline: g2_gate_audit.G2_3_evidence_before_indictment",
+        "storyline: g2_gate_audit.G2_4_horizontal_logic_verified",
+        "storyline: g2_gate_audit.G2_5_actionable_insight_over_narration",
+        "storyline: g2_gate_audit.G2_6_two_pass_compression_and_lang",
+        "storyline: narrative_architecture.evidence_before_indictment_verified"
+      ],
+      "pptx_stats": {
+        "slides_count": 6,
+        "expected_chart_panels": 5,
+        "native_editable_charts_verified": 5,
+        "static_raster_images_count": 0,
+        "spec_digest_fresh": true
+      },
+      "png_stats": {
+        "verified_1920x1080_pngs": 5,
+        "expected_pngs": 5,
+        "render_source": "pptx_libreoffice"
+      },
+      "issues": []
+    },
+    {
+      "run_id": "bench_vi_briefing_no_ask",
+      "deck_id": "bench_vi_briefing_no_ask",
+      "language": "vi",
+      "language_rule_card": "LANG-VI",
+      "delivery_mode": "hybrid",
+      "slides_count": 5,
+      "pillars": {
+        "P1_G1_Context_Brief": {
+          "score": 15.0,
+          "max": 15.0
+        },
+        "P2_G2_G3_Storyline_Visual_Plan": {
+          "score": 20.0,
+          "max": 20.0
+        },
+        "P3_G4_Slide_Spec_Audit": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P4_Native_PPTX_and_HTML": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P5_QA_Render_Provenance": {
+          "score": 15.0,
+          "max": 15.0
+        }
+      },
+      "total_score": 100.0,
+      "max_score": 100.0,
+      "passed": true,
+      "machine_checks": 346,
+      "self_attested_flags": [
+        "context_brief: brand_profile.palette.colorblind_safe_verified",
+        "context_brief: g1_gate_audit.G1_1_explanatory_mode",
+        "context_brief: g1_gate_audit.G1_2_stakeholder_decomposition",
+        "context_brief: g1_gate_audit.G1_3_unbundled_primary_action",
+        "context_brief: g1_gate_audit.G1_4_dual_sided_stakes",
+        "context_brief: g1_gate_audit.G1_5_single_sentence_big_idea",
+        "context_brief: g1_gate_audit.G1_6_delivery_and_language_meta",
+        "context_brief: strategic_stakes.zero_generic_buzzwords_verified",
+        "slide_spec: slides[].claim_evidence_contract.numeric_source_traceability_verified",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.compound_word_linebreak_safe",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.zero_text_overlap_or_clipping",
+        "slide_spec: slides[].claim_evidence_contract.strict_claim_match_verified",
+        "slide_spec: slides[].layout_spec.grid_alignment_verified",
+        "slide_spec: slides[].progressive_reveal.standalone_self_sufficient_verified",
+        "slide_spec: slides[].word_jobs.no_triple_headline_repetition_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.active_verb_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.sentence_case_verified",
+        "storyline: g2_gate_audit.G2_1_analyst_process_pruning",
+        "storyline: g2_gate_audit.G2_2_complete_narrative_arc",
+        "storyline: g2_gate_audit.G2_3_evidence_before_indictment",
+        "storyline: g2_gate_audit.G2_4_horizontal_logic_verified",
+        "storyline: g2_gate_audit.G2_5_actionable_insight_over_narration",
+        "storyline: g2_gate_audit.G2_6_two_pass_compression_and_lang",
+        "storyline: narrative_architecture.evidence_before_indictment_verified"
+      ],
+      "pptx_stats": {
+        "slides_count": 7,
+        "expected_chart_panels": 4,
+        "native_editable_charts_verified": 4,
+        "static_raster_images_count": 0,
+        "spec_digest_fresh": true
+      },
+      "png_stats": {
+        "verified_1920x1080_pngs": 5,
+        "expected_pngs": 5,
+        "render_source": "pptx_libreoffice"
+      },
+      "issues": []
+    },
+    {
+      "run_id": "showcase_en_coffee_editorial",
+      "deck_id": "showcase_en_coffee_editorial",
+      "language": "en",
+      "language_rule_card": "LANG-EN",
+      "delivery_mode": "standalone",
+      "slides_count": 4,
+      "pillars": {
+        "P1_G1_Context_Brief": {
+          "score": 15.0,
+          "max": 15.0
+        },
+        "P2_G2_G3_Storyline_Visual_Plan": {
+          "score": 20.0,
+          "max": 20.0
+        },
+        "P3_G4_Slide_Spec_Audit": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P4_Native_PPTX_and_HTML": {
+          "score": 25.0,
+          "max": 25.0
+        },
+        "P5_QA_Render_Provenance": {
+          "score": 15.0,
+          "max": 15.0
+        }
+      },
+      "total_score": 100.0,
+      "max_score": 100.0,
+      "passed": true,
+      "machine_checks": 1292,
+      "self_attested_flags": [
+        "context_brief: brand_profile.palette.colorblind_safe_verified",
+        "context_brief: g1_gate_audit.G1_1_explanatory_mode",
+        "context_brief: g1_gate_audit.G1_2_stakeholder_decomposition",
+        "context_brief: g1_gate_audit.G1_3_unbundled_primary_action",
+        "context_brief: g1_gate_audit.G1_4_dual_sided_stakes",
+        "context_brief: g1_gate_audit.G1_5_single_sentence_big_idea",
+        "context_brief: g1_gate_audit.G1_6_delivery_and_language_meta",
+        "context_brief: strategic_stakes.zero_generic_buzzwords_verified",
+        "slide_spec: slides[].claim_evidence_contract.numeric_source_traceability_verified",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.compound_word_linebreak_safe",
+        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.zero_text_overlap_or_clipping",
+        "slide_spec: slides[].claim_evidence_contract.strict_claim_match_verified",
+        "slide_spec: slides[].layout_spec.grid_alignment_verified",
+        "slide_spec: slides[].progressive_reveal.standalone_self_sufficient_verified",
+        "slide_spec: slides[].word_jobs.no_triple_headline_repetition_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.active_verb_verified",
+        "slide_spec: slides[].word_jobs.takeaway_title.sentence_case_verified",
+        "storyline: g2_gate_audit.G2_1_analyst_process_pruning",
+        "storyline: g2_gate_audit.G2_2_complete_narrative_arc",
+        "storyline: g2_gate_audit.G2_3_evidence_before_indictment",
+        "storyline: g2_gate_audit.G2_4_horizontal_logic_verified",
+        "storyline: g2_gate_audit.G2_5_actionable_insight_over_narration",
+        "storyline: g2_gate_audit.G2_6_two_pass_compression_and_lang",
+        "storyline: narrative_architecture.evidence_before_indictment_verified"
+      ],
+      "pptx_stats": {
+        "slides_count": 15,
+        "expected_chart_panels": 9,
+        "native_editable_charts_verified": 9,
+        "static_raster_images_count": 0,
+        "spec_digest_fresh": true
+      },
+      "png_stats": {
+        "verified_1920x1080_pngs": 4,
+        "expected_pngs": 4,
+        "render_source": "pptx_powerpoint"
+      },
+      "issues": []
+    }
+  ]
+}

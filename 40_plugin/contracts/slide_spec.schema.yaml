@@ -1,0 +1,2024 @@
+# ==============================================================================
+# Format-Agnostic Slide Specification Schema (30_design/contracts/slide_spec.schema.yaml)
+# ==============================================================================
+# Artifact Path in User Workspace: <user-deck-workspace>/artifacts/slide_spec.yaml
+# Produced By: deck-builder after G3 approval (D-040), from the G3 plan in storyline.md Section 5
+# Consumed By:
+#   - 40_plugin/scripts/pptx_renderer.py (Native editable PowerPoint charts & slides)
+#   - 40_plugin/scripts/html_renderer.py (Interactive HTML deck with Progressive Reveal)
+#   - 40_plugin/skills/deck-reviewer (Adversarial G4 audit against CHK-REV-002)
+#
+# Enforces 100% of CHK-REV-002 (Checks G4.1 through G4.12) & SWD Core Cards:
+#   - 6 Familiar Workhorse Charts (PRIN-VIS-002) & Native Editable Objects (ANTI-VIS-002)
+#   - One-Sided, Two-Sided, Small Multiples, and 1_plus_4_grid Layouts (PAT-DSN-001, PAT-VIS-002, EX-002, EX-003)
+#   - Seven Functional Word Jobs & Zero Triple-Headline Repetition (PRIN-TTL-002, PRIN-TTL-003, G4.1–G4.3, EX-004)
+#   - Subtraction-First Decluttering & Solid vs. Dashed Forecast Lines (PRIN-DSN-002, G4.4)
+#   - Greyscale Baseline, Two-Tier Color Intensity, Shaded Deltas & Color Tie (PRIN-DSN-004, PAT-DSN-002, ANTI-DSN-001, G4.5–G4.6)
+#   - Small Multiples Y-Axis Scale Integrity & Non-Uniform Guardrails (PAT-DSN-003, G4.7)
+#   - Strict Claim-vs-Evidence Alignment & 100% Numeric Traceability (PRIN-AI-003, G4.8–G4.9)
+#   - Rendered PNG Geometry QA, Delivery Mode Pacing & Skeptic Stress-Test (PRIN-PRS-001, PAT-PRS-001, LANG-EN, LANG-VI, G4.10–G4.12)
+# ==============================================================================
+
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "https://data-story-slide-deck.local/schemas/slide_spec.schema.yaml"
+title: "Data Story Slide Deck Slide Specification Contract (slide_spec.yaml)"
+type: object
+required:
+  - schema_version
+  - deck_meta
+  - slides
+  - g4_review_audit
+
+properties:
+  schema_version:
+    type: string
+    const: "1.0"
+
+  # ----------------------------------------------------------------------------
+  # 1. DECK METADATA, BRAND GROUNDING & GREYSCALE BASELINE PALETTE
+  # ----------------------------------------------------------------------------
+  deck_meta:
+    type: object
+    required:
+      - deck_id
+      - context_brief_ref
+      - storyline_ref
+      - workflow_mode
+      - delivery_mode
+      - target_format
+      - deck_language
+      - language_rule_card
+      - aspect_ratio
+      - theme_palette
+    properties:
+      deck_id:
+        type: string
+        description: "Kebab-case identifier for the presentation project."
+      context_brief_ref:
+        type: string
+        default: "artifacts/context_brief.md"
+      storyline_ref:
+        type: string
+        default: "artifacts/storyline.md"
+      workflow_mode:
+        type: string
+        enum: ["greenfield", "makeover"]
+        default: "greenfield"
+        description: "Supports MVP report-to-deck ('greenfield') and post-MVP existing .pptx redesign ('makeover' — D-012)."
+      delivery_mode:
+        type: string
+        enum: ["live", "standalone", "hybrid"]
+        description: "Governs annotation density and Progressive Reveal behavior (PRIN-PRS-001, G4.11)."
+      target_format:
+        type: string
+        enum: ["pptx", "html"]
+        default: "pptx"
+        description: "Selected at Checkpoint G1 (D-008)."
+      deck_language:
+        type: string
+        enum: ["en", "vi", "zh", "es", "pt", "ja", "ko"]
+        description: "Selected at Checkpoint G1 (D-011)."
+      language_rule_card:
+        type: string
+        enum: ["LANG-EN", "LANG-VI"]
+        description: "Active typographic and title-length linting rule card."
+      aspect_ratio:
+        type: string
+        enum: ["16:9", "4:3"]
+        default: "16:9"
+      title_slide:
+        type: object
+        description: "D-075 (mock-up S2). The unnumbered slide that opens the deck: deck title (the purpose or the answer in one line), audience line, meeting date and presenter, from context_brief.md. On by default; `enabled: false` with a `disabled_reason` turns it off. White background, no logo wall (ANTI-DSN-002); outside the key-slide budget (D-063); renders as `renders/slide_00.png`."
+        properties:
+          enabled: { type: boolean, default: true }
+          disabled_reason: { type: string }
+          title: { type: string, description: "≤ 15 English words or ≤ 25 Vietnamese syllables." }
+          audience_line: { type: string, description: "Who the deck is for, e.g. 'Decision for the Operating Committee'." }
+          date: { type: string, description: "Meeting or issue date as written for the audience." }
+          presenter: { type: string, description: "Presenter or team." }
+          finish:
+            type: object
+            additionalProperties: false
+            description: "D-091: layout adjustments written only by deck-finisher; never words, numbers, emphasis or layout type (the content digest guards them). Lengths on the 0.05 in base unit."
+            properties:
+              title_break_after: { type: integer, minimum: 1, description: "Break the deck title after this word; the words are unchanged." }
+      footer_label:
+        type: string
+        description: "D-075. Short deck name (≤ 5 words or ≤ 8 Vietnamese syllables) printed before the slide number, bottom right, in `standalone` and `hybrid` decks; ignored in `live`. Every main slide except section dividers shows its number; appendix slides show 'Appendix n'."
+
+      # Design layer (D-078-D-080): how the deck looks, never what it says or emphasises.
+      # `editorial` for new decks (Aptos, ink and muted text, five type roles; contracts/design_tokens.yaml);
+      # absent or `classic` = the look before D-078 (Arial, older size table), so earlier specs render unchanged.
+      design_system:
+        type: string
+        enum: [editorial, classic]
+      # Brand typography locked at G1 (PRIN-DSN-003, PRIN-DSN-009); defaults come from the design system
+      # (editorial: Aptos / Aptos Display; classic: Arial)
+      typography:
+        type: object
+        properties:
+          # Labels and body text: plain sans-serif, normal width and weight, lining tabular figures
+          font_family: { type: string }
+          # Optional face for the takeaway title only (e.g., a brand serif); falls back to font_family (D-029)
+          title_font_family: { type: string }
+
+      # Tested colour kit from contracts/colour_kits.yaml (D-030), or 'brand' for mapped brand colours.
+      # With a kit, theme_palette and every chromatic data mark must use that kit's values for the delivery mode.
+      colour_kit:
+        type: string
+        enum: [orange, blue, plum, amber, indigo, brand]
+
+      # Enforces PRIN-DSN-003, PRIN-DSN-004, PAT-DSN-002, ANTI-DSN-001 (Checks G4.5 & G4.6)
+      theme_palette:
+        type: object
+        required:
+          - background_hex
+          - text_primary_hex
+          - text_muted_hex
+          - greyscale_baseline
+          - two_tier_accent
+          - colorblind_safe_verified
+        properties:
+          background_hex:
+            type: string
+            pattern: "^#[0-9A-Fa-f]{6}$"
+            default: "#FFFFFF"
+          text_primary_hex:
+            type: string
+            pattern: "^#[0-9A-Fa-f]{6}$"
+            default: "#1F2937"
+          text_muted_hex:
+            type: string
+            pattern: "^#[0-9A-Fa-f]{6}$"
+            default: "#6B7280"
+          panel_highlight_bg_hex:
+            type: string
+            pattern: "^#[0-9A-Fa-f]{6}$"
+            default: "#F3F4F6"
+            description: "Subtle light-grey background shading to spotlight a focal Small Multiples panel (EX-001)."
+
+          greyscale_baseline:
+            type: object
+            required:
+              - context_series_hex
+              - context_line_width_pt
+              - axis_and_grid_hex
+              - zero_competing_dark_series_verified
+            properties:
+              context_series_hex:
+                type: string
+                pattern: "^#[0-9A-Fa-f]{6}$"
+                default: "#9E9E9E"
+                description: "Muted neutral grey applied to all non-focal series/bars (PRIN-DSN-004, G4.5). Must meet the PRIN-DSN-007 floor for the delivery mode: #9E9E9E standalone, #8C8C8C live/hybrid on white."
+              context_line_width_pt:
+                type: number
+                default: 1.5
+                maximum: 2.0
+              axis_and_grid_hex:
+                type: string
+                pattern: "^#[0-9A-Fa-f]{6}$"
+                default: "#D1D5DB"
+                description: "Axis and zero lines."
+              gridline_hex:
+                type: string
+                pattern: "^#[0-9A-Fa-f]{6}$"
+                default: "#E5E7EB"
+                description: "D-056 P10: value gridlines (0.5 pt), lighter than the axis so they do not compete with grey context marks."
+              zero_competing_dark_series_verified:
+                type: boolean
+                const: true
+                description: "G4.5 Gate: Forbids dark navy/black secondary lines that compete with the focal series (ANTI-DSN-001)."
+
+          two_tier_accent:
+            type: object
+            required:
+              - primary_focal_hex
+              - primary_focal_line_width_pt
+              - secondary_tint_hex
+              - shaded_delta_fill_hex
+              - single_hue_hierarchy_verified
+            properties:
+              primary_focal_hex:
+                type: string
+                pattern: "^#[0-9A-Fa-f]{6}$"
+                description: "Tier 1 saturated accessible accent color for primary focal series/bars (the kit's `focal` value from colour_kits.yaml, e.g., '#D95F02' Orange or '#2B5C8F' Blue)."
+              primary_focal_line_width_pt:
+                type: number
+                default: 3.25
+                minimum: 2.75
+              secondary_tint_hex:
+                type: string
+                pattern: "^#[0-9A-Fa-f]{6}$"
+                description: "Tier 2 lighter tint/shade of the same hue for secondary comparison group (PAT-DSN-002, EX-003 Part A)."
+              shaded_delta_fill_hex:
+                type: string
+                pattern: "^#[0-9A-Fa-f]{6}$"
+                description: "Soft translucent fill for shaded crossover/gap deltas between lines (PAT-DSN-002, EX-002)."
+              single_hue_hierarchy_verified:
+                type: boolean
+                const: true
+          colorblind_safe_verified:
+            type: boolean
+            const: true
+            description: "G4.6 Gate: Explicitly bans red-green color pairings."
+
+  # ----------------------------------------------------------------------------
+  # 2. MAIN SLIDE SEQUENCE (slides[])
+  # ----------------------------------------------------------------------------
+  slides:
+    type: array
+    minItems: 1
+    items:
+      $ref: "#/$defs/Slide"
+
+  # ----------------------------------------------------------------------------
+  # 3. OPTIONAL APPENDIX SLIDES (appendix_slides[])
+  # ----------------------------------------------------------------------------
+  appendix_slides:
+    type: array
+    default: []
+    items:
+      $ref: "#/$defs/Slide"
+
+  # ----------------------------------------------------------------------------
+  # 4. CHECKPOINT G4 ADVERSARIAL AUDIT & SKEPTIC STRESS-TEST (CHK-REV-002)
+  # ----------------------------------------------------------------------------
+  g4_review_audit:
+    type: object
+    required:
+      - status
+      - checklist_results
+      - skeptic_stress_test_qa
+    properties:
+      status:
+        type: string
+        enum: ["pending", "failed_needs_repair", "agent_review_complete", "passed"]
+        description: "Agent review layer only (D-035). 'passed' is a deprecated alias of 'agent_review_complete' and never means owner acceptance."
+      machine_checks:
+        type: object
+        description: "D-035 layer 1: generated results of validate_spec.py, pptx_qa.py and numeric traceability. Free-form; never edited by hand."
+      finish:
+        type: object
+        description: "D-091: written by deck-finisher before its pass. `content_digest` is spec_digest.content_digest of the spec; validate_spec.py reports an error when the content no longer matches it."
+        properties:
+          content_digest: { type: string }
+      human_g4:
+        type: object
+        description: "D-035 layer 3: the owner's G4 decision. Only explicit owner words in chat set 'accepted' or 'changes_requested'."
+        required: [decision]
+        properties:
+          decision: { type: string, enum: ["pending", "accepted", "changes_requested"] }
+          approved_by: { type: string }
+          approved_at: { type: string }
+          owner_words: { type: string, description: "The owner's words that carried the decision, quoted." }
+      source_reread:
+        type: array
+        description: "D-040 (CHK-REV-002 G4.8): the reviewer re-opened each chart slide's source and checked sign, significance, population and estimand against the title. Expected when the brief sets study_design."
+        items:
+          type: object
+          required: [slide_number, title_claim, source_checked, sign_ok, significance_ok, population_ok]
+          properties:
+            slide_number: { type: integer, minimum: 1 }
+            title_claim: { type: string }
+            source_checked: { type: string, description: "Table, model and cells re-read." }
+            sign_ok: { type: boolean }
+            significance_ok: { type: boolean }
+            population_ok: { type: boolean }
+            title_quantity: { type: string, description: "D-043: when the title states a share or percentage, the number it implies and the source value it was checked against (e.g. 'two-fifths = 40% vs 28.6% plotted: FAIL')." }
+            note: { type: string }
+      checklist_results:
+        type: object
+        required:
+          - G4_1_no_triple_headline_repetition
+          - G4_2_dual_title_upper_left_z_anchor
+          - G4_3_distinct_seven_word_jobs
+          - G4_4_subtraction_first_decluttering
+          - G4_5_greyscale_baseline_no_competing_dark
+          - G4_6_accessible_palette_and_color_tie
+          - G4_7_small_multiples_scale_integrity
+          - G4_8_strict_claim_vs_evidence_match
+          - G4_9_hundred_percent_numeric_traceability
+          - G4_10_rendered_png_geometry_inspection
+          - G4_11_delivery_mode_fidelity
+          - G4_12_stakeholder_stress_test_complete
+        properties:
+          G4_1_no_triple_headline_repetition: { type: string, enum: ["pass", "fail"] }
+          G4_2_dual_title_upper_left_z_anchor: { type: string, enum: ["pass", "fail"] }
+          G4_3_distinct_seven_word_jobs: { type: string, enum: ["pass", "fail"] }
+          G4_4_subtraction_first_decluttering: { type: string, enum: ["pass", "fail"] }
+          G4_5_greyscale_baseline_no_competing_dark: { type: string, enum: ["pass", "fail"] }
+          G4_6_accessible_palette_and_color_tie: { type: string, enum: ["pass", "fail"] }
+          G4_7_small_multiples_scale_integrity: { type: string, enum: ["pass", "fail"] }
+          G4_8_strict_claim_vs_evidence_match: { type: string, enum: ["pass", "fail"] }
+          G4_9_hundred_percent_numeric_traceability: { type: string, enum: ["pass", "fail"] }
+          G4_10_rendered_png_geometry_inspection: { type: string, enum: ["pass", "fail", "pending"], description: "`pending` only while g4_review_audit.status is pending (before the first render is inspected, D-040)." }
+          G4_11_delivery_mode_fidelity: { type: string, enum: ["pass", "fail"] }
+          G4_12_stakeholder_stress_test_complete: { type: string, enum: ["pass", "fail"], description: "Anticipated questions answered in the report or notes (D-035); key kept for compatibility." }
+          G4_13_prominence_matches_importance: { type: string, enum: ["pass", "fail", "needs_owner_judgement"] }
+          G4_14_audience_relevance: { type: string, enum: ["pass", "fail", "needs_owner_judgement"] }
+          G4_15_neutral_tone: { type: string, enum: ["pass", "fail", "needs_owner_judgement"] }
+
+      skeptic_stress_test_qa:
+        type: array
+        minItems: 2
+        description: "G4.12 Anticipated questions (D-035): 2–3 likely questions from the actual audience (mapped skeptics when they exist) with evidence-backed answers. They live in the report or notes and never justify new slides; skeptic_name_or_role may name any audience role."
+        items:
+          type: object
+          required:
+            - skeptic_name_or_role
+            - predicted_question
+            - evidence_backed_response
+            - supporting_slide_numbers
+          properties:
+            skeptic_name_or_role: { type: string }
+            predicted_question: { type: string }
+            evidence_backed_response: { type: string }
+            supporting_slide_numbers:
+              type: array
+              items: { type: integer }
+
+# ==============================================================================
+# DEFINITIONS ($defs)
+# ==============================================================================
+$defs:
+
+  # ----------------------------------------------------------------------------
+  # SLIDE OBJECT DEFINITION
+  # ----------------------------------------------------------------------------
+  Slide:
+    type: object
+    required:
+      - slide_id
+      - slide_number
+      - arc_stage
+      - analytical_question
+      - layout_spec
+      - word_jobs
+      - claim_evidence_contract
+    properties:
+      slide_id:
+        type: string
+        pattern: "^slide_[0-9]{2}$"
+      slide_number:
+        type: integer
+        minimum: 1
+      arc_stage:
+        type: string
+        enum: ["summary", "plot", "rising_action", "climax", "falling_action", "resolution", "twist", "ending", "appendix"]
+        description: "Maps to Five-Part Narrative Arc or three-part Story Mountain (PRIN-STR-003, G2.2). `summary` marks the executive-summary slide only (D-075, PAT-STR-004); it sits before the arc."
+      analytical_question:
+        type: string
+        description: "The single analytical question answered by this slide (PRIN-VIS-003)."
+      target_stakeholder:
+        type: string
+        description: "Decision-maker, ally, or skeptic from context_brief.md addressed by this slide."
+      audience_need:
+        type: string
+        description: "Required for appendix slides (PRIN-STR-002, D-035): the audience request, dependent decision, or post-meeting reference this slide serves. 'Someone might ask' is not a need."
+
+      # ------------------------------------------------------------------------
+      # A. LAYOUT & Z-PATTERN GRID GEOMETRY (PRIN-DSN-001, PRIN-DSN-003, PAT-DSN-001, PAT-VIS-002)
+      # ------------------------------------------------------------------------
+      layout_spec:
+        type: object
+        required:
+          - layout_type
+          - upper_left_z_anchor
+          - grid_alignment_verified
+        properties:
+          layout_type:
+            type: string
+            enum:
+              - "one_sided_left_text"       # One-Sided Layout: concise callout on left, large primary visual on right (PAT-DSN-001)
+              - "one_sided_right_text"      # One-Sided Layout: large primary visual on left, concise callout on right (PAT-DSN-001)
+              - "two_sided_comparison"      # Two-Sided Layout: side-by-side scenario or policy comparison (PAT-DSN-001)
+              - "two_sided_paired_views"    # Two-Sided Layout: two complementary charts answering paired questions (EX-003 Part B)
+              - "small_multiples_grid"      # Grid of compact panels sharing visual grammar (1x3, 2x2, 2x3 — PAT-VIS-002, EX-001)
+              - "1_plus_4_grid"             # Hierarchical Two-Sided: 1 large Total chart on left + 2x2 regional Small Multiples on right (PAT-VIS-002, EX-002)
+              - "statement_or_transition"   # Non-chart conceptual / scope / resolution slide
+              - "data_table"                # D-055 / PAT-VIS-006: native table for look-up; body is `table_spec`, cards go to the bottom strip
+              - "diagram"                   # D-069 / PAT-VIS-009: native-shape diagram; body is `diagram_spec`, cards go to the bottom strip
+              - "section_divider"           # D-063: section break on the dark key background: large `section_number`, title, one-line `section_question`
+              - "executive_summary"         # D-075 / PAT-STR-004: first main-deck slide; numbered rows from `word_jobs.summary_points`, no chart or callout
+              - "evidence_columns"          # D-075 / PAT-DSN-001: decision slide; one `recommendation_line`, then 2-3 columns of criterion heading, one-sentence finding and a small chart
+          upper_left_z_anchor:
+            type: boolean
+            const: true
+            description: "G4.2 Gate: Takeaway Title is anchored at upper-left to initiate Z-pattern scanning (PRIN-DSN-001)."
+          grid_alignment_verified:
+            type: boolean
+            const: true
+            description: "G4.10 Gate: Crisp top/left bounding-box alignment across titles, charts, and callouts (PRIN-DSN-003)."
+          emphasis:
+            type: string
+            enum: ["standard", "key", "spotlight"]
+            description: "D-064: `spotlight` (once per deck, big-number slides only) fills the slide with the kit focal colour and white text. D-063: `key` slides use the dark key background. Section dividers are always key; the closing decision statement slide of the main deck defaults to key; any other key slide needs `emphasis_reason`. Only non-chart slides can be key."
+          emphasis_reason:
+            type: string
+            description: "D-063: why a slide other than a divider or the closing decision slide is a key slide (at most two such slides per deck)."
+          section_number:
+            type: integer
+            minimum: 1
+            description: "D-063: number of the section a `section_divider` opens, shown large in the lifted tint."
+
+      # ------------------------------------------------------------------------
+      # B. SEVEN FUNCTIONAL WORD JOBS & COLOR TIE (PRIN-TTL-002..003, G4.1–G4.3, G4.6, EX-004)
+      # ------------------------------------------------------------------------
+      word_jobs:
+        type: object
+        required:
+          - takeaway_title
+          - no_triple_headline_repetition_verified
+          - source_footnote
+        properties:
+          # Job 1: Takeaway Title (Top-left headline answering 'So what?')
+          takeaway_title:
+            type: object
+            required:
+              - text
+              - token_count
+              - sentence_case_verified
+              - active_verb_verified
+              - color_tie_spans
+            properties:
+              text:
+                type: string
+                description: "Point-of-view sentence <=12 words (LANG-EN) or <=20 syllables (LANG-VI)."
+              token_count:
+                type: integer
+                maximum: 20
+              sentence_case_verified:
+                type: boolean
+                const: true
+              active_verb_verified:
+                type: boolean
+                const: true
+              color_tie_spans:
+                type: array
+                description: "G4.6 Color Tie: Exact substrings in the Takeaway Title colored to match the focal data series. Spans inherit the title weight; omit `bold` (PRIN-DSN-008, D-035)."
+                items:
+                  $ref: "#/$defs/ColorTieSpan"
+              mixed_weight_reason:
+                type: string
+                description: "Only when a title span deliberately sets `bold: false`: why mixed weight is wanted (D-035). Without it, a regular-weight span in a title is an error."
+
+          # G4.1 Gate: Bans stacking top title + repeating subtitle + repeating bottom callout box
+          no_triple_headline_repetition_verified:
+            type: boolean
+            const: true
+
+          # Job 2: Descriptive Chart Title (Neutral metric + dimension + time period directly above chart)
+          chart_title:
+            type: string
+            description: "Neutral label above the primary chart (or per panel in visual_spec.panels[].panel_chart_title)."
+
+          section_question:
+            type: string
+            description: "D-063: on a `section_divider`, the one question the section answers (one line: <= 15 English words or <= 25 Vietnamese syllables)."
+
+          # Job 3: Axis Titles (Explicit units and dimensions)
+          axis_titles:
+            type: object
+            properties:
+              x_axis_title: { type: string }
+              y_axis_title: { type: string }
+
+          # Job 4: Direct Data Labels (Replaces detached legends — G4.3)
+          direct_labels_mode:
+            type: string
+            enum: ["series_endpoints", "both_endpoints", "bar_values", "threshold_and_peaks", "min_max_endpoints", "none_statement_slide"]
+            default: "series_endpoints"
+
+          # Job 5: On-Chart Annotations (Explains spikes, troughs, crossovers, or thresholds on canvas)
+          annotations:
+            type: array
+            default: []
+            items:
+              type: object
+              required:
+                - text
+                - target_panel_id
+                - anchor_data_point
+              properties:
+                text: { type: string }
+                target_panel_id: { type: string }
+                anchor_data_point:
+                  type: string
+                  description: "A category label or series name of the target panel, or '-' for a note that marks no point. D-073 / PAT-VIS-012: a real anchor is checked against the panel."
+                anchor_end_data_point:
+                  type: string
+                  description: "D-073 / PAT-VIS-012: optional end of a span (a period or run of categories) that starts at `anchor_data_point`; a later category of the same panel. The note then marks the whole span."
+                color_tie_spans:
+                  type: array
+                  items:
+                    $ref: "#/$defs/ColorTieSpan"
+
+          # Job 6: Action / Recommendation Callout (Decision implication or scheduling rule; NEVER repeats takeaway_title)
+          recommendation_callout:
+            type: object
+            properties:
+              text:
+                type: string
+                description: "Actionable guidance or quantitative breakdown placed in the side zone."
+              distinct_from_takeaway_title:
+                type: boolean
+                const: true
+              color_tie_spans:
+                type: array
+                items:
+                  $ref: "#/$defs/ColorTieSpan"
+              kind:
+                type: string
+                enum: ["action", "implication"]
+                default: "action"
+                description: "D-035: 'action' = recommended next step (accent card); 'implication' = what the finding means for an audience with no ask (neutral label, annotation styling). Never use either for a reading note."
+              header_label:
+                type: string
+                description: "Optional label above the callout. Defaults: 'KEY IMPLICATION & ACTION' / 'Khuyến nghị trọng tâm' (action, chart slides), 'What this means' / 'Ý nghĩa' (implication), 'PRIMARY ACTION REQUESTED TODAY' on statement slides."
+              evidence_slides:
+                type: array
+                items: { type: integer, minimum: 1 }
+                description: "D-040: slide numbers whose evidence supports this implication or action. Expected on the closing slide when the brief's objective is shared_understanding."
+
+          # D-075 / PAT-DSN-001: the one line above the columns of an `evidence_columns` slide
+          recommendation_line:
+            type: object
+            required: [text]
+            description: "The decision the columns support, in one line (≤ 25 English words or ≤ 40 Vietnamese syllables). Names the concrete decision and differs from the takeaway title. Only on `evidence_columns`, which carries no `recommendation_callout`."
+            properties:
+              text:
+                type: string
+              color_tie_spans:
+                type: array
+                items:
+                  $ref: "#/$defs/ColorTieSpan"
+
+          # D-075 / PAT-STR-004: the points of an `executive_summary` slide, one per section, primary action last
+          summary_points:
+            type: array
+            minItems: 2
+            maxItems: 4
+            items:
+              type: object
+              required: [lead, evidence_slides]
+              properties:
+                lead:
+                  type: string
+                  description: "Bold lead sentence stating the section's claim (≤ 15 English words or ≤ 25 Vietnamese syllables)."
+                detail:
+                  type: string
+                  description: "At most one supporting sentence (≤ 25 words or ≤ 40 syllables)."
+                evidence_slides:
+                  type: array
+                  items: { type: integer, minimum: 1 }
+                  description: "`slide_number`s of the later main-deck slides that prove the point; drawn at the right of the row."
+                color_tie_spans:
+                  type: array
+                  items:
+                    $ref: "#/$defs/ColorTieSpan"
+
+          # Statement slides: optional implementation step cards under the hero action card (P7.0 — all copy lives in the spec, never in renderers)
+          implementation_steps:
+            type: array
+            maxItems: 4
+            items:
+              type: object
+              required: [title]
+              properties:
+                title: { type: string, description: "Step name; with `step_style: big_number`, the number as shown (<= 8 characters)." }
+                description: { type: string, description: "Step text; with `step_style: big_number`, the caption (<= 12 English words or <= 20 Vietnamese syllables)." }
+                source_cell_ref: { type: string, description: "D-064: required on big-number tiles; the number traces to `inputs/` like a data point." }
+                focal: { type: boolean, description: "D-064: the one tile whose number takes the focal colour (at most one)." }
+          step_style:
+            type: string
+            enum: ["cards", "big_number"]
+            default: "cards"
+            description: "D-064: `big_number` draws `implementation_steps` as big-number tiles (at most three; one tile sits beside the main card)."
+          side_image:
+            type: object
+            required: [path, alt_text, referenced_in]
+            description: "D-064: optional content image in the last column beside the main-sentence card; never decoration (ANTI-DSN-002)."
+            properties:
+              path: { type: string, description: "Image file inside `inputs/`." }
+              alt_text: { type: string }
+              referenced_in: { type: string, enum: ["slide_text", "speaker_notes"] }
+
+          # Job 7: Source / Footnote (Bottom-left provenance, sample size n, time range — G4.9)
+          source_footnote:
+            type: string
+            description: "Quiet provenance at bottom-left citing exact dataset/table, sample size (n), and date range."
+
+          # Job 7 (optional part): Reading note (PRIN-TTL-003, D-035)
+          reading_note:
+            type: string
+            description: "One short sentence the reader needs to read the chart correctly (unit, base, coverage). Rendered as 'Note:' / 'Lưu ý:' directly above the source in footnote styling, never as a card. Max 25 words (EN) / 35 syllables (VI). Material limitations go to the title, chart title, or an annotation."
+
+      # ------------------------------------------------------------------------
+      # C. VISUAL & NATIVE CHART SPECIFICATION (PRIN-VIS-002, PAT-VIS-001..002, PAT-DSN-002..003, G4.4–G4.7, G4.10)
+      # ------------------------------------------------------------------------
+      visual_spec:
+        type: object
+        description: "Required on chart layouts; omit it entirely on statement_or_transition and data_table slides (an empty panel list fails this schema)."
+        required:
+          - render_mode
+          - g3_tradeoff_record
+          - declutter_rules
+          - scale_guardrails
+          - panels
+        properties:
+          render_mode:
+            type: string
+            const: "native_editable_chart"
+            description: "G4.10 & ANTI-VIS-002 Gate: All charts in .pptx MUST be native editable DrawingML/Chart objects, never static PNG/JPG images."
+
+          g3_tradeoff_record:
+            type: object
+            required:
+              - selected_option_summary
+              - shows
+              - obscures
+              - rejected_alternatives
+            properties:
+              selected_option_summary: { type: string }
+              shows: { type: string }
+              obscures: { type: string }
+              rejected_alternatives:
+                type: array
+                items: { type: string }
+
+          # G4.4 Subtraction-First Decluttering Gate (PRIN-DSN-002)
+          declutter_rules:
+            type: object
+            required:
+              - outer_chart_border
+              - minor_gridlines
+              - axis_tick_marks
+              - detached_legend
+              - attached_data_table
+              - strip_trailing_decimal_zeros
+              - actual_vs_forecast_line_encoding
+            properties:
+              outer_chart_border: { type: boolean, const: false }
+              minor_gridlines: { type: boolean, const: false }
+              axis_tick_marks: { type: boolean, const: false }
+              detached_legend:
+                type: boolean
+                const: false
+                description: "G4.3 Gate: Use direct data labels on lines/bars instead of a detached legend. The renderer adds a native legend only above horizontal stacks with several series, whose segments direct labels cannot name (D-060)."
+              attached_data_table:
+                type: boolean
+                const: false
+                description: "ANTI-VIS-001 Gate: Never attach a multi-row spreadsheet table underneath a chart."
+              strip_trailing_decimal_zeros:
+                type: boolean
+                const: true
+                description: "G4.4 Gate: Format axes as '$5M' or '40%', never '$5.00M' or '40.00%'."
+              actual_vs_forecast_line_encoding:
+                type: string
+                const: "solid_actual_dashed_forecast"
+                description: "PRIN-DSN-002 & EX-002: Solid line for historical actuals, dashed line for forecast/target."
+
+          # G4.7 Small Multiples Scale Integrity & Non-Uniform Guardrails (PAT-DSN-003, EX-001, EX-002)
+          scale_guardrails:
+            type: object
+            required:
+              - shared_y_axis
+            properties:
+              shared_y_axis:
+                type: boolean
+                default: true
+                description: "Default true across all panels in small_multiples_grid (EX-001)."
+              non_uniform_scale_justification:
+                type: string
+                description: "Required ONLY when shared_y_axis is false (e.g., subgroup magnitude differs by >4x such as Americas vs. Middle East & Africa in EX-002)."
+              non_uniform_axis_label_mode:
+                type: string
+                enum: ["standard", "min_max_only"]
+                description: "MUST be 'min_max_only' ([0, Max]) when shared_y_axis is false (PAT-DSN-003, G4.7)."
+              require_direct_endpoint_labels:
+                type: boolean
+                description: "MUST be true when shared_y_axis is false so viewers never misread visual slopes across different scales."
+
+          # Supports Single Chart (1 panel), Paired Views (2 panels), Small Multiples (1x3 / 2x2), and 1_plus_4_grid (5 panels)
+          panels:
+            type: array
+            minItems: 1
+            maxItems: 6
+            items:
+              $ref: "#/$defs/ChartPanel"
+
+      # ------------------------------------------------------------------------
+      # C2. NATIVE TABLE SPECIFICATION (D-055, PAT-VIS-006) — required on data_table slides, forbidden elsewhere
+      # ------------------------------------------------------------------------
+      table_spec:
+        $ref: "#/$defs/TableSpec"
+
+      # ------------------------------------------------------------------------
+      # C3. NATIVE DIAGRAM SPECIFICATION (D-069, PAT-VIS-009) — required on diagram slides, forbidden elsewhere
+      # ------------------------------------------------------------------------
+      diagram_spec:
+        $ref: "#/$defs/DiagramSpec"
+
+      # ------------------------------------------------------------------------
+      # D. DELIVERY MODE & PROGRESSIVE REVEAL PACING (PRIN-PRS-001, PAT-PRS-001, G4.11)
+      # ------------------------------------------------------------------------
+      progressive_reveal:
+        type: object
+        required:
+          - enabled
+          - standalone_self_sufficient_verified
+          - reveal_steps
+        properties:
+          enabled:
+            type: boolean
+            description: "True when delivery_mode is 'live' and the slide contains multi-series or multi-panel comparisons."
+          standalone_self_sufficient_verified:
+            type: boolean
+            description: "G4.11 Gate: When delivery_mode is 'standalone' or 'hybrid', slide annotations are 100% self-explanatory without a speaker."
+          reveal_steps:
+            type: array
+            description: "In .pptx, compiles into sequential built slides; in .html, compiles into step-by-step interactive fragments."
+            items:
+              type: object
+              required:
+                - step_number
+                - visible_panel_ids
+                - visible_series_roles
+                - show_annotations
+                - show_recommendation_callout
+                - speaker_notes
+              properties:
+                step_number: { type: integer, minimum: 1 }
+                visible_panel_ids:
+                  type: array
+                  items: { type: string }
+                visible_item_ids:
+                  type: array
+                  items: { type: string }
+                  description: "D-069: on a `diagram` slide, the step, item or cell ids drawn in this step (build node by node)."
+                visible_series_roles:
+                  type: array
+                  items:
+                    type: string
+                    enum: ["context_greyscale", "focal_secondary_tier2", "focal_primary_tier1"]
+                show_annotations: { type: boolean }
+                show_recommendation_callout: { type: boolean }
+                speaker_notes:
+                  type: string
+                  description: "Spoken narrative script for the presenter during this beat, in the deck language. No file or cell references, raw field labels, or unformatted numbers; traceability lives in data_points[].source_cell_ref (D-035)."
+
+      finish:
+        type: object
+        additionalProperties: false
+        description: "D-091: layout adjustments written only by deck-finisher; never words, numbers, emphasis or layout type (the content digest guards them). Lengths on the 0.05 in base unit."
+        properties:
+          title_break_after: { type: integer, minimum: 1, description: "Break the takeaway title after this word; the words are unchanged." }
+          diagram_height_in: { type: number, minimum: 1.0, description: "`diagram` slides: height of the diagram, drawn at the top of its zone." }
+          chart_height_in: { type: number, minimum: 1.0, description: "One chart on a `one_sided_*` slide: height of the chart, top-aligned in its zone." }
+          side_card_cols: { type: integer, enum: [3, 4], description: "`one_sided_*` slides: the side card spans 3 or 4 of the 12 grid columns; the chart takes the rest." }
+      # ------------------------------------------------------------------------
+      # E. CLAIM-VS-EVIDENCE & NUMERIC TRACEABILITY CONTRACT (PRIN-AI-003, G4.8, G4.9, G4.10)
+      # ------------------------------------------------------------------------
+      claim_evidence_contract:
+        type: object
+        required:
+          - claimed_construct_in_title
+          - plotted_metric_on_chart
+          - strict_claim_match_verified
+          - numeric_source_traceability_verified
+          - rendered_png_qa
+        properties:
+          claimed_construct_in_title:
+            type: string
+            description: "Exact noun + verb claimed in word_jobs.takeaway_title (e.g., 'competency scores of new-graduate nurses')."
+          plotted_metric_on_chart:
+            type: string
+            description: "Exact metric plotted on the y-axis/bars (e.g., 'Mean performance rating on 1.0–5.0 scale')."
+          strict_claim_match_verified:
+            type: boolean
+            const: true
+            description: "G4.8 Gate: Prevents causal leaps where the title claims an unmeasured construct (e.g., claiming 'mentoring gap' when plotting 'performance rating' — EX-001)."
+          numeric_source_traceability_verified:
+            type: boolean
+            const: true
+            description: "G4.9 Gate: 100% of data points match inputs/ with zero hallucinated benchmarks."
+          population:
+            type: string
+            description: "D-040: who the plotted estimates describe (e.g. 'adults who rent or hold a mortgage'). The title may not name a wider group. Expected when the brief sets study_design."
+          estimand:
+            type: string
+            description: "D-040: what each plotted number is, with its model and reference group (e.g. 'log-odds vs mortgagors, Model 3'; 'AME in percentage points vs income Q3')."
+          comparison_valid_reason:
+            type: string
+            description: "D-040: why estimates compared on this slide are comparable (same model and scale, or a formal test of the difference). Needed when they come from different models, columns or reference groups."
+          rendered_png_qa:
+            type: object
+            required:
+              - rendered_image_path
+              - zero_text_overlap_or_clipping
+              - compound_word_linebreak_safe
+            properties:
+              rendered_image_path:
+                type: string
+                description: "Path to rendered slide image (e.g., 'renders/slide_06.png') inspected by deck-reviewer."
+              zero_text_overlap_or_clipping:
+                type: boolean
+                description: "Set true only after inspecting the render. May stay false before the first render; must be true once g4_review_audit.status is agent_review_complete (validator)."
+              compound_word_linebreak_safe:
+                type: boolean
+                description: "G4.10 & LANG-VI Gate: no Vietnamese two-syllable compound word (từ ghép) is split across line breaks. Same lifecycle as zero_text_overlap_or_clipping: false allowed before the first render, required true once the agent review is complete."
+
+  # ----------------------------------------------------------------------------
+  # CHART PANEL DEFINITION (6 Familiar Workhorse Charts + Shaded Deltas)
+  # ----------------------------------------------------------------------------
+  ChartPanel:
+    type: object
+    required:
+      - panel_id
+      - panel_role
+      - chart_family
+      - panel_chart_title
+      - x_axis
+      - y_axis
+      - series
+    properties:
+      panel_id:
+        type: string
+      panel_role:
+        type: string
+        enum:
+          - "primary_single"        # Standard single chart in One-Sided Layout
+          - "paired_left"           # Left chart in Two-Sided Paired Views (EX-003 Part B)
+          - "paired_right"          # Right chart in Two-Sided Paired Views (EX-003 Part B)
+          - "hero_total_left"       # Large left Total chart in 1_plus_4_grid (EX-002)
+          - "small_multiple_cell"   # Individual panel in small_multiples_grid or right-hand 2x2 of 1_plus_4_grid
+          - "evidence_column"       # D-075: one of the 2-3 criterion columns of an evidence_columns slide
+      grid_position:
+        type: object
+        properties:
+          row: { type: integer, minimum: 1 }
+          col: { type: integer, minimum: 1 }
+      is_focal_panel_shaded:
+        type: boolean
+        default: false
+        description: "If true, fills panel background with panel_highlight_bg_hex to draw the eye (EX-001 Slide 6)."
+
+      # Enforces PRIN-VIS-005: the job colour does in this panel (recorded at G3)
+      colour_scale:
+        type: string
+        enum: ["emphasis", "categorical", "sequential", "diverging"]
+        default: "emphasis"
+        description: "emphasis = greyscale + accent (SWD default); categorical = <= 2 hue families for equally important categories; sequential = shades of one hue in order; diverging = two hues around a meaningful midpoint."
+      colour_midpoint:
+        type: object
+        required: [value, meaning]
+        properties:
+          value: { type: number }
+          meaning: { type: string, description: "Why the midpoint matters: zero, 50 %, target, average, threshold, neutral answer." }
+        description: "Required when colour_scale is 'diverging' (PRIN-VIS-005)."
+
+      # Enforces PRIN-VIS-002: Default to the Six Familiar Workhorse Charts
+      chart_family:
+        type: string
+        enum:
+          - "line_chart"            # Workhorse 1: Continuous trends over time (EX-002, EX-004)
+          - "vertical_bar_chart"    # Workhorse 2: Discrete cohort/time comparisons
+          - "horizontal_bar_chart"  # Workhorse 3: Ranking / long category names / YoY brand change (EX-003 Part A)
+          - "stacked_bar_chart"     # Workhorse 4: Part-to-whole with <=2 focal segments (never 4D stacked — ANTI-VIS-001); counts, 100 % shares or diverging answer scales (D-057)
+          - "slopegraph"            # Workhorse 5: Two-point before/after rate of change (EX-001 Slides 6–7, EX-003 Part B)
+          - "dot_plot"              # Workhorse 6: Distribution or multi-category spread without zero-baseline bar bulk
+          - "dot_whisker_chart"     # D-040: model estimates (AMEs, coefficients, predicted probabilities) as dots with CI whiskers around a reference line
+          - "scatter_plot"          # D-065: relationship between two measures; points carry `x_value`; sections by `reference_lines` and `section_labels`
+          - "waterfall_chart"       # D-067: a start value, signed changes and an end value (or the net of the changes); one series, `step_type` on each point
+          - "strip_plot"            # D-086: one item's place among many; rows are measures on one shared value axis, one dot per item, the focal item in the accent
+
+      # D-056 / PAT-VIS-005: dot-plot options (dot_plot panels; orientation also on stacked_bar_chart, D-057)
+      orientation:
+        type: string
+        enum: ["vertical", "horizontal"]
+        default: "vertical"
+        description: "dot_plot and stacked_bar_chart only. horizontal: categories as rows (top to bottom in x_axis.categories order), values along the bottom; use for long category names (PAT-DSN-005) and for diverging stacks."
+      # D-057 / PAT-VIS-004: stacked-bar options
+      stack_mode:
+        type: string
+        enum: ["count", "percent", "diverging"]
+        default: "count"
+        description: "stacked_bar_chart only. count: values add up to the total; percent: native 100 % stack, values are shares in percent that sum to 100 per category; diverging: every series sets diverging_side, listed from the most negative answer to the most positive; negative answers run left of (below) zero, the neutral answer is split across zero, and the axis is symmetric and shows no minus signs (y_axis min/max are ignored). Diverging stacks need colour_scale: diverging with a colour_midpoint."
+      dot_style:
+        type: string
+        enum: ["single", "connected"]
+        default: "single"
+        description: "connected: exactly two series (start first, end second) joined per category; the gap or change is the message (D-051)."
+      connector:
+        type: string
+        enum: ["line", "arrow"]
+        default: "line"
+        description: "connected only. line: a grey line between the two dots; arrow: a line with a large arrowhead from the start dot to the end dot."
+      reference_lines:
+        type: array
+        maxItems: 2
+        description: "D-065 (scatter_plot): dashed threshold lines that split the points into sections, at most one per axis. D-088: `axis: diagonal` is the y = x equal-change line (no `value`), only when both axes have the same range and number format; `label` names it (default 'Equal' / 'Bằng nhau')."
+        items:
+          type: object
+          required: [axis]
+          properties:
+            axis: { type: string, enum: ["x", "y", "diagonal"] }
+            value: { type: number }
+            label: { type: string }
+      section_labels:
+        type: array
+        maxItems: 4
+        description: "D-065 (scatter_plot): short section names (<= 4 words) placed at data coordinates, clear of points and lines."
+        items:
+          type: object
+          required: [text, x, y]
+          properties:
+            text: { type: string }
+            x: { type: number }
+            y: { type: number }
+      label_points:
+        type: string
+        enum: ["focal", "all"]
+        default: "focal"
+        description: "D-065 (scatter_plot): label the focal points only, or every point (at most 10 points)."
+      trend_line:
+        type: string
+        enum: ["none", "linear"]
+        default: "none"
+        description: "D-065 (scatter_plot): SWD prefers no fitted line when communicating; `linear` needs `trend_reason`."
+      trend_reason:
+        type: string
+        description: "D-065: why the slide needs a fitted line (required with `trend_line: linear`)."
+      waterfall_mode:
+        type: string
+        enum: ["full", "changes_only"]
+        default: "full"
+        description: "D-067 (waterfall_chart). full: a `start` pillar, `delta` bars and an end `total` pillar, all from zero. changes_only: only `delta` bars grow from a zero-length start and a derived net bar closes them; use it when the largest change is under 10 % of the pillar."
+      net_label:
+        type: string
+        description: "D-067 (waterfall_chart, changes_only): the category label of the derived net bar; default 'Net change'."
+      connector_lines:
+        type: boolean
+        default: true
+        description: "D-067 (waterfall_chart): thin lines between the bar edges at the running total."
+      side_totals:
+        type: string
+        enum: ["none", "brackets"]
+        default: "none"
+        description: "D-088 (PAT-VIS-004): horizontal diverging stacks only. brackets: a thin grey bracket under each side of each bar with the side's total (neutral answer excluded), computed from the plotted segments."
+      side_column:
+        type: object
+        required: [title, data_points]
+        description: "D-095 (PAT-VIS-004, SRC-SEC-023): horizontal_bar_chart with one series only. A column of text at the right edge, one row per bar, for a change or gap against a reference (last year, plan). The bars keep the level; the column carries the change. A row takes its bar's colour and goes bold when that bar is the focal mark, else it stays in the chart-text neutral."
+        properties:
+          title:
+            type: string
+            description: "Column header, named with the reference and unit, e.g. 'Against plan' or 'vs. 2024 (pts)'."
+          data_points:
+            type: array
+            description: "One entry per category of x_axis.categories, each once."
+            items:
+              type: object
+              required: [category, value, source_cell_ref]
+              properties:
+                category: { type: string }
+                value: { type: number, description: "Signed change; shown with a true minus, an explicit plus and a bare zero." }
+                formatted_label: { type: string, description: "Overrides the default text, e.g. '+3 pts'." }
+                source_cell_ref: { type: string, description: "Traced like a series point; a change computed from two cells uses `aggregation: diff` (first cell minus second)." }
+                aggregation: { type: string, enum: [sum, mean, min, max, diff] }
+                source_unit_factor: { type: number }
+      median_line:
+        type: boolean
+        default: false
+        description: "D-086 (strip_plot): a short vertical tick at each row's median, named once above the first row."
+      highlight_band:
+        type: string
+        enum: ["top_fifth", "bottom_fifth", "top_quarter", "bottom_quarter"]
+        description: "D-086 (strip_plot, PAT-VIS-013): one very light grey band per row over the part of the distribution the takeaway title names (top = highest values), named once above the first row. Only when the title names that part."
+      time_spacing_reason:
+        type: string
+        description: "D-087 (ANTI-VIS-005): why year categories with unequal gaps are drawn evenly spaced (e.g. 'only census years are reported'); without it the validator warns."
+      highlight_band_label:
+        type: string
+        description: "D-086 (strip_plot): the band's name in the title's own words (<= 3 words, e.g. 'Slowest fifth'); default 'Top fifth', 'Bottom quarter' and so on."
+      category_order:
+        type: string
+        enum: ["by_gap", "by_value", "natural"]
+        description: "How categories are ordered. Dot plots: required for connected, default by_value for single; by_gap / by_value sort descending by end-minus-start or by the (last) series value. Bar families (D-057 B7): optional, by_value or natural; by_value means descending by the first series (stacks: by the total), and is checked."
+      category_scale:
+        type: string
+        enum: ["nominal", "ordinal"]
+        description: "D-073 (PAT-VIS-004, PAT-VIS-005). What kind of categories a bar or dot-plot panel shows. nominal: no order of their own (brands, regions, reasons), so they are sorted by value, largest first. ordinal: an order of their own (time, age bands, answer scales such as Likert), so the given order stays. Optional; when set it is checked against the data and `category_order`."
+
+      panel_chart_title:
+        type: string
+        description: "Job 2 Descriptive Chart Title or panel header (e.g., 'Critical Care'). Required on every panel. On a single-panel slide, keep it and drop `word_jobs.chart_title` when the two would repeat each other (G4.1)."
+      panel_headline:
+        type: object
+        description: "D-075 (PAT-DSN-001 §3, SRC-SWD-006). A one-line finding that heads the panel, stated as a claim, drawn bold above the neutral `panel_chart_title` (which then turns muted and regular). On `two_sided_paired_views` and `two_sided_comparison` both panels carry one or neither does; on `evidence_columns` every panel carries one; on `1_plus_4_grid` only the `hero_total_left` panel may; not on small multiples. ≤ 8 English words or ≤ 15 Vietnamese syllables (on `evidence_columns` the finding is one sentence of ≤ 14 words or ≤ 24 syllables); it must differ from the takeaway title. A card annotation without an anchor may not target a panel that carries a headline: fold it into the headline or anchor it on the chart."
+        required: [text]
+        properties:
+          text:
+            type: string
+          color_tie_spans:
+            type: array
+            items:
+              $ref: "#/$defs/ColorTieSpan"
+      column_heading:
+        type: string
+        description: "D-075. The criterion a column of an `evidence_columns` slide answers (≤ 3 words, e.g. 'Payoff', 'Effort'); drawn above the finding. Only on `evidence_columns`, where every panel carries one."
+      panel_text:
+        type: string
+        description: "D-075. At most two lines under `panel_headline` that explain it (mock-up L1-C). `standalone` and `hybrid` decks only; in `live` the explanation goes to the speaker notes. Requires `panel_headline`; ≤ 25 English words or ≤ 40 Vietnamese syllables."
+
+      # D-040: research estimates and their uncertainty
+      metric_kind:
+        type: string
+        enum: ["observed", "model_estimate", "derived"]
+        description: "model_estimate = coefficients, AMEs, predicted probabilities or other model output; these need ci_low/ci_high on their points or an uncertainty_omitted_reason."
+      reference_group:
+        type: string
+        description: "Reference category of the plotted estimates (e.g. 'mortgagors'). Panels compared on one slide with different reference groups need claim_evidence_contract.comparison_valid_reason."
+      uncertainty_omitted_reason:
+        type: string
+        description: "Why a model_estimate panel shows no confidence intervals (e.g. 'audience is non-technical; all shown estimates p < 0.01'). D-043: warned when the cited source already holds the intervals."
+      estimate_scale_reason:
+        type: string
+        description: "D-043 (PRIN-VIS-006): why a model_estimate panel stays on the log-odds/logit scale although inputs/ holds marginal effects or predicted probabilities."
+      estimand:
+        type: string
+        description: "D-046: the quantity this panel's estimates are (e.g. 'predicted probability, margins over(party)', 'cell contrast, margins i.tenure#i.party'). When another slide's levels imply a different gap for a plotted difference, the validator warns unless this estimand is named in the slide's reading_note or source_footnote."
+
+      x_axis:
+        type: object
+        required:
+          - categories
+          - show_labels
+        properties:
+          title: { type: string }
+          categories:
+            type: array
+            items: { type: string }
+            description: "Abbreviate years in Small Multiples ('20–'26 per EX-002). Scatter plots: the point names."
+          min: { type: number, description: "D-065 (scatter_plot): numeric x-axis minimum." }
+          max: { type: number, description: "D-065 (scatter_plot): numeric x-axis maximum." }
+          number_format: { type: string, description: "D-065 (scatter_plot): x-axis tick format." }
+          show_labels:
+            type: boolean
+            default: true
+            description: "In 2x2 Small Multiples, can be set to true only on bottom row to declutter (EX-002)."
+
+      y_axis:
+        type: object
+        required:
+          - min
+          - max
+          - number_format
+        properties:
+          title: { type: string }
+          min: { type: number }
+          max: { type: number }
+          number_format:
+            type: string
+            description: "Clean format without redundant trailing zeros (e.g., '0.0', '$#,##0M', '0%' — G4.4). Bare letters are emitted as literals."
+          show_subtle_gridlines:
+            type: boolean
+            default: true
+          show_tick_labels:
+            type: boolean
+            description: "Defaults to true, except horizontal bar charts whose series all use bar_end labels (direct labels make the value axis redundant)."
+
+      series:
+        type: array
+        minItems: 1
+        items:
+          $ref: "#/$defs/DataSeries"
+
+      # Enforces PAT-DSN-002 & EX-002: Shaded crossover or gap deltas between series
+      shaded_deltas:
+        type: array
+        default: []
+        items:
+          type: object
+          required:
+            - upper_series_name
+            - lower_series_name
+            - start_category
+            - end_category
+            - fill_color_hex
+            - label_text
+          properties:
+            upper_series_name: { type: string }
+            lower_series_name: { type: string }
+            start_category: { type: string }
+            end_category: { type: string }
+            fill_color_hex:
+              type: string
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            label_text: { type: string }
+            label_color_hex:
+              type: string
+              pattern: "^#[0-9A-Fa-f]{6}$"
+              description: "Defaults to the focal series color so the delta label stays color-tied to its series."
+
+      # Stacked bars: optional total label above each column, aligned with x_axis.categories (empty string = no label)
+      stack_total_labels:
+        type: array
+        items: { type: string }
+
+      # Optional reference/threshold line (e.g., '60 calls/min capacity threshold' in EX-004)
+      threshold_lines:
+        type: array
+        default: []
+        items:
+          type: object
+          required:
+            - value
+            - label
+            - line_style
+            - color_hex
+          properties:
+            value: { type: number }
+            label: { type: string }
+            line_style: { type: string, enum: ["dashed", "dotted", "solid"] }
+            color_hex: { type: string, pattern: "^#[0-9A-Fa-f]{6}$" }
+
+  # ----------------------------------------------------------------------------
+  # DATA SERIES DEFINITION (Greyscale Baseline vs. Two-Tier Accent)
+  # ----------------------------------------------------------------------------
+  DataSeries:
+    type: object
+    required:
+      - series_name
+      - visual_role
+      - color_hex
+      - data_points
+    properties:
+      series_name:
+        type: string
+      visual_role:
+        type: string
+        enum:
+          - "focal_primary_tier1"   # Bold primary accent color (3.0–3.5pt line or saturated bar — PRIN-DSN-004)
+          - "focal_secondary_tier2" # Lighter tint of same accent hue (Tier 2 comparison — PAT-DSN-002, EX-003 Part A)
+          - "context_greyscale"     # Muted neutral grey baseline (1.5pt line or grey bar — PRIN-DSN-004, G4.5)
+      color_hex:
+        type: string
+        pattern: "^#[0-9A-Fa-f]{6}$"
+      line_width_pt:
+        type: number
+        description: "3.0–3.5pt for focal_primary_tier1; 1.5pt for context_greyscale."
+      direct_label_placement:
+        type: string
+        enum: ["right_endpoint", "both_endpoints", "bar_end", "peak_only", "none"]
+        default: "right_endpoint"
+        description: "Which points get a value label. right_endpoint / both_endpoints / peak_only suit lines; bar_end labels every bar or dot (on bars with CIs the label sits beyond the whisker); none relies on the axis."
+      label_categories:
+        type: array
+        items: { type: string }
+        description: "With peak_only: extra categories that also receive a direct label (e.g. a second peak)."
+      diverging_side:
+        type: string
+        enum: ["negative", "neutral", "positive"]
+        description: "Required on every series of a diverging stack (stack_mode: diverging, D-057 B3): which side of the midpoint the answer sits on. Write values as positive shares; the renderer draws negative answers outward from zero."
+      direct_label_name:
+        type: string
+        description: "Short series name used in direct labels (e.g. 'Senior' for 'Senior Leadership'); defaults to series_name without its parenthetical."
+      label_series_name:
+        type: boolean
+        default: true
+        description: "Append the series name to its last direct label in the lead panel of multi-series line charts (replaces a legend)."
+      data_points:
+        type: array
+        minItems: 1
+        items:
+          type: object
+          required:
+            - category
+            - value
+            - is_forecast
+            - source_cell_ref
+          properties:
+            category: { type: string }
+            value: { type: number }
+            formatted_label:
+              type: string
+              description: "The label as shown (e.g. '+23.0', '28.6%'). Quote it in YAML: an unquoted +23.0 is read as a number and fails."
+            is_forecast:
+              type: boolean
+              default: false
+              description: "When true on a line chart, renderer draws segment as a dashed line (PRIN-DSN-002, EX-002)."
+            point_visual_role_override:
+              type: string
+              enum: ["focal_primary_tier1", "focal_secondary_tier2", "context_greyscale"]
+              description: "Used in categorical bar charts (like the ranked menu-item sales change in EX-003 Part A) where individual bars in one series take Tier-1 orange, Tier-2 light orange, or Greyscale."
+            point_color_override_hex:
+              type: string
+              pattern: "^#[0-9A-Fa-f]{6}$"
+            x_value:
+              type: number
+              description: "D-065 (scatter_plot): the point's x measure; `value` is its y measure."
+            item:
+              type: string
+              description: "D-086 (strip_plot): the item this dot stands for (a store, a province); `category` is the row (the measure)."
+            step_type:
+              type: string
+              enum: ["start", "delta", "total"]
+              description: "D-067 (waterfall_chart): start and total pillars are absolute from zero; delta bars float from the running total (`value` is the signed change)."
+            x_source_cell_ref:
+              type: string
+              description: "D-065 (scatter_plot): traces `x_value` to inputs/ like `source_cell_ref` traces `value`."
+            source_cell_ref:
+              type: string
+              description: "G4.9 Traceability, machine-verified against inputs/: 'file.csv!R2C4' (1-based, header = row 1), 'file.csv!R2C4:R5C4' or 'file.csv!R2C4,R7C4' with `aggregation`, or 'report.md!<section>' (the number must appear in that document)."
+            aggregation:
+              type: string
+              enum: ["sum", "mean", "min", "max", "diff"]
+              description: "Required for multi-cell source_cell_ref; 'diff' = first cell minus second cell."
+            source_unit_factor:
+              type: number
+              description: "Multiplier from the source unit to the plotted unit (e.g. 0.001 when '450 triệu' is plotted as 0.45 tỷ)."
+            ci_low:
+              type: number
+              description: "D-040: lower bound of the 95% confidence interval, in the plotted unit. Drawn as a whisker (dot_whisker_chart) or error bar (bar charts)."
+            ci_high:
+              type: number
+              description: "D-040: upper bound of the 95% confidence interval, in the plotted unit."
+            ci_low_source_cell_ref:
+              type: string
+              description: "Source of ci_low, same forms as source_cell_ref (machine-verified)."
+            ci_high_source_cell_ref:
+              type: string
+              description: "Source of ci_high, same forms as source_cell_ref (machine-verified)."
+            significant:
+              type: boolean
+              description: "D-040: whether the estimate differs from the reference at the deck's stated level. Non-significant estimates stay in the context tier, never the focal tier."
+            unit_kind:
+              type: string
+              enum: ["contrast_vs_reference", "per_sd", "percentage_points", "probability", "percent", "other"]
+              description: "D-043: the estimate's unit. A model_estimate panel mixing kinds is warned (e.g. dummy contrasts beside per-SD terms)."
+            estimand:
+              type: string
+              description: "D-046: overrides the panel's `estimand` for this point."
+
+  # ----------------------------------------------------------------------------
+  # TABLE DEFINITION (D-055, PAT-VIS-006): look-up tables, designed to scan
+  # ----------------------------------------------------------------------------
+  TableSpec:
+    type: object
+    required: [g3_tradeoff_record, table_title, columns, rows]
+    properties:
+      g3_tradeoff_record:
+        type: object
+        required: [selected_option_summary, shows, obscures, rejected_alternatives]
+        description: "Why a table serves the look-up job better than a chart (PAT-VIS-003); same fields as on charts."
+        properties:
+          selected_option_summary: { type: string }
+          shows: { type: string }
+          obscures: { type: string }
+          rejected_alternatives:
+            type: array
+            items: { type: string }
+      table_title:
+        type: string
+        description: "Job 2 descriptive title above the table (what, unit, period). Drop `word_jobs.chart_title` when it would repeat this."
+      columns:
+        type: array
+        minItems: 2
+        maxItems: 8
+        description: "Key column first; time columns in time order. More than 6 columns warns (D-055 T4)."
+        items:
+          type: object
+          required: [col_id, header, kind]
+          properties:
+            col_id: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+            header: { type: string }
+            kind:
+              type: string
+              enum: ["text", "number"]
+              description: "text columns are left-aligned; number columns right-aligned with one `number_format`."
+            number_format:
+              type: string
+              description: "Display format shared by the column, e.g. '0.0', '+0.0%', '#,##0'. Cells show their `formatted_label`; this records the intended decimals."
+            group:
+              type: string
+              description: "Label of a `column_groups` entry this column sits under (one level)."
+      column_groups:
+        type: array
+        description: "Optional single level of merged headers over adjacent columns (PAT-VIS-006 super-category labels)."
+        items:
+          type: object
+          required: [label]
+          properties:
+            label: { type: string }
+      row_order:
+        type: object
+        required: [mode]
+        properties:
+          mode: { type: string, enum: ["natural", "by_column"] }
+          col_id: { type: string, description: "Required with by_column." }
+          direction: { type: string, enum: ["ascending", "descending"], default: "descending" }
+      rows:
+        type: array
+        minItems: 1
+        maxItems: 20
+        description: "Data rows. More than 12 warns (T4); more than 6 warns on a live/hybrid main-deck slide (T3)."
+        items:
+          $ref: "#/$defs/TableRow"
+      summary_row:
+        $ref: "#/$defs/TableRow"
+        description: "Optional total or average row, drawn bold with a rule above; label it in the key column."
+      focal:
+        type: object
+        required: [kind]
+        description: "At most one row, one column or three cells in the accent colour (T5)."
+        properties:
+          kind: { type: string, enum: ["row", "column", "cells"] }
+          row_id: { type: string }
+          col_id: { type: string }
+          cells:
+            type: array
+            maxItems: 3
+            items:
+              type: object
+              required: [row_id, col_id]
+              properties:
+                row_id: { type: string }
+                col_id: { type: string }
+      heatmap:
+        type: object
+        description: "Optional colour fills on number columns (D-068 / PAT-VIS-006). The cells keep their numbers; a hue in the kit's comparison colour encodes value. Summary rows and text columns are never shaded."
+        required: [columns]
+        properties:
+          scale:
+            type: string
+            enum: ["per_column", "shared"]
+            default: "per_column"
+            description: "per_column: each column spends its own range (mixed units). shared: one range across all shaded columns, which then need the same `unit` and the same `dark_end`; a scale key is drawn above the table."
+          steps:
+            type: integer
+            enum: [0, 3, 4, 5, 6, 7]
+            default: 5
+            description: "Equal colour steps; 0 is a continuous fill. A diverging column needs 0 or an odd count."
+          columns:
+            type: array
+            minItems: 1
+            items:
+              type: object
+              required: [col_id, dark_end]
+              properties:
+                col_id: { type: string }
+                dark_end:
+                  type: string
+                  enum: ["high", "low"]
+                  description: "The end of the column the title names. Sequential: that end is the darkest. Diverging: that end takes the kit's focal hue and the other end the comparison hue."
+                scale_type: { type: string, enum: ["sequential", "diverging"], default: "sequential" }
+                midpoint:
+                  type: number
+                  description: "Required with `diverging`: the value where the colour turns (zero, a target, a baseline); it must lie inside the column's data."
+                unit:
+                  type: string
+                  description: "Required on every shaded column when `scale: shared`; shown beside the scale key."
+
+  DiagramSpec:
+    type: object
+    description: "D-069 / PAT-VIS-009: a diagram the renderer lays out from content. The agent never places coordinates. Required on `diagram` slides, forbidden elsewhere."
+    required: [diagram_type, g3_tradeoff_record, alt_text]
+    properties:
+      diagram_type:
+        type: string
+        enum: ["process_flow", "timeline", "matrix_2x2", "decision_flow", "swimlane", "tree"]
+        description: "One layout grammar per type (PAT-VIS-009). Exactly the matching type block must be present."
+      g3_tradeoff_record:
+        type: object
+        required: [selected_option_summary, shows, obscures, rejected_alternatives]
+        description: "Why structure is the message and a sentence, list or table would not do (PRIN-VIS-008)."
+        properties:
+          selected_option_summary: { type: string }
+          shows: { type: string }
+          obscures: { type: string }
+          rejected_alternatives:
+            type: array
+            items: { type: string }
+      diagram_title:
+        type: string
+        description: "Job 2 descriptive title above the diagram (what, scope, period)."
+      alt_text:
+        type: string
+        description: "One sentence saying what the diagram shows, for screen readers (D-049 G6)."
+      process_flow:
+        type: object
+        required: [steps]
+        description: "Ordered steps left to right. 3 to 6 steps fit a slide; more than 6 warns."
+        properties:
+          style:
+            type: string
+            enum: ["boxes", "numbered"]
+            default: "boxes"
+            description: "boxes: glued arrows between steps. numbered: no arrows, a number on each box, for steps that are not strictly sequential."
+          steps:
+            type: array
+            minItems: 2
+            maxItems: 8
+            items:
+              type: object
+              required: [step_id, label]
+              properties:
+                step_id: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+                label: { type: string, description: "A short name, at most about 4 words." }
+                sublabel: { type: string, description: "An optional one-line detail." }
+                focal: { type: boolean, description: "The step the title is about. One or two per diagram." }
+                source_cell_ref:
+                  type: string
+                  description: "Required when the label or sublabel contains a number; same forms as data_points[].source_cell_ref."
+      timeline:
+        type: object
+        required: [start, end, items]
+        description: "Events or plans on a dated axis. Positions follow the real dates, never an even spacing (ANTI-VIS-004). Quote dates in YAML."
+        properties:
+          form:
+            type: string
+            enum: ["milestones", "bars"]
+            default: "milestones"
+            description: "milestones: dots on one axis with staggered labels, for when dates are the message. bars: one row per item on a dated grid (Gantt), for when duration or overlap is the message."
+          start: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$", description: "First date on the axis, YYYY-MM-DD." }
+          end: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$", description: "Last date on the axis, YYYY-MM-DD." }
+          unit:
+            type: string
+            enum: ["day", "week", "month", "quarter", "year"]
+            default: "month"
+            description: "The tick unit; choose a coarse one (SRC-SWD-011 §11). More than 14 ticks warns."
+          today: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$", description: "Optional marker for the status date." }
+          items:
+            type: array
+            minItems: 2
+            maxItems: 12
+            description: "Up to 8 items fit a slide; more warns."
+            items:
+              type: object
+              required: [item_id, label, source_cell_ref]
+              properties:
+                item_id: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+                label: { type: string }
+                date: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$", description: "A milestone's date." }
+                start: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$", description: "A bar's first date." }
+                end: { type: string, pattern: "^\\d{4}-\\d{2}-\\d{2}$", description: "A bar's last date." }
+                date_label: { type: string, description: "Optional text shown instead of the formatted date." }
+                focal: { type: boolean, description: "One or two per diagram." }
+                source_cell_ref: { type: string, description: "Where the date comes from; every dated item is traced." }
+      matrix_2x2:
+        type: object
+        required: [x_axis, y_axis]
+        description: "A two-factor grid. positioning: items placed by x and y. scenario: four named cells (SRC-SWD-011 §15)."
+        properties:
+          variant:
+            type: string
+            enum: ["positioning", "scenario"]
+            default: "positioning"
+          x_axis: { $ref: "#/$defs/MatrixAxis" }
+          y_axis: { $ref: "#/$defs/MatrixAxis" }
+          items:
+            type: array
+            maxItems: 14
+            description: "Positioning only. Up to 10 fit a slide; more warns."
+            items:
+              type: object
+              required: [item_id, label, x, y, placement_basis]
+              properties:
+                item_id: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+                label: { type: string }
+                x: { type: number, minimum: 0, maximum: 1, description: "0 = the low end of the x axis, 1 = the high end. Never within 0.06 of the middle (that is the axis)." }
+                y: { type: number, minimum: 0, maximum: 1, description: "0 = the low end of the y axis, 1 = the high end. Never within 0.06 of the middle." }
+                placement_basis:
+                  type: string
+                  enum: ["data", "judgement"]
+                  description: "data: x and y come from measured values, cited in `source_cell_ref`. judgement: an assessment; say so in the speaker notes."
+                focal: { type: boolean, description: "One or two per diagram." }
+                source_cell_ref: { type: string, description: "Required for `data` placements and for labels that contain a number." }
+          cells:
+            type: array
+            maxItems: 4
+            description: "Scenario only: exactly four named cells."
+            items:
+              type: object
+              required: [cell_id, name]
+              properties:
+                cell_id: { type: string, enum: ["tl", "tr", "bl", "br"], description: "Top-left, top-right, bottom-left, bottom-right." }
+                name: { type: string, description: "A name for the outcome, never 'Scenario 1'." }
+                description: { type: string }
+                focal: { type: boolean, description: "Exactly one cell is focal." }
+                source_cell_ref: { type: string, description: "Required when the name or description contains a number." }
+
+      decision_flow:
+        type: object
+        required: [nodes, edges]
+        description: "D-071: branching logic. The main path (the first node, then each node's first exit) runs left to right; a decision's second exit drops below it and a third rises above it; a branch node may rejoin a later main-path node. Up to 9 nodes and 5 on the main path fit a slide."
+        properties:
+          nodes:
+            type: array
+            minItems: 3
+            maxItems: 12
+            items:
+              type: object
+              required: [node_id, kind, label]
+              properties:
+                node_id: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+                kind:
+                  type: string
+                  enum: ["start", "step", "decision", "end"]
+                  description: "Shape carries the type: terminator for start and end, rectangle for a step, diamond for a decision (a short question)."
+                label: { type: string, description: "A short name or question, at most about 4 words." }
+                sublabel: { type: string, description: "An optional one-line detail (not shown in a diamond)." }
+                focal: { type: boolean, description: "The decisive step or branch. One or two per diagram." }
+                source_cell_ref: { type: string, description: "Required when the label or sublabel contains a number." }
+          edges:
+            type: array
+            minItems: 2
+            items:
+              type: object
+              required: [from, to]
+              properties:
+                from: { type: string }
+                to: { type: string }
+                answer: { type: string, description: "Required on every decision exit: the answer, at most 14 characters, shown beside the line at the exit (PAT-DSN-006). List the main-path exit first." }
+
+      swimlane:
+        type: object
+        required: [lanes, steps]
+        description: "D-071: hand-offs between owners. One horizontal lane per owner; steps listed in process order; a hand-off keeps its column when the lanes between are free. Up to 4 lanes and 6 steps fit a slide."
+        properties:
+          lanes:
+            type: array
+            minItems: 2
+            maxItems: 6
+            items:
+              type: object
+              required: [lane_id, name]
+              properties:
+                lane_id: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+                name: { type: string, description: "The owner, for example 'HR'." }
+          steps:
+            type: array
+            minItems: 2
+            maxItems: 10
+            items:
+              type: object
+              required: [step_id, lane_id, label]
+              properties:
+                step_id: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+                lane_id: { type: string, description: "The one lane this step sits in." }
+                label: { type: string, description: "A short name, at most about 4 words." }
+                sublabel: { type: string }
+                focal: { type: boolean, description: "The step the title is about; with `focal_handoff`, one or two focal elements in all." }
+                source_cell_ref: { type: string, description: "Required when the label or sublabel contains a number." }
+          focal_handoff:
+            type: object
+            required: [from, to]
+            description: "The riskiest hand-off: an accent connector between two consecutive steps in different lanes, with an optional short label beside it."
+            properties:
+              from: { type: string }
+              to: { type: string }
+              label: { type: string, description: "At most 14 characters, for example '5-day wait'." }
+              source_cell_ref: { type: string, description: "Required when the label contains a number." }
+
+      tree:
+        type: object
+        required: [nodes]
+        description: "D-071: a hierarchy or decomposition (issue tree, driver tree, org chart) joined by bus connectors. Up to 3 levels, 5 children per node and 12 nodes fit a slide."
+        properties:
+          direction:
+            type: string
+            enum: ["right", "down"]
+            default: "right"
+            description: "right: root on the left, for issue and driver trees. down: root on top, for org charts."
+          additive:
+            type: boolean
+            description: "true when each node's children add up to it (a driver tree); every node then carries `value` and the validator checks the sums."
+          nodes:
+            type: array
+            minItems: 2
+            maxItems: 16
+            items:
+              type: object
+              required: [node_id, label]
+              properties:
+                node_id: { type: string, pattern: "^[a-z][a-z0-9_]*$" }
+                parent: { type: string, description: "The parent's node_id; omitted on the root only. Children are drawn in listed order." }
+                label: { type: string, description: "A short name, at most about 4 words." }
+                value: { type: number, description: "The node's number, for the additive check." }
+                value_label: { type: string, description: "The value as shown under the label (quote it in YAML)." }
+                focal: { type: boolean, description: "The root or one critical leaf, never both." }
+                source_cell_ref: { type: string, description: "Required when the node shows a number." }
+                aggregation: { type: string, enum: ["sum", "mean", "min", "max", "diff"] }
+
+  MatrixAxis:
+    type: object
+    required: [title, low_label, high_label]
+    properties:
+      title: { type: string, description: "The factor, for example 'Effort'." }
+      low_label: { type: string, description: "One word at the low tip." }
+      high_label: { type: string, description: "One word at the high tip." }
+
+  TableRow:
+    type: object
+    required: [row_id, cells]
+    properties:
+      row_id: { type: string }
+      cells:
+        type: object
+        description: "Map of col_id → cell. Text cells carry `text`; number cells carry `value`, `formatted_label` and `source_cell_ref` (G4.9)."
+        additionalProperties:
+          $ref: "#/$defs/TableCell"
+
+  TableCell:
+    type: object
+    properties:
+      text: { type: string }
+      value: { type: number }
+      formatted_label:
+        type: string
+        description: "The number as shown (quote it in YAML)."
+      source_cell_ref:
+        type: string
+        description: "Same forms and machine check as data_points[].source_cell_ref."
+      aggregation:
+        type: string
+        enum: ["sum", "mean", "min", "max", "diff"]
+      source_unit_factor: { type: number }
+
+  # ----------------------------------------------------------------------------
+  # COLOR TIE SPAN DEFINITION (GLOSSARY.md & G4.6)
+  # ----------------------------------------------------------------------------
+  ColorTieSpan:
+    type: object
+    required:
+      - substring
+      - color_hex
+      - linked_series_or_category
+    properties:
+      substring:
+        type: string
+        description: "Exact phrase inside the title, annotation, or callout to colorize."
+      color_hex:
+        type: string
+        pattern: "^#[0-9A-Fa-f]{6}$"
+        description: "MUST exactly match the color_hex of the corresponding focal series or bar."
+      bold:
+        type: boolean
+        description: "Optional (D-035). Absent = inherit the block's weight (bold in titles, regular in bodies). In annotation, callout, and step bodies set `true` on the one key phrase (PRIN-DSN-008). `false` in a takeaway title needs `mixed_weight_reason`."
+      linked_series_or_category:
+        type: string
+        description: "Name of the chart series or bar category visually tied to this text span."
+
+# ==============================================================================
+# GOLDEN VALIDATION INSTANCE (EX-001 Slide 6 — Climax 1x3 Slopegraph)
+# ==============================================================================
+# Golden example: EX-001 Slide 3 (fictional nurse-staffing scenario, D-017), generated from
+# 50_evals/scenarios/bench_en_nurse_staffing.yaml. Values trace to that run's inputs/nurse_outcomes.csv.
+examples:
+- schema_version: '1.0'
+  deck_meta:
+    deck_id: bench_en_nurse_staffing
+    context_brief_ref: artifacts/context_brief.md
+    storyline_ref: artifacts/storyline.md
+    workflow_mode: greenfield
+    delivery_mode: live
+    target_format: pptx
+    deck_language: en
+    language_rule_card: LANG-EN
+    aspect_ratio: '16:9'
+    theme_palette:
+      background_hex: '#FFFFFF'
+      text_primary_hex: '#1F2937'
+      text_muted_hex: '#6B7280'
+      panel_highlight_bg_hex: '#F3F4F6'
+      greyscale_baseline:
+        context_series_hex: '#8C8C8C'
+        context_line_width_pt: 1.5
+        axis_and_grid_hex: '#D1D5DB'
+        zero_competing_dark_series_verified: true
+      two_tier_accent:
+        primary_focal_hex: '#D95F02'
+        primary_focal_line_width_pt: 3.25
+        secondary_tint_hex: '#F0974A'
+        shaded_delta_fill_hex: '#FEE6CE'
+        single_hue_hierarchy_verified: true
+      colorblind_safe_verified: true
+  slides:
+  - slide_id: slide_03
+    slide_number: 3
+    arc_stage: climax
+    analytical_question: Which nurses' competency changed after rotation began?
+    target_stakeholder: Dr. Lena Okafor (CNO)
+    layout_spec:
+      layout_type: small_multiples_grid
+      upper_left_z_anchor: true
+      grid_alignment_verified: true
+    word_jobs:
+      takeaway_title:
+        text: Competency scores fell for new-graduate nurses after rotation began.
+        token_count: 9
+        sentence_case_verified: true
+        active_verb_verified: true
+        color_tie_spans:
+        - substring: new-graduate nurses
+          color_hex: '#D95F02'
+          bold: true
+          linked_series_or_category: focal series
+      no_triple_headline_repetition_verified: true
+      chart_title: Mean competency score (1–5) by unit and tenure, 2023 (before rotation) vs. 2025
+      direct_labels_mode: series_endpoints
+      annotations:
+      - text: The steepest fall is in Critical Care (3.9 to 3.2) for new graduates.
+        target_panel_id: panel_cc
+        anchor_data_point: '-'
+        color_tie_spans:
+        - substring: steepest fall is in Critical Care (3.9 to 3.2)
+          color_hex: '#A74A02'
+          bold: true
+          linked_series_or_category: focal series
+      recommendation_callout:
+        text: Give new graduates a stable home unit for their first two years.
+        distinct_from_takeaway_title: true
+        color_tie_spans: []
+      source_footnote: 'Source: Northvale annual competency assessments, 2023 and 2025 (n = 1,800 nurses).'
+    visual_spec:
+      render_mode: native_editable_chart
+      g3_tradeoff_record:
+        selected_option_summary: 1x3 small-multiple slopegraphs by unit
+        shows: The new-graduate drop against flat experienced cohorts.
+        obscures: Year-by-year detail between the two points.
+        rejected_alternatives:
+        - 18-bar grouped column chart
+      declutter_rules:
+        outer_chart_border: false
+        minor_gridlines: false
+        axis_tick_marks: false
+        detached_legend: false
+        attached_data_table: false
+        strip_trailing_decimal_zeros: true
+        actual_vs_forecast_line_encoding: solid_actual_dashed_forecast
+      scale_guardrails:
+        shared_y_axis: true
+      panels:
+      - panel_id: panel_cc
+        panel_role: small_multiple_cell
+        chart_family: slopegraph
+        panel_chart_title: Critical Care
+        x_axis:
+          categories:
+          - '2023'
+          - '2025'
+          show_labels: true
+        y_axis:
+          min: 2.5
+          max: 5.0
+          number_format: '0.0'
+          show_subtle_gridlines: true
+        series:
+        - series_name: Senior
+          visual_role: context_greyscale
+          color_hex: '#8C8C8C'
+          line_width_pt: 1.5
+          direct_label_placement: both_endpoints
+          data_points:
+          - category: '2023'
+            value: 4.4
+            formatted_label: '4.4'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R2C4
+          - category: '2025'
+            value: 4.4
+            formatted_label: '4.4'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R2C5
+        - series_name: Experienced
+          visual_role: context_greyscale
+          color_hex: '#8C8C8C'
+          line_width_pt: 1.5
+          direct_label_placement: both_endpoints
+          data_points:
+          - category: '2023'
+            value: 4.2
+            formatted_label: '4.2'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R3C4
+          - category: '2025'
+            value: 4.1
+            formatted_label: '4.1'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R3C5
+        - series_name: New graduate
+          visual_role: focal_primary_tier1
+          color_hex: '#D95F02'
+          line_width_pt: 3.25
+          direct_label_placement: both_endpoints
+          data_points:
+          - category: '2023'
+            value: 3.9
+            formatted_label: '3.9'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R4C4
+          - category: '2025'
+            value: 3.2
+            formatted_label: '3.2'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R4C5
+        grid_position:
+          row: 1
+          col: 1
+        is_focal_panel_shaded: true
+      - panel_id: panel_ed
+        panel_role: small_multiple_cell
+        chart_family: slopegraph
+        panel_chart_title: Emergency
+        x_axis:
+          categories:
+          - '2023'
+          - '2025'
+          show_labels: true
+        y_axis:
+          min: 2.5
+          max: 5.0
+          number_format: '0.0'
+          show_subtle_gridlines: true
+        series:
+        - series_name: Senior
+          visual_role: context_greyscale
+          color_hex: '#8C8C8C'
+          line_width_pt: 1.5
+          direct_label_placement: none
+          data_points:
+          - category: '2023'
+            value: 4.3
+            formatted_label: '4.3'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R5C4
+          - category: '2025'
+            value: 4.2
+            formatted_label: '4.2'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R5C5
+        - series_name: Experienced
+          visual_role: context_greyscale
+          color_hex: '#8C8C8C'
+          line_width_pt: 1.5
+          direct_label_placement: none
+          data_points:
+          - category: '2023'
+            value: 4.1
+            formatted_label: '4.1'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R6C4
+          - category: '2025'
+            value: 4.0
+            formatted_label: '4'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R6C5
+        - series_name: New graduate
+          visual_role: focal_primary_tier1
+          color_hex: '#D95F02'
+          line_width_pt: 3.25
+          direct_label_placement: both_endpoints
+          data_points:
+          - category: '2023'
+            value: 3.8
+            formatted_label: '3.8'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R7C4
+          - category: '2025'
+            value: 3.3
+            formatted_label: '3.3'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R7C5
+        grid_position:
+          row: 1
+          col: 2
+      - panel_id: panel_op
+        panel_role: small_multiple_cell
+        chart_family: slopegraph
+        panel_chart_title: Outpatient
+        x_axis:
+          categories:
+          - '2023'
+          - '2025'
+          show_labels: true
+        y_axis:
+          min: 2.5
+          max: 5.0
+          number_format: '0.0'
+          show_subtle_gridlines: true
+        series:
+        - series_name: Senior
+          visual_role: context_greyscale
+          color_hex: '#8C8C8C'
+          line_width_pt: 1.5
+          direct_label_placement: none
+          data_points:
+          - category: '2023'
+            value: 4.5
+            formatted_label: '4.5'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R8C4
+          - category: '2025'
+            value: 4.5
+            formatted_label: '4.5'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R8C5
+        - series_name: Experienced
+          visual_role: context_greyscale
+          color_hex: '#8C8C8C'
+          line_width_pt: 1.5
+          direct_label_placement: none
+          data_points:
+          - category: '2023'
+            value: 4.3
+            formatted_label: '4.3'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R9C4
+          - category: '2025'
+            value: 4.3
+            formatted_label: '4.3'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R9C5
+        - series_name: New graduate
+          visual_role: focal_primary_tier1
+          color_hex: '#D95F02'
+          line_width_pt: 3.25
+          direct_label_placement: both_endpoints
+          data_points:
+          - category: '2023'
+            value: 4.0
+            formatted_label: '4.0'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R10C4
+          - category: '2025'
+            value: 3.8
+            formatted_label: '3.8'
+            is_forecast: false
+            source_cell_ref: nurse_outcomes.csv!R10C5
+        grid_position:
+          row: 1
+          col: 3
+    progressive_reveal:
+      enabled: true
+      standalone_self_sufficient_verified: true
+      reveal_steps:
+      - step_number: 1
+        visible_panel_ids:
+        - panel_cc
+        - panel_ed
+        - panel_op
+        visible_series_roles:
+        - context_greyscale
+        show_annotations: false
+        show_recommendation_callout: false
+        speaker_notes: Experienced and senior nurses held steady in every unit.
+      - step_number: 2
+        visible_panel_ids:
+        - panel_cc
+        - panel_ed
+        - panel_op
+        visible_series_roles:
+        - context_greyscale
+        - focal_primary_tier1
+        show_annotations: true
+        show_recommendation_callout: true
+        speaker_notes: New graduates fell in every unit, most of all in Critical Care.
+    claim_evidence_contract:
+      claimed_construct_in_title: competency scores of new-graduate nurses
+      plotted_metric_on_chart: Mean competency score (1–5)
+      strict_claim_match_verified: true
+      numeric_source_traceability_verified: true
+      rendered_png_qa:
+        rendered_image_path: renders/slide_03.png
+        zero_text_overlap_or_clipping: true
+        compound_word_linebreak_safe: true
+  g4_review_audit:
+    status: passed
+    checklist_results:
+      G4_1_no_triple_headline_repetition: pass
+      G4_2_dual_title_upper_left_z_anchor: pass
+      G4_3_distinct_seven_word_jobs: pass
+      G4_4_subtraction_first_decluttering: pass
+      G4_5_greyscale_baseline_no_competing_dark: pass
+      G4_6_accessible_palette_and_color_tie: pass
+      G4_7_small_multiples_scale_integrity: pass
+      G4_8_strict_claim_vs_evidence_match: pass
+      G4_9_hundred_percent_numeric_traceability: pass
+      G4_10_rendered_png_geometry_inspection: pass
+      G4_11_delivery_mode_fidelity: pass
+      G4_12_stakeholder_stress_test_complete: pass
+    skeptic_stress_test_qa:
+    - skeptic_name_or_role: Tomás Reyes (CFO)
+      predicted_question: Won't fixed unit teams push us back onto agency nurses when a unit runs short?
+      evidence_backed_response: Slide 5 models $2.6M less agency spend because fewer new nurses leave; Slide 6 shows open weekend shifts do not rise.
+      supporting_slide_numbers:
+      - 5
+      - 6
+    - skeptic_name_or_role: Hana Sato (VP Workforce Planning)
+      predicted_question: Do we lose the cross-training the rotation was built for?
+      evidence_backed_response: Slide 7 keeps two planned cross-unit shifts per quarter, targeted at experienced nurses whose scores held steady (Slide 3).
+      supporting_slide_numbers:
+      - 3
+      - 7

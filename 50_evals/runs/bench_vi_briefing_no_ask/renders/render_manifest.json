@@ -1,0 +1,40 @@
+{
+  "render_source": "pptx_libreoffice",
+  "renderer": "LibreOffice 26.8.1.1 bf6ef2662401c7d6dce671ab4deb26ee0af3a7c1",
+  "generated_at": "2026-11-08T05:26:25Z",
+  "pptx_file": "presentation.pptx",
+  "pptx_sha256": "d181eefa023b39c70ef652210576ceecc4783741449ea846d955555ff16c1c37",
+  "slide_spec_sha256": "6d7cbd9a5f4dd922639cf6c77e38f202d3515eb4799442e8dd95d2e3e67ec067",
+  "width_px": 1920,
+  "slide_count": 7,
+  "pngs": [
+    {
+      "file": "slide_00.png",
+      "sha256": "61e7499833358569bde0f19d073cda521cd869d9e7feda85faedfd024562d4d7"
+    },
+    {
+      "file": "slide_01.png",
+      "sha256": "6495dfed81e074f37c9e59c92679f3b86d0abd990d37f6bf072fe2e0ee29da44"
+    },
+    {
+      "file": "slide_02.png",
+      "sha256": "eca1b0df564c7e97446edb46e588aecfb2d8d47d4bdd949d339423f423aea715"
+    },
+    {
+      "file": "slide_03.png",
+      "sha256": "4530393c53fe0be72be84a075809337ff9286ead5de7742e1e3df0554e70de57"
+    },
+    {
+      "file": "slide_04.png",
+      "sha256": "c9985cd631fe55a8f2d341517d0e271e6f3b056aa70e1ecc533b0d51bc88fe11"
+    },
+    {
+      "file": "slide_05.png",
+      "sha256": "f5ffa6c341992a46ffde71dc7f467314c1124e38e92fa4b4882d2b4230198afc"
+    },
+    {
+      "file": "slide_06.png",
+      "sha256": "e38422049cdbb127b0c697bff3f688d2b40738b08e8b0040f27ba2ac22f3e4b8"
+    }
+  ]
+}

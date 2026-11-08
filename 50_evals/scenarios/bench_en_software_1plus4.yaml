@@ -1,0 +1,360 @@
+# EX-002 benchmark (fictional): legacy on-premise licences vs. a cloud subscription across four regions (1+4 grid).
+run_id: bench_en_software_1plus4
+example_card: EX-002
+deck: {language: en, delivery_mode: live, palette: blue}
+title_slide: {title: Shift $12M from Harbor renewals to Skyline adoption, audience_line: Decision for the Portfolio Committee, date: January 2025, presenter: Skyline General Manager}
+
+context:
+  org: Kestrel Analytics (fictional)
+  room: Portfolio Committee — FY2025 sales budget review
+  decision_maker:
+    name_or_role: Ines Carvalho (Chief Revenue Officer) and the Portfolio Committee
+    decision_authority: Approves the FY2025 regional sales and support budget split between Harbor and Skyline
+    core_priority: Keep total revenue growing while Harbor matures
+  allies:
+    - name_or_role: Skyline General Manager
+      priority: More field and onboarding support in Europe and Asia Pacific
+      evidence_needed: Regional trajectories showing Skyline overtaking Harbor
+  skeptics:
+    - name_or_role: Daniel Okoro (EVP, Europe & Asia Pacific)
+      core_bias_or_fear: Protects the Harbor renewal teams in his regions.
+      required_reframe_or_proof: Slides 2 and 3 show Harbor already falling fastest in Europe and Asia Pacific.
+    - name_or_role: Ruth Feldman (Chief Financial Officer)
+      core_bias_or_fear: Holds operating expense flat.
+      required_reframe_or_proof: Slide 4 funds the $12M from Harbor renewal budget, not new spend.
+  primary_action: Approve moving $12M of FY2025 sales budget from Harbor renewals to Skyline adoption in Europe and Asia Pacific.
+  fallback: Move $6M in Europe in H1 and release the rest after the Q2 review.
+  benefits:
+    - About $40M added Skyline revenue in 2025F and $95M in 2026F.
+    - Skyline leads Harbor by $198M in 2026F ($560M vs. $362M).
+  risks:
+    - Renewal budget keeps flowing to regions where Harbor is shrinking 25–28%.
+    - Skyline is under-supported in the two years it overtakes Harbor.
+  big_idea:
+    sentence: Moving $12M from Harbor renewals to Skyline adoption in Europe and Asia Pacific will add about $95M by 2026 as Skyline overtakes Harbor.
+    point_of_view: Move $12M from Harbor renewals to Skyline adoption in Europe and Asia Pacific
+    stakes_clause: add about $95M by 2026 as Skyline overtakes Harbor
+    phrasing_mode: quantified
+    phrasing_rationale: The committee expects the budget amount and the return up front.
+
+report: |
+  # Kestrel Analytics — Product Revenue Review (fictional benchmark data)
+
+  Harbor (on-premise licences) peaked at $440M in 2023; Skyline (cloud subscriptions) grew from $60M in 2020 to $345M in 2024.
+  Forecast: Skyline $450M vs. Harbor $405M in 2025F; $560M vs. $362M in 2026F.
+  Harbor 2023 to 2026F by region: Americas $220M to $200M, Europe $123M to $88M, Asia Pacific $67M to $50M, Middle East & Africa $30M to $24M.
+  Moving $12M of FY2025 Harbor renewal budget to Skyline adoption is modeled to add $40M (2025F) and $95M (2026F) of Skyline revenue.
+
+datasets:
+  revenue:
+    columns: [product, region, year, revenue_usd_m]
+    rows:
+      - [Harbor, Americas, 2020, 190]
+      - [Harbor, Americas, 2021, 205]
+      - [Harbor, Americas, 2022, 215]
+      - [Harbor, Americas, 2023, 220]
+      - [Harbor, Americas, 2024, 220]
+      - [Harbor, Americas, 2025, 212]
+      - [Harbor, Americas, 2026, 200]
+      - [Harbor, Europe, 2020, 110]
+      - [Harbor, Europe, 2021, 118]
+      - [Harbor, Europe, 2022, 122]
+      - [Harbor, Europe, 2023, 123]
+      - [Harbor, Europe, 2024, 118]
+      - [Harbor, Europe, 2025, 105]
+      - [Harbor, Europe, 2026, 88]
+      - [Harbor, Asia Pacific, 2020, 55]
+      - [Harbor, Asia Pacific, 2021, 60]
+      - [Harbor, Asia Pacific, 2022, 64]
+      - [Harbor, Asia Pacific, 2023, 67]
+      - [Harbor, Asia Pacific, 2024, 67]
+      - [Harbor, Asia Pacific, 2025, 60]
+      - [Harbor, Asia Pacific, 2026, 50]
+      - [Harbor, Middle East & Africa, 2020, 25]
+      - [Harbor, Middle East & Africa, 2021, 27]
+      - [Harbor, Middle East & Africa, 2022, 29]
+      - [Harbor, Middle East & Africa, 2023, 30]
+      - [Harbor, Middle East & Africa, 2024, 30]
+      - [Harbor, Middle East & Africa, 2025, 28]
+      - [Harbor, Middle East & Africa, 2026, 24]
+      - [Skyline, Americas, 2020, 35]
+      - [Skyline, Americas, 2021, 60]
+      - [Skyline, Americas, 2022, 95]
+      - [Skyline, Americas, 2023, 140]
+      - [Skyline, Americas, 2024, 190]
+      - [Skyline, Americas, 2025, 240]
+      - [Skyline, Americas, 2026, 290]
+      - [Skyline, Europe, 2020, 15]
+      - [Skyline, Europe, 2021, 28]
+      - [Skyline, Europe, 2022, 45]
+      - [Skyline, Europe, 2023, 65]
+      - [Skyline, Europe, 2024, 90]
+      - [Skyline, Europe, 2025, 120]
+      - [Skyline, Europe, 2026, 150]
+      - [Skyline, Asia Pacific, 2020, 7]
+      - [Skyline, Asia Pacific, 2021, 12]
+      - [Skyline, Asia Pacific, 2022, 22]
+      - [Skyline, Asia Pacific, 2023, 32]
+      - [Skyline, Asia Pacific, 2024, 45]
+      - [Skyline, Asia Pacific, 2025, 65]
+      - [Skyline, Asia Pacific, 2026, 85]
+      - [Skyline, Middle East & Africa, 2020, 3]
+      - [Skyline, Middle East & Africa, 2021, 5]
+      - [Skyline, Middle East & Africa, 2022, 8]
+      - [Skyline, Middle East & Africa, 2023, 13]
+      - [Skyline, Middle East & Africa, 2024, 20]
+      - [Skyline, Middle East & Africa, 2025, 25]
+      - [Skyline, Middle East & Africa, 2026, 35]
+  reallocation:
+    columns: [item, usd_m]
+    rows:
+      - [FY2025 budget moved from Harbor renewals, -12]
+      - [Added Skyline revenue 2025F, 40]
+      - [Added Skyline revenue 2026F, 95]
+
+storyline:
+  tension: Renewal budget stays locked on Harbor while Skyline overtakes it — exactly where Harbor is shrinking fastest.
+  withheld: 3
+  pruned:
+    - {item: Country-level reseller inventory tables, disposition: speaker_notes, reason: Obscures the four-region picture; answered if asked.}
+    - {item: Product telemetry adoption funnels, disposition: excluded, reason: Engineering detail unrelated to the budget split.}
+  climax:
+    slide_numbers: [3]
+    human_or_operational_peak: Harbor falls fastest in Europe ($123M to $88M) and Asia Pacific ($67M to $50M).
+    financial_or_strategic_peak: Skyline overtakes Harbor in 2025F and leads by $198M in 2026F.
+  skeptic_slides:
+    - {slide_number: 2, target_skeptic: 'Daniel Okoro (EVP, Europe & Asia Pacific)', objection_neutralized: Harbor is already falling fastest in his regions despite current spend.}
+    - {slide_number: 4, target_skeptic: Ruth Feldman (CFO), objection_neutralized: The $12M comes from Harbor renewal budget; opex stays flat.}
+
+qa:
+  - skeptic_name_or_role: Daniel Okoro (EVP, Europe & Asia Pacific)
+    predicted_question: Won’t cutting renewal support speed up Harbor’s decline in my regions?
+    evidence_backed_response: Slide 2 shows Harbor falling 28% in Europe and 25% in Asia Pacific at current spend; Slide 3 shows Skyline more than replacing it.
+    supporting_slide_numbers: [2, 3]
+  - skeptic_name_or_role: Ruth Feldman (CFO)
+    predicted_question: Does this need new operating expense?
+    evidence_backed_response: No. Slide 4 moves $12M from Harbor renewals and models $40M (2025F) and $95M (2026F) of added Skyline revenue.
+    supporting_slide_numbers: [4]
+
+slides:
+  - arc: plot
+    layout: one_sided_right_text
+    title: Revenue growth now depends on Skyline cloud subscriptions.
+    tie: [Skyline cloud subscriptions]
+    pass1: Over the past five years almost all of our revenue growth has come from Skyline cloud subscriptions rather than Harbor licences.
+    question: Where has revenue growth come from since 2020?
+    stakeholder: Ines Carvalho (CRO)
+    chart_title: Annual revenue by product ($M), 2020–2024 actuals
+    labels_mode: bar_values
+    annotations:
+      - {text: Skyline grew from $60M to $345M while Harbor stayed near $435M., tie: [$60M to $345M], anchor: '2024'}
+    rec: {text: 'Plan FY2025 budgets around Skyline growth, not Harbor renewals.'}
+    footnote: 'Source: Kestrel finance ledger, 2020–2024.'
+    g3: {selected: Stacked columns with totals, shows: Total growth and Skyline’s rising share., obscures: Regional detail (next slides)., rejected: [Pie chart of 2024 mix]}
+    claim: {construct: revenue growth from Skyline, metric: Annual revenue by product ($M)}
+    panels:
+      - id: panel_mix
+        family: stacked_bar_chart
+        title: Harbor and Skyline revenue
+        categories: ['2020', '2021', '2022', '2023', '2024']
+        y: [0, 800]
+        format: $0M
+        stack_total_labels: [$440M, $515M, $600M, $690M, $780M]
+        series:
+          # Skyline first: the focal segment sits on the baseline (D-057 B5)
+          - {name: Skyline, role: focal, labels: bar_end, label: '${v:.0f}M', base: {dataset: revenue, column: revenue_usd_m, where: {product: Skyline}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024]}, sum_over: {region: [Americas, Europe, Asia Pacific, Middle East & Africa]}}
+          - {name: Harbor, role: context, labels: bar_end, label: '${v:.0f}M', base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024]}, sum_over: {region: [Americas, Europe, Asia Pacific, Middle East & Africa]}}
+
+  - arc: rising_action
+    layout: one_sided_right_text
+    title: Harbor licences have peaked and fall fastest in Europe and Asia Pacific.
+    tie: [Europe, {text: Asia Pacific, color: tier2}]
+    pass1: When we compare each region's 2023 Harbor revenue with the 2026 forecast, Europe and Asia Pacific decline the most.
+    question: Where is Harbor declining fastest?
+    stakeholder: Daniel Okoro (EVP, Europe & Asia Pacific)
+    chart_title: Harbor revenue by region ($M), 2023 peak vs. 2026 forecast
+    annotations:
+      - {text: Europe falls 28% ($123M to $88M) and Asia Pacific 25% ($67M to $50M)., tie: [Europe falls 28%], anchor: '2026F'}
+    rec: {text: Stop adding renewal effort where Harbor customers are already moving to the cloud.}
+    footnote: 'Source: Kestrel regional forecast, 2023 actuals and 2026 forecast.'
+    g3: {selected: Slopegraph of 2023 vs. 2026F by region, shows: Rate of decline per region., obscures: Year-by-year path (next slide)., rejected: [Eight-line spaghetti chart]}
+    claim: {construct: Harbor peak and fastest decline in Europe and Asia Pacific, metric: Harbor revenue by region ($M)}
+    panels:
+      - id: panel_harbor_regions
+        family: slopegraph
+        title: Four regions
+        categories: [2023 peak, 2026F]
+        y: [0, 250]
+        format: $0M
+        series:
+          - {name: Americas, role: context, labels: both_endpoints, label: '${v:.0f}M', forecast: [2026F], base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor, region: Americas}}, category_key: {column: year, values: [2023, 2026]}}
+          - {name: Middle East & Africa, direct_label_name: MEA, role: context, labels: both_endpoints, label: '${v:.0f}M', forecast: [2026F], base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor, region: Middle East & Africa}}, category_key: {column: year, values: [2023, 2026]}}
+          - {name: Asia Pacific, role: tier2, labels: both_endpoints, label: '${v:.0f}M', forecast: [2026F], base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor, region: Asia Pacific}}, category_key: {column: year, values: [2023, 2026]}}
+          - {name: Europe, role: focal, labels: both_endpoints, label: '${v:.0f}M', forecast: [2026F], base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor, region: Europe}}, category_key: {column: year, values: [2023, 2026]}}
+
+  - arc: climax
+    layout: 1_plus_4_grid
+    title: Skyline growth is expected to more than offset Harbor’s decline.
+    tie: [Skyline growth]
+    pass1: Looking at the total and all four regions together, Skyline’s growth is forecast to more than make up for Harbor’s decline.
+    question: Will Skyline offset Harbor through 2026, overall and in each region?
+    stakeholder: Portfolio Committee
+    chart_title: Revenue ($M) by product, total and by region, 2020–2024 actuals (solid) and 2025–2026 forecast (dashed)
+    scale:
+      shared_y_axis: false
+      non_uniform_scale_justification: Regional revenue differs by more than 4x (Americas vs. Middle East & Africa).
+      non_uniform_axis_label_mode: min_max_only
+      require_direct_endpoint_labels: true
+    annotations:
+      - {text: Skyline overtakes Harbor in 2025F ($450M vs. $405M) and leads by $198M in 2026F., tie: [leads by $198M in 2026F]}
+    rec: {text: Shift field support toward Skyline in Europe and Asia Pacific.}
+    footnote: 'Source: Kestrel global and regional forecast, 2020–2026. Regional panels use their own scales.'
+    g3: {selected: 1+4 grid of line charts, shows: The global crossover plus each region on its own scale., obscures: Exact cross-region comparisons (different scales)., rejected: [Ten-line single chart]}
+    claim: {construct: Skyline growth offsetting Harbor decline, metric: 'Revenue by product ($M), actuals and forecast'}
+    reveal:
+      - {step_number: 1, visible_panel_ids: [panel_total, panel_am, panel_eu, panel_ap, panel_mea], visible_series_roles: [context_greyscale], show_annotations: false, show_recommendation_callout: false, speaker_notes: Harbor flattens and then declines in every region.}
+      - {step_number: 2, visible_panel_ids: [panel_total, panel_am, panel_eu, panel_ap, panel_mea], visible_series_roles: [context_greyscale, focal_primary_tier1], show_annotations: true, show_recommendation_callout: true, speaker_notes: 'Skyline crosses Harbor in 2025 and opens a $198M lead by 2026. The two shaded panels are Europe and Asia Pacific, where Harbor falls fastest, so that is where field support moves first.'}
+    panels:
+      - id: panel_total
+        role: hero_total_left
+        family: line_chart
+        title: Total ($M)
+        categories: ["'20", "'21", "'22", "'23", "'24", "'25F", "'26F"]
+        y: [0, 600]
+        format: $0M
+        deltas: [{upper_series_name: Skyline, lower_series_name: Harbor, start_category: "'25F", end_category: "'26F", label_text: "+$198M Skyline lead ('26F)"}]
+        series:
+          - {name: Harbor, role: context, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}, sum_over: {region: [Americas, Europe, Asia Pacific, Middle East & Africa]}}
+          - {name: Skyline, role: focal, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Skyline}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}, sum_over: {region: [Americas, Europe, Asia Pacific, Middle East & Africa]}}
+      - &region_panel
+        id: panel_am
+        role: small_multiple_cell
+        family: line_chart
+        title: Americas
+        show_x: false
+        categories: ["'20", "'21", "'22", "'23", "'24", "'25F", "'26F"]
+        y: [0, 300]
+        format: $0M
+        series:
+          - {name: Harbor, role: context, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor, region: Americas}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}}
+          - {name: Skyline, role: focal, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Skyline, region: Americas}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}}
+      - id: panel_eu
+        role: small_multiple_cell
+        family: line_chart
+        title: Europe
+        shaded: true
+        show_x: false
+        categories: ["'20", "'21", "'22", "'23", "'24", "'25F", "'26F"]
+        y: [0, 160]
+        format: $0M
+        series:
+          - {name: Harbor, role: context, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor, region: Europe}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}}
+          - {name: Skyline, role: focal, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Skyline, region: Europe}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}}
+      - id: panel_ap
+        role: small_multiple_cell
+        family: line_chart
+        title: Asia Pacific
+        shaded: true
+        categories: ["'20", "'21", "'22", "'23", "'24", "'25F", "'26F"]
+        y: [0, 100]
+        format: $0M
+        series:
+          - {name: Harbor, role: context, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor, region: Asia Pacific}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}}
+          - {name: Skyline, role: focal, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Skyline, region: Asia Pacific}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}}
+      - id: panel_mea
+        role: small_multiple_cell
+        family: line_chart
+        title: Middle East & Africa
+        categories: ["'20", "'21", "'22", "'23", "'24", "'25F", "'26F"]
+        y: [0, 40]
+        format: $0M
+        series:
+          - {name: Harbor, role: context, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Harbor, region: Middle East & Africa}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}}
+          - {name: Skyline, role: focal, label: '${v:.0f}M', forecast: ["'25F", "'26F"], base: {dataset: revenue, column: revenue_usd_m, where: {product: Skyline, region: Middle East & Africa}}, category_key: {column: year, values: [2020, 2021, 2022, 2023, 2024, 2025, 2026]}}
+
+  - arc: resolution
+    layout: one_sided_left_text
+    title: Move $12M from Harbor to Skyline to add $95M by 2026.
+    tie: [add $95M by 2026]
+    pass1: We recommend moving twelve million dollars of renewal budget from Harbor to Skyline adoption, which the model says adds ninety-five million by 2026.
+    question: What should we do with the FY2025 sales budget?
+    stakeholder: Ruth Feldman (CFO) and Ines Carvalho (CRO)
+    chart_title: Budget moved and added Skyline revenue ($M)
+    labels_mode: bar_values
+    annotations:
+      - {text: 'The $12M comes from Harbor renewal budget, so operating expense stays flat.', tie: [operating expense stays flat]}
+    rec:
+      header: DECISION REQUESTED TODAY
+      text: 'Approve the $12M move for Europe and Asia Pacific (fallback: $6M in Europe first, the rest after the Q2 review).'
+    footnote: 'Source: Kestrel FY2025 budget model and Skyline revenue forecast.'
+    g3: {selected: Horizontal bars of budget moved vs. added revenue, shows: Return relative to the amount moved., obscures: Timing within each year., rejected: [Multi-row budget table]}
+    claim: {construct: $95M added by 2026 from a $12M move, metric: Budget moved and modeled added revenue ($M)}
+    panels:
+      - id: panel_return
+        family: horizontal_bar_chart
+        title: Return on the shift
+        categories: [Budget moved (FY2025), Added revenue (2025F), Added revenue (2026F)]
+        y: [-40, 100]
+        format: $0M
+        series:
+          - name: Budget and return
+            role: context
+            labels: bar_end
+            label: '{s}${a:.0f}M'
+            base: {dataset: reallocation, column: usd_m}
+            highlight: {Added revenue (2025F): tier2, Added revenue (2026F): focal}
+            points:
+              Budget moved (FY2025): {where: {item: FY2025 budget moved from Harbor renewals}}
+              Added revenue (2025F): {where: {item: Added Skyline revenue 2025F}}
+              Added revenue (2026F): {where: {item: Added Skyline revenue 2026F}}
+
+  - arc: appendix
+    layout: one_sided_right_text
+    title: Skyline overtakes Harbor in 2025 except across the Middle East and Africa.
+    tie: [except across the Middle East and Africa]
+    pass1: Regional directors asked whether Skyline overtakes Harbor everywhere in 2025; the forecast says it does in three of four regions.
+    question: In which regions is Skyline forecast to pass Harbor in 2025?
+    stakeholder: Ines Carvalho (CRO)
+    audience_need: Regional directors asked for the 2025 Harbor-versus-Skyline forecast by region to plan their sales targets.
+    chart_title: 2025 forecast revenue by region ($M), Harbor vs. Skyline
+    reveal:
+      - {step_number: 1, visible_panel_ids: [panel_gap], visible_series_roles: [context_greyscale], show_annotations: false, show_recommendation_callout: false, speaker_notes: Each grey dot is Harbor’s 2025 forecast revenue in one region.}
+      - {step_number: 2, visible_panel_ids: [panel_gap], visible_series_roles: [context_greyscale, focal_secondary_tier2, focal_primary_tier1], show_annotations: true, show_recommendation_callout: true, speaker_notes: "Each line joins it to Skyline’s forecast, and the regions are sorted by Skyline’s lead. Middle East and Africa is the one region where Harbor stays ahead."}
+    annotations:
+      - {text: 'Keep Harbor renewal effort in Middle East & Africa for 2025, and shift it to Skyline in the other three regions.', tie: [Middle East & Africa]}
+    footnote: 'Source: Kestrel revenue forecast by product and region, 2025F.'
+    g3: {selected: Horizontal connected dot plot sorted by Skyline’s lead, shows: The gap in each region and the one region where Harbor leads., obscures: The path from 2020 to 2025 (slide 3)., rejected: [Grouped bars of eight values]}
+    claim: {construct: Skyline passes Harbor in three of four regions in 2025, metric: 2025 forecast revenue by product and region ($M)}
+    panels:
+      - id: panel_gap
+        family: dot_plot
+        orientation: horizontal
+        dot_style: connected
+        connector: line
+        category_order: by_gap
+        title: Four regions, 2025 forecast
+        categories: [Americas, Europe, Asia Pacific, Middle East & Africa]
+        y: [0, 250]
+        format: $0M
+        series:
+          - name: Harbor
+            role: context
+            labels: bar_end
+            label: '${v:.0f}M'
+            base: {dataset: revenue, column: revenue_usd_m}
+            points:
+              Americas: {where: {product: Harbor, region: Americas, year: 2025}}
+              Europe: {where: {product: Harbor, region: Europe, year: 2025}}
+              Asia Pacific: {where: {product: Harbor, region: Asia Pacific, year: 2025}}
+              Middle East & Africa: {where: {product: Harbor, region: Middle East & Africa, year: 2025}}
+          - name: Skyline
+            role: tier2
+            labels: bar_end
+            label: '${v:.0f}M'
+            base: {dataset: revenue, column: revenue_usd_m}
+            highlight: {Middle East & Africa: focal}
+            points:
+              Americas: {where: {product: Skyline, region: Americas, year: 2025}}
+              Europe: {where: {product: Skyline, region: Europe, year: 2025}}
+              Asia Pacific: {where: {product: Skyline, region: Asia Pacific, year: 2025}}
+              Middle East & Africa: {where: {product: Skyline, region: Middle East & Africa, year: 2025}}

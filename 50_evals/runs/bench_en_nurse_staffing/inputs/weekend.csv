@@ -1,0 +1,4 @@
+unit_type,current_open_shifts,unit_based_open_shifts
+Critical Care,6,5
+Emergency,9,8
+Outpatient,2,2

@@ -1,0 +1,20 @@
+{
+  "name": "data-story-slide-deck",
+  "interface": {
+    "displayName": "Data Story Slide Deck"
+  },
+  "plugins": [
+    {
+      "name": "data-story-slide-deck",
+      "source": {
+        "source": "local",
+        "path": "./40_plugin"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

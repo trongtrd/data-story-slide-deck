@@ -1,0 +1,29 @@
+# Raw copyrighted source snapshots (personal study only — never commit to public repo)
+10_sources/raw/
+
+# OS & editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*~
+.vscode/
+.idea/
+
+# Python / Node / Tooling artifacts
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+node_modules/
+.env
+.env.*
+
+# Eval run outputs (large binary PPTX/PNG files if temporary)
+50_evals/runs/*/tmp/
+
+# Pillow preview renders (not G4 evidence)
+50_evals/runs/*/renders_preview/
+
+# Owner-supplied private review copies (D-035)
+90_archive/

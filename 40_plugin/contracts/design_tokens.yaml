@@ -1,0 +1,76 @@
+# Design tokens for Data Story Slide Deck decks (D-078, D-079, D-080)
+#
+# The design layer decides how a slide looks; the SWD layer (takeaway titles, focal and context roles, Color Tie,
+# callout and note content, layout and chart types) is never changed by these values (D-078 §1).
+# Prose rationale: design_system.md. Colour kits stay in colour_kits.yaml and plug into these tokens (D-030).
+#
+# A deck chooses its system in `deck_meta.design_system`:
+#   - editorial: the default for new decks (D-079). Aptos, ink and muted tokens, five type roles per delivery mode.
+#   - classic:   the look before D-078 (Arial, the older size table). Used when the field is absent, so earlier
+#                specs and the LibreOffice-pinned benchmarks render exactly as before (D-044, D-080 §4).
+
+systems:
+  editorial:
+    name: Editorial
+    fonts:
+      body: Aptos             # Microsoft 365 default; full Vietnamese coverage and tabular figures (checked 2026-11-05)
+      title: Aptos Display    # display cut of the same family, for takeaway, deck and divider titles
+      fallback: Arial         # deckctl doctor warns when Aptos is missing (D-080 §4)
+      width_factor: 0.93      # Aptos average advance width relative to Arial, measured on a mixed sample (step 2)
+    # Text colours on light slides. Contrast on white: ink 16.4:1, ink_muted 6.2:1 (floor 4.5:1), chart_text 9.2:1.
+    # Dark key slides keep colour_kits.yaml `neutrals_dark` (D-063).
+    neutrals:
+      ink: "#18202B"
+      ink_muted: "#586273"
+      chart_text: "#3F4856"
+      hairline: "#C9CED6"     # graphic only (1.6:1), never text
+    # Five type roles per delivery mode (D-029: at most five sizes per slide, neighbours >= 1.5 pt apart;
+    # D-026 floors 20/10/9/8 standalone, 24/16/12/10 live). `hybrid` decks use the live column.
+    type_roles:
+      standalone: { title: 24.0, headline: 16.0, body: 12.0, chart: 10.5, small: 9.0 }
+      live:       { title: 28.0, headline: 20.0, body: 16.0, chart: 13.5, small: 12.0 }
+    # Big-number tiles (D-064) keep their own display size; it is the number, not a text role.
+    tile_number: { standalone: 44.0, live: 56.0 }
+    # Which role each renderer text slot takes.
+    role_of:
+      takeaway_title: title
+      panel_headline: headline
+      hero: headline
+      chart_title: body
+      panel_title: body
+      annotation: body
+      callout: body
+      callout_header: body
+      hero_header: body
+      step_title: body
+      step_body: body
+      table_cell: body
+      panel_text: body
+      value_tick: chart
+      category_tick: chart
+      axis_title: chart
+      data_label: chart
+      overlay_label: chart
+      stack_total: chart
+      source_footnote: small
+      diagram_label: body       # box labels in process, timeline, decision, swimlane and tree diagrams
+      diagram_sub: chart        # descriptions and answers inside diagrams; keeps diagram geometry within the body
+    # Moments (D-080 §3.7, step 3): the title slide and the section divider.
+    moments:
+      title_slide:
+        title_scale: 1.5          # x the takeaway-title size: 36 pt standalone, 42 pt live
+        audience_pt: { standalone: 18.0, live: 22.0 }
+        stroke_w_in: 0.90         # one short accent stroke above the title, the deck's only mark (CONF-015, D-080 §2)
+        stroke_h_in: 0.06
+        meta_top_in: 6.35         # date and presenter sit low on the page, joined by an em space, no middle dot
+      divider:
+        number_scale: 5.5         # x the takeaway-title size: the bold moment of each section
+        title_scale: 1.35
+    # Spacing (D-080 §3.4); used by the component steps that follow step 1.
+    spacing:
+      unit_in: 0.05
+      tight_in: 0.10
+      group_in: 0.20
+      section_in: 0.40
+      margin_in: 0.60
+      grid_columns: 12

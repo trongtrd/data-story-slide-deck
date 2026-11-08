@@ -1,0 +1,87 @@
+# Colour kits for Data Story Slide Deck decks (D-030)
+#
+# A kit is not a decorative theme. It gives each visual role one tested colour, so a deck keeps
+# SWD's grey-plus-one-accent emphasis (PRIN-DSN-004, ANTI-DSN-001) and stays readable for everyone.
+#
+# How every kit was built and checked (D-028 thresholds, checked with 40_plugin/scripts/color_contrast.py):
+#   - Lightness first, hue second (SRC-SEC-006 §16): every kit reuses the lightness levels of the
+#     reviewed Orange and Blue kits, so focal colours, tints, and greys keep the same visual weight.
+#   - Colour-vision deficiency: every pair of colours that can share a panel (focal + tier-2 + grey, or
+#     focal + comparison + grey) stays apart by a worst-case OKLab ΔE >= 0.12 under simulated protanopia,
+#     deuteranopia, and tritanopia, as well as normal vision (PRIN-DSN-006). The comparison accent always
+#     sits on the warm-cool axis (orange/amber vs. blue/indigo/plum), the safest axis for colour-blind readers.
+#   - Greyscale: the focal colour and the comparison accent differ in lightness, so they also separate in print.
+#   - Contrast (PRIN-DSN-007): focal and comparison colours >= 3:1 on white and on the #F3F4F6 card fill;
+#     tier-2 tints >= 1.6:1 standalone and >= 2.0:1 live/hybrid; greys >= 2.4:1 / 3.0:1.
+#   - Meaning: no pure red or grass green (danger/good connotations; red is also festive in Vietnam),
+#     no neon or pure hues. Teal was tested and rejected: it merges with grey for deuteranopes.
+#
+# How to choose a kit (G1, deck-context-griller):
+#   1. The organisation has brand colours -> colour_kit: brand. Map one brand colour to `focal` and check
+#      it with validate_spec.py; if it fails a floor, propose the nearest passing shade. Otherwise:
+#   2. orange (default): the point is a problem, a risk, or something to act on.
+#   3. blue: neutral, financial, or good-news reporting; or orange already means something in the data.
+#   4. plum, amber, or indigo: orange and blue are already taken by meaning (competitors, parties, product
+#      lines), or the audience's house style leans that way. Pick by the associations the topic needs:
+#      plum = distinct and calm, amber = warm and formal, indigo = cool and understated.
+#   Use one kit per deck. `comparison` is only for a second entity of equal importance, never a third accent.
+#
+# Values per delivery mode: `hybrid` decks are projected, so they use the `live` values.
+
+neutrals:
+  background: "#FFFFFF"
+  text_primary: "#1F2937"
+  text_muted: "#6B7280"
+  card_fill: "#F3F4F6"
+  axis_and_grid: "#D1D5DB"   # axis and zero lines
+  gridline: "#E5E7EB"        # value gridlines, 0.5 pt (D-056 P10)
+  context_grey: {standalone: "#9E9E9E", live: "#8C8C8C"}
+
+# D-063: key slides (section dividers, the closing decision slide) use this dark set. On it, the focal role
+# (Color Tie spans, the section number) takes each kit's `tier2.live` tint in every delivery mode; all five pass
+# 4.5:1 here, while four of the five focal colours fail 3:1. Cards keep their light fills and light-theme text.
+neutrals_dark:
+  background: "#1E2A38"
+  text_primary: "#F3F4F6"   # 13.2:1
+  text_muted: "#AEB8C4"     # 7.2:1
+  rule: "#3B4A5C"
+
+kits:
+  orange:
+    name: Orange
+    use_when: Default. The point is a problem, a risk, or something to act on (SWD's reference accent).
+    focal: "#D95F02"
+    tier2: {standalone: "#FBB070", live: "#F0974A"}
+    comparison: "#2B5C8F"
+    comparison_tier2: {standalone: "#9FC4EE", live: "#86B0DA"}  # D-060: lighter step of the comparison side of a diverging scale
+    shade: "#FEE6CE"
+    note: "The focal colour is 3.76:1 on white: fine for marks and bold Color Tie text, below 4.5:1 for regular body text."
+  blue:
+    name: Blue
+    use_when: Neutral, financial, or good-news reporting; or orange already carries a meaning in the data.
+    focal: "#2B5C8F"
+    tier2: {standalone: "#9FC4EE", live: "#86B0DA"}
+    comparison: "#D95F02"
+    comparison_tier2: {standalone: "#FBB070", live: "#F0974A"}  # D-060: lighter step of the comparison side of a diverging scale
+    shade: "#DCE8F4"
+  plum:
+    name: Plum
+    use_when: Orange and blue are taken by meaning; a distinct, calm accent.
+    focal: "#71426D"
+    tier2: {standalone: "#EDABFC", live: "#E190F3"}
+    comparison: "#9F7100"
+    shade: "#F8E2F5"
+  amber:
+    name: Amber
+    use_when: A warm, formal accent without an alarm connotation.
+    focal: "#8D5E00"
+    tier2: {standalone: "#F3BA25", live: "#D9A514"}
+    comparison: "#39456E"
+    shade: "#F6E8D0"
+  indigo:
+    name: Indigo
+    use_when: A cool, understated accent that is not the default Office blue.
+    focal: "#494C83"
+    tier2: {standalone: "#C3B9FF", live: "#7B9AFF"}
+    comparison: "#C57800"
+    shade: "#E4E8FF"

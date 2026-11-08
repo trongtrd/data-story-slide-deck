@@ -1,0 +1,346 @@
+# EX-001 benchmark (fictional): a hospital network replacing a uniform monthly nurse rotation with unit-based staffing.
+run_id: bench_en_nurse_staffing
+example_card: EX-001
+deck: {language: en, delivery_mode: live, palette: orange}
+title_slide: {title: Move to unit-based staffing to keep new nurses and cut agency spend, audience_line: Decision for the Executive Leadership Team, date: November 2026, presenter: 'Dr. Lena Okafor, Chief Nursing Officer'}
+
+context:
+  org: Northvale Health (fictional)
+  room: Executive Leadership Team — FY2026 nursing workforce review
+  decision_maker:
+    name_or_role: Grace Adeyemi (Chief Executive Officer) and the Executive Leadership Team
+    decision_authority: Approves hospital-wide staffing models and the agency-nurse budget
+    core_priority: Safe staffing at a sustainable cost
+  allies:
+    - name_or_role: Dr. Lena Okafor (Chief Nursing Officer)
+      priority: Retaining new-graduate nurses and building their competence
+      evidence_needed: Competency and turnover trends by unit and tenure
+  skeptics:
+    - name_or_role: Tomás Reyes (Chief Financial Officer)
+      core_bias_or_fear: Expects the rotation to keep agency-nurse spend down.
+      required_reframe_or_proof: Slide 5 shows unit-based staffing would cut agency spend by $2.6M a year.
+    - name_or_role: Hana Sato (VP Workforce Planning)
+      core_bias_or_fear: Designed the rotation to keep nurses cross-trained.
+      required_reframe_or_proof: Slide 7 keeps two planned cross-unit shifts per quarter.
+    - name_or_role: Victor Mensah (Director of Operations)
+      core_bias_or_fear: Worried that weekend shifts will go unfilled.
+      required_reframe_or_proof: Slide 6 shows open weekend shifts stay flat or fall in every unit.
+  primary_action: Approve replacing the uniform monthly rotation with unit-based staffing from next quarter.
+  fallback: Run a six-month unit-based pilot in Critical Care and Emergency only.
+  benefits:
+    - About $4.3M a year saved ($2.6M agency spend, $1.7M turnover replacement).
+    - New-graduate competency scores recover toward pre-rotation levels.
+  risks:
+    - First-year turnover in Critical Care stays near 27%, almost double the pre-rotation rate.
+    - Agency nurses keep filling the gaps that rotation creates.
+  big_idea:
+    sentence: Replacing the uniform monthly rotation with unit-based staffing will meaningfully cut agency and turnover costs while helping new nurses build competence and stay.
+    point_of_view: Replace the uniform monthly rotation with unit-based staffing
+    stakes_clause: meaningfully cut agency and turnover costs while helping new nurses build competence and stay
+    phrasing_mode: directional
+    phrasing_rationale: The CFO will debate the savings model; the direction lands first and the $4.3M arrives on Slide 5.
+
+report: |
+  # Northvale Health — Nursing Workforce Review (fictional benchmark data)
+
+  Since January 2024 all 1,800 nurses rotate to a different unit each month.
+
+  - Outpatient pilot clinics that kept fixed teams saw 18.6 patients per nurse shift, versus 15.1 under monthly rotation.
+  - Competency scores (1–5) for new-graduate nurses fell from 3.9 to 3.2 in Critical Care, 3.8 to 3.3 in Emergency, and 4.0 to 3.8 in Outpatient. Experienced and senior nurses held steady.
+  - First-year turnover rose from 14% to 27% in Critical Care, 15% to 24% in Emergency, and 11% to 16% in Outpatient.
+  - Modeled annual savings of unit-based staffing: $2.6M agency spend and $1.7M turnover replacement.
+  - Open weekend shifts per month would move from 6 to 5 (Critical Care), 9 to 8 (Emergency), and stay at 2 (Outpatient).
+
+datasets:
+  throughput:
+    columns: [care_model, patients_per_nurse_shift]
+    rows:
+      - [Monthly rotation, 15.1]
+      - [Fixed team (pilot clinics), 18.6]
+  nurse_outcomes:
+    columns: [metric, unit_type, cohort, before_rotation, current]
+    rows:
+      - [competency_score, Critical Care, Senior, 4.4, 4.4]
+      - [competency_score, Critical Care, Experienced, 4.2, 4.1]
+      - [competency_score, Critical Care, New graduate, 3.9, 3.2]
+      - [competency_score, Emergency, Senior, 4.3, 4.2]
+      - [competency_score, Emergency, Experienced, 4.1, 4.0]
+      - [competency_score, Emergency, New graduate, 3.8, 3.3]
+      - [competency_score, Outpatient, Senior, 4.5, 4.5]
+      - [competency_score, Outpatient, Experienced, 4.3, 4.3]
+      - [competency_score, Outpatient, New graduate, 4.0, 3.8]
+      - [first_year_turnover_pct, Critical Care, Senior, 5, 5]
+      - [first_year_turnover_pct, Critical Care, Experienced, 8, 9]
+      - [first_year_turnover_pct, Critical Care, New graduate, 14, 27]
+      - [first_year_turnover_pct, Emergency, Senior, 6, 6]
+      - [first_year_turnover_pct, Emergency, Experienced, 9, 10]
+      - [first_year_turnover_pct, Emergency, New graduate, 15, 24]
+      - [first_year_turnover_pct, Outpatient, Senior, 4, 4]
+      - [first_year_turnover_pct, Outpatient, Experienced, 7, 7]
+      - [first_year_turnover_pct, Outpatient, New graduate, 11, 16]
+  savings:
+    columns: [item, annual_usd_m]
+    rows:
+      - [Agency nurse spend avoided, 2.6]
+      - [Turnover replacement avoided, 1.7]
+  weekend:
+    columns: [unit_type, current_open_shifts, unit_based_open_shifts]
+    rows:
+      - [Critical Care, 6, 5]
+      - [Emergency, 9, 8]
+      - [Outpatient, 2, 2]
+
+storyline:
+  tension: A uniform rotation meant to keep nurses flexible is costing new nurses their footing — and the hospital its agency and turnover budget.
+  withheld: 5
+  pruned:
+    - {item: Parking-structure badge-in counts, disposition: excluded, reason: 'Measures presence, not care quality or retention.'}
+    - {item: Nurse survey methodology and Likert breakdowns, disposition: speaker_notes, reason: Supports credibility but not the decision; answered if asked.}
+    - {item: Shift-swap app usage logs, disposition: excluded, reason: Exploratory detail with no bearing on the staffing model.}
+  climax:
+    slide_numbers: [3, 4]
+    human_or_operational_peak: New-graduate competency fell most in Critical Care (3.9 to 3.2).
+    financial_or_strategic_peak: First-year Critical Care turnover nearly doubled (14% to 27%).
+  skeptic_slides:
+    - {slide_number: 5, target_skeptic: Tomás Reyes (CFO), objection_neutralized: Unit-based staffing saves $2.6M agency spend plus $1.7M turnover replacement a year.}
+    - {slide_number: 6, target_skeptic: Victor Mensah (Director of Operations), objection_neutralized: Open weekend shifts stay flat or fall in every unit.}
+    - {slide_number: 7, target_skeptic: Hana Sato (VP Workforce Planning), objection_neutralized: Cross-training continues through two planned cross-unit shifts per quarter.}
+
+qa:
+  - skeptic_name_or_role: Tomás Reyes (CFO)
+    predicted_question: Won’t fixed unit teams push us back onto agency nurses when a unit runs short?
+    evidence_backed_response: Slide 5 models $2.6M less agency spend because fewer new nurses leave; Slide 6 shows open weekend shifts do not rise.
+    supporting_slide_numbers: [5, 6]
+  - skeptic_name_or_role: Hana Sato (VP Workforce Planning)
+    predicted_question: Do we lose the cross-training the rotation was built for?
+    evidence_backed_response: Slide 7 keeps two planned cross-unit shifts per quarter, targeted at experienced nurses whose scores held steady (Slide 3).
+    supporting_slide_numbers: [3, 7]
+
+slides:
+  - arc: plot
+    layout: statement_or_transition
+    title: Every nursing unit follows one monthly rotation today.
+    tie: [one monthly rotation]
+    pass1: Since January 2024 every nurse in every unit has rotated to a different unit each month under one uniform policy.
+    question: How are nurses assigned to units today?
+    stakeholder: Executive Leadership Team
+    chart_title: How nurses are assigned across Northvale’s units since January 2024
+    rec:
+      header: WHAT CHANGED IN 2024
+      text: All 1,800 nurses now move to a different unit every month, whatever that unit’s care model.
+    footnote: 'Source: Northvale Health nursing workforce policy, January 2024.'
+    claim: {construct: one uniform monthly rotation, metric: Policy statement (no chart)}
+
+  - arc: rising_action
+    layout: one_sided_right_text
+    title: Outpatient nurses see more patients when teams stay together.
+    tie: [see more patients]
+    pass1: Our outpatient pilot clinics that kept their nursing teams together saw noticeably more patients per nurse shift than clinics on rotation.
+    question: Does team stability change outpatient throughput?
+    stakeholder: Dr. Lena Okafor (CNO)
+    chart_title: Patients seen per nurse shift in outpatient clinics, 2025
+    labels_mode: bar_values
+    annotations:
+      - {text: Fixed-team clinics saw 18.6 patients per nurse shift versus 15.1 under rotation., tie: [18.6 patients per nurse shift], anchor: Fixed team}
+    rec: {text: Keep outpatient nurses on stable home teams.}
+    footnote: 'Source: Northvale outpatient scheduling system, 2025 (pilot clinics vs. rotating clinics).'
+    g3: {selected: Two-bar column chart, shows: The throughput gap between team models., obscures: Variation between individual clinics., rejected: [Clinic-by-clinic table]}
+    claim: {construct: more patients seen with stable teams, metric: Patients per nurse shift}
+    panels:
+      - id: panel_throughput
+        family: vertical_bar_chart
+        title: By care model
+        categories: [Monthly rotation, Fixed team (pilot clinics)]
+        y: [0, 20]
+        format: '0'
+        series:
+          - name: Patients per nurse shift
+            role: context
+            labels: bar_end
+            label: '{v:.1f}'
+            base: {dataset: throughput, column: patients_per_nurse_shift}
+            highlight: {Fixed team (pilot clinics): focal}
+            points:
+              Monthly rotation: {where: {care_model: Monthly rotation}}
+              Fixed team (pilot clinics): {where: {care_model: Fixed team (pilot clinics)}}
+
+  - arc: climax
+    layout: small_multiples_grid
+    title: Competency scores fell for new-graduate nurses after rotation began.
+    tie: [new-graduate nurses]
+    pass1: When we compare competency assessments before and after the rotation policy, new-graduate nurses declined in every unit while experienced nurses held steady.
+    question: Which nurses' competency changed after rotation began?
+    stakeholder: Dr. Lena Okafor (CNO)
+    chart_title: Mean competency score (1–5) by unit and tenure, 2023 (before rotation) vs. 2025
+    annotations:
+      - {text: The steepest fall is in Critical Care (3.9 to 3.2) for new graduates., tie: [Critical Care (3.9 to 3.2)], panel: panel_cc}
+    rec: {text: Give new graduates a stable home unit for their first two years.}
+    footnote: 'Source: Northvale annual competency assessments, 2023 and 2025 (n = 1,800 nurses).'
+    g3: {selected: 1x3 small-multiple slopegraphs by unit, shows: The new-graduate drop against flat experienced cohorts., obscures: Year-by-year detail between the two points., rejected: [18-bar grouped column chart]}
+    claim: {construct: competency scores of new-graduate nurses, metric: Mean competency score (1–5)}
+    reveal:
+      - {step_number: 1, visible_panel_ids: [panel_cc, panel_ed, panel_op], visible_series_roles: [context_greyscale], show_annotations: false, show_recommendation_callout: false, speaker_notes: Experienced and senior nurses held steady in every unit.}
+      - {step_number: 2, visible_panel_ids: [panel_cc, panel_ed, panel_op], visible_series_roles: [context_greyscale, focal_primary_tier1], show_annotations: true, show_recommendation_callout: true, speaker_notes: 'New graduates fell in every unit, most of all in Critical Care.'}
+    panels: &competency_panels
+      - id: panel_cc
+        role: small_multiple_cell
+        grid_pos: [1, 1]
+        shaded: true
+        family: slopegraph
+        title: Critical Care
+        categories: ['2023', '2025']
+        y: [2.5, 5.0]
+        format: '0.0'
+        series:
+          - {name: Senior, role: context, labels: both_endpoints, label: '{v:.1f}', base: {dataset: nurse_outcomes, where: {metric: competency_score, unit_type: Critical Care, cohort: Senior}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: Experienced, role: context, labels: both_endpoints, label: '{v:.1f}', base: {dataset: nurse_outcomes, where: {metric: competency_score, unit_type: Critical Care, cohort: Experienced}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: New graduate, role: focal, labels: both_endpoints, label: '{v:.1f}', base: {dataset: nurse_outcomes, where: {metric: competency_score, unit_type: Critical Care, cohort: New graduate}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+      - id: panel_ed
+        role: small_multiple_cell
+        grid_pos: [1, 2]
+        family: slopegraph
+        title: Emergency
+        categories: ['2023', '2025']
+        y: [2.5, 5.0]
+        format: '0.0'
+        series:
+          - {name: Senior, role: context, labels: none, base: {dataset: nurse_outcomes, where: {metric: competency_score, unit_type: Emergency, cohort: Senior}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: Experienced, role: context, labels: none, base: {dataset: nurse_outcomes, where: {metric: competency_score, unit_type: Emergency, cohort: Experienced}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: New graduate, role: focal, labels: both_endpoints, label: '{v:.1f}', base: {dataset: nurse_outcomes, where: {metric: competency_score, unit_type: Emergency, cohort: New graduate}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+      - id: panel_op
+        role: small_multiple_cell
+        grid_pos: [1, 3]
+        family: slopegraph
+        title: Outpatient
+        categories: ['2023', '2025']
+        y: [2.5, 5.0]
+        format: '0.0'
+        series:
+          - {name: Senior, role: context, labels: none, base: {dataset: nurse_outcomes, where: {metric: competency_score, unit_type: Outpatient, cohort: Senior}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: Experienced, role: context, labels: none, base: {dataset: nurse_outcomes, where: {metric: competency_score, unit_type: Outpatient, cohort: Experienced}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: New graduate, role: focal, labels: both_endpoints, label: '{v:.1f}', base: {dataset: nurse_outcomes, where: {metric: competency_score, unit_type: Outpatient, cohort: New graduate}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+
+  - arc: climax
+    layout: small_multiples_grid
+    title: First-year turnover nearly doubled in Critical Care after rotation.
+    tie: [nearly doubled in Critical Care]
+    pass1: First-year turnover among new nurses has risen sharply since the rotation started, and Critical Care has almost doubled.
+    question: Where did first-year turnover change after rotation began?
+    stakeholder: Tomás Reyes (CFO)
+    chart_title: First-year turnover (%) by unit and tenure, 2023 (before rotation) vs. 2025
+    annotations:
+      - {text: Critical Care new-graduate turnover rose from 14% to 27%., tie: [14% to 27%], panel: panel_t_cc}
+    rec: {text: Treat new-graduate retention as the first savings lever.}
+    footnote: 'Source: Northvale HR separations data, 2023 and 2025.'
+    g3: {selected: Same 1x3 slopegraph grammar as the previous slide, shows: Where turnover rose and for whom., obscures: Reasons for leaving (in the speaker notes)., rejected: [Stacked bars of leavers by reason]}
+    claim: {construct: first-year turnover in Critical Care, metric: First-year turnover (%)}
+    panels:
+      - id: panel_t_cc
+        role: small_multiple_cell
+        grid_pos: [1, 1]
+        shaded: true
+        family: slopegraph
+        title: Critical Care
+        categories: ['2023', '2025']
+        y: [0, 30]
+        format: 0%
+        series:
+          - {name: Senior, role: context, labels: both_endpoints, label: '{v:.0f}%', base: {dataset: nurse_outcomes, where: {metric: first_year_turnover_pct, unit_type: Critical Care, cohort: Senior}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: Experienced, role: context, labels: both_endpoints, label: '{v:.0f}%', base: {dataset: nurse_outcomes, where: {metric: first_year_turnover_pct, unit_type: Critical Care, cohort: Experienced}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: New graduate, role: focal, labels: both_endpoints, label: '{v:.0f}%', base: {dataset: nurse_outcomes, where: {metric: first_year_turnover_pct, unit_type: Critical Care, cohort: New graduate}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+      - id: panel_t_ed
+        role: small_multiple_cell
+        grid_pos: [1, 2]
+        family: slopegraph
+        title: Emergency
+        categories: ['2023', '2025']
+        y: [0, 30]
+        format: 0%
+        series:
+          - {name: Senior, role: context, labels: none, base: {dataset: nurse_outcomes, where: {metric: first_year_turnover_pct, unit_type: Emergency, cohort: Senior}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: Experienced, role: context, labels: none, base: {dataset: nurse_outcomes, where: {metric: first_year_turnover_pct, unit_type: Emergency, cohort: Experienced}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: New graduate, role: focal, labels: both_endpoints, label: '{v:.0f}%', base: {dataset: nurse_outcomes, where: {metric: first_year_turnover_pct, unit_type: Emergency, cohort: New graduate}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+      - id: panel_t_op
+        role: small_multiple_cell
+        grid_pos: [1, 3]
+        family: slopegraph
+        title: Outpatient
+        categories: ['2023', '2025']
+        y: [0, 30]
+        format: 0%
+        series:
+          - {name: Senior, role: context, labels: none, base: {dataset: nurse_outcomes, where: {metric: first_year_turnover_pct, unit_type: Outpatient, cohort: Senior}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: Experienced, role: context, labels: none, base: {dataset: nurse_outcomes, where: {metric: first_year_turnover_pct, unit_type: Outpatient, cohort: Experienced}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+          - {name: New graduate, role: focal, labels: both_endpoints, label: '{v:.0f}%', base: {dataset: nurse_outcomes, where: {metric: first_year_turnover_pct, unit_type: Outpatient, cohort: New graduate}}, points: {'2023': {column: before_rotation}, '2025': {column: current}}}
+
+  - arc: falling_action
+    layout: one_sided_right_text
+    title: Unit-based staffing would save about $4.3M a year.
+    tie: [about $4.3M a year]
+    pass1: Our finance model suggests that moving to unit-based staffing would save roughly four point three million dollars every year.
+    question: What would unit-based staffing save each year?
+    stakeholder: Tomás Reyes (CFO)
+    chart_title: Modeled annual savings from unit-based staffing ($M)
+    labels_mode: bar_values
+    annotations:
+      - {text: $2.6M comes from fewer agency nurses and $1.7M from replacing fewer leavers., tie: [fewer agency nurses], anchor: Unit-based staffing}
+    rec: {text: Book the agency savings in the FY2026 nursing budget.}
+    footnote: 'Source: Northvale finance model of unit-based staffing, FY2026.'
+    g3: {selected: Single stacked column with a total label, shows: The two savings components and their sum., obscures: Monthly phasing of savings., rejected: [Waterfall from current to proposed cost]}
+    claim: {construct: annual savings of unit-based staffing, metric: Modeled annual savings ($M)}
+    panels:
+      - id: panel_savings
+        family: stacked_bar_chart
+        title: Savings components
+        categories: [Unit-based staffing (modeled)]
+        y: [0, 5]
+        format: $0M
+        stack_total_labels: [$4.3M a year]
+        series:
+          - {name: Agency spend avoided, role: focal, labels: bar_end, label: '${v:.1f}M', points: {Unit-based staffing (modeled): {dataset: savings, where: {item: Agency nurse spend avoided}, column: annual_usd_m}}}
+          - {name: Turnover replacement avoided, role: tier2, labels: bar_end, label: '${v:.1f}M', points: {Unit-based staffing (modeled): {dataset: savings, where: {item: Turnover replacement avoided}, column: annual_usd_m}}}
+
+  - arc: falling_action
+    layout: one_sided_right_text
+    title: Weekend coverage holds steady under unit-based staffing.
+    tie: [holds steady]
+    pass1: Operations modeled the weekend schedule and found that open weekend shifts would stay the same or improve slightly with unit-based staffing.
+    question: Will weekend shifts go unfilled without rotation?
+    stakeholder: Victor Mensah (Director of Operations)
+    chart_title: Open weekend shifts per month, current rotation vs. modeled unit-based staffing
+    labels_mode: bar_values
+    annotations:
+      - {text: Open weekend shifts stay flat or fall by one in every unit; Emergency stays the hardest to fill., tie: [stay flat], anchor: Emergency}
+    rec: {text: Keep the weekend float pool for Emergency only.}
+    footnote: 'Source: Northvale operations scheduling model, FY2026.'
+    g3: {selected: Slopegraph of current vs. modeled open shifts by unit, shows: Flat or falling lines in every unit., obscures: Week-to-week variation., rejected: [Grouped columns (heavy ink for small gaps)]}
+    claim: {construct: weekend coverage under unit-based staffing, metric: Open weekend shifts per month}
+    panels:
+      - id: panel_weekend
+        family: slopegraph
+        title: Three units
+        categories: [Current rotation, Unit-based model]
+        y: [0, 12]
+        format: '0'
+        series:
+          - {name: Critical Care, role: context, labels: both_endpoints, label: '{v:.0f}', forecast: [Unit-based model], base: {dataset: weekend, where: {unit_type: Critical Care}}, points: {Current rotation: {column: current_open_shifts}, Unit-based model: {column: unit_based_open_shifts}}}
+          - {name: Outpatient, role: context, labels: both_endpoints, label: '{v:.0f}', forecast: [Unit-based model], base: {dataset: weekend, where: {unit_type: Outpatient}}, points: {Current rotation: {column: current_open_shifts}, Unit-based model: {column: unit_based_open_shifts}}}
+          - {name: Emergency, role: focal, labels: both_endpoints, label: '{v:.0f}', forecast: [Unit-based model], base: {dataset: weekend, where: {unit_type: Emergency}}, points: {Current rotation: {column: current_open_shifts}, Unit-based model: {column: unit_based_open_shifts}}}
+
+  - arc: resolution
+    layout: statement_or_transition
+    title: Approve unit-based staffing to stop the turnover and agency drain.
+    tie: [Approve unit-based staffing]
+    pass1: We are asking the leadership team to approve unit-based staffing so that we stop losing new nurses and paying for agency cover.
+    question: What decision do we need today?
+    stakeholder: Grace Adeyemi (CEO) and the Executive Leadership Team
+    chart_title: Decision requested and first three steps
+    rec:
+      text: 'Approve unit-based staffing from next quarter (fallback: a six-month pilot in Critical Care and Emergency).'
+      tie: [Approve unit-based staffing]
+    steps:
+      - {title: 'Step 1: Home units', description: Assign every nurse a home unit; new graduates stay put for two years.}
+      - {title: 'Step 2: Planned cross-training', description: Two scheduled cross-unit shifts per quarter for experienced nurses.}
+      - {title: 'Step 3: Track the savings', description: Report agency spend and first-year turnover monthly against the $4.3M target.}
+    footnote: 'Source: Northvale nursing workforce review, FY2026.'
+    claim: {construct: approval of unit-based staffing, metric: Decision request (no chart)}

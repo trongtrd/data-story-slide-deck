@@ -1,0 +1,14 @@
+{
+  "name": "data-story-slide-deck",
+  "description": "Data Story Slide Deck skill suite for story-driven, editable presentation decks",
+  "owner": {
+    "name": "Trong Truong"
+  },
+  "plugins": [
+    {
+      "name": "data-story-slide-deck",
+      "source": "./40_plugin",
+      "description": "Stage-gated deck builder: context, storyline, visual plan, native editable .pptx charts, and adversarial review."
+    }
+  ]
+}

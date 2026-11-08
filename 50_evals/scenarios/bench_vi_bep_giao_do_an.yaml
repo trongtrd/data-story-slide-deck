@@ -1,0 +1,252 @@
+# EX-004 benchmark (fictional, Vietnamese): kitchen order peaks vs. capacity — the seven word jobs in a VI deck.
+run_id: bench_vi_bep_giao_do_an
+example_card: EX-004
+deck: {language: vi, delivery_mode: live, palette: orange}
+title_slide: {title: Dời giờ ăn ca và giao ca để bếp theo kịp đơn cao điểm, audience_line: 'Họp vận hành tháng, quyết định của Giám đốc vận hành', date: Tháng 9/2026, presenter: 'Anh Minh, Trưởng nhóm dữ liệu'}
+
+context:
+  org: Bếp Trung Tâm Lá Chanh (hư cấu)
+  room: Họp vận hành tháng — kế hoạch ca bếp quý 4
+  decision_maker:
+    name_or_role: Chị Ngọc Anh (Giám đốc vận hành)
+    decision_authority: Phê duyệt lịch ca và giờ ăn ca của toàn bộ đầu bếp
+    core_priority: Giảm đơn giao trễ trước mùa cao điểm cuối năm
+  allies:
+    - name_or_role: Anh Minh (Trưởng nhóm dữ liệu)
+      priority: Lịch ca dựa trên số đơn thực tế theo giờ
+      evidence_needed: Đơn hàng và năng lực bếp theo từng giờ
+  skeptics:
+    - name_or_role: Anh Phúc (Bếp trưởng)
+      core_bias_or_fear: Lo đầu bếp mất giờ ăn ca và mệt hơn.
+      required_reframe_or_proof: Slide 4 giữ nguyên tổng giờ công và chỉ dời giờ ăn ca.
+    - name_or_role: Chị Hạnh (Kế toán trưởng)
+      core_bias_or_fear: Không muốn tăng chi phí nhân sự.
+      required_reframe_or_proof: Slide 3 cho thấy giao trễ đang tốn 1,8 tỷ đồng mỗi quý.
+  primary_action: Phê duyệt lịch ăn ca lệch giờ và dời giờ giao ca ra khỏi hai khung cao điểm từ tháng sau.
+  fallback: Chạy thử lịch mới hai tuần tại một bếp trước khi áp dụng toàn hệ thống.
+  benefits:
+    - Năng lực bếp lúc 12:00 tăng từ 30 lên 54 đơn/15 phút mà không tuyển thêm người.
+    - Giảm khoản hoàn tiền và voucher bồi thường đang tốn 1,8 tỷ đồng mỗi quý.
+  risks:
+    - Tỷ lệ giao trễ tiếp tục ở mức 10,6% khi bước vào mùa cao điểm.
+    - Hai khung cao điểm giữ tỷ lệ trễ trên 18%.
+  big_idea:
+    sentence: Dời giờ ăn ca và giao ca ra khỏi hai khung cao điểm sẽ giúp bếp theo kịp đơn hàng mà không cần tuyển thêm người.
+    point_of_view: Dời giờ ăn ca và giao ca ra khỏi hai khung cao điểm
+    stakes_clause: giúp bếp theo kịp đơn hàng mà không cần tuyển thêm người
+    phrasing_mode: directional
+    phrasing_rationale: Bếp trưởng cần thấy hướng đi trước; con số chi phí xuất hiện ở slide 3.
+
+report: |
+  # Bếp Trung Tâm Lá Chanh — Báo cáo vận hành quý 3 (dữ liệu hư cấu cho benchmark)
+
+  - Tỷ lệ đơn giao trễ tăng từ 4,1% (quý 1) lên 10,6% (quý 3) dù số đầu bếp mỗi ca giữ nguyên 48 người.
+  - Đơn hàng đạt đỉnh 52 đơn/15 phút lúc 12:00 (giờ ăn ca) và 55 đơn/15 phút lúc 18:00 (giờ giao ca), khi năng lực bếp chỉ còn 30 và 34.
+  - Khi vượt 40 đơn/15 phút, bếp phải gọi thêm người hỗ trợ.
+  - Tỷ lệ trễ: 21,4% ở đỉnh trưa, 18,9% ở đỉnh tối, 2,6% giờ thấp điểm, 3,9% các giờ khác.
+  - Chi phí quý 3: 1.320 triệu đồng hoàn tiền đơn trễ và 480 triệu đồng voucher bồi thường.
+  - Lịch đề xuất dời giờ ăn ca sang 14:00–16:00 và giao ca sang 20:00; năng lực lúc 12:00 lên 54 và lúc 18:00 lên 56 đơn/15 phút mà không tuyển thêm người.
+
+datasets:
+  late_rate:
+    columns: [quarter, late_delivery_pct]
+    rows:
+      - [Q1 2025, 4.1]
+      - [Q3 2025, 10.6]
+  hourly:
+    columns: [hour, orders_per_15min, capacity_current, capacity_proposed]
+    rows:
+      - ['10:00', 18, 30, 22]
+      - ['11:00', 34, 32, 36]
+      - ['12:00', 52, 30, 54]
+      - ['13:00', 38, 36, 40]
+      - ['14:00', 22, 40, 24]
+      - ['15:00', 20, 40, 22]
+      - ['16:00', 26, 40, 28]
+      - ['17:00', 40, 38, 42]
+      - ['18:00', 55, 34, 56]
+      - ['19:00', 47, 36, 48]
+      - ['20:00', 30, 40, 32]
+      - ['21:00', 16, 32, 20]
+  late_by_window:
+    columns: [window, late_pct]
+    rows:
+      - [Đỉnh trưa (11:30–13:00), 21.4]
+      - [Đỉnh tối (17:30–19:30), 18.9]
+      - [Giờ thấp điểm (14:00–16:30), 2.6]
+      - [Giờ khác, 3.9]
+  refund_cost:
+    columns: [item, million_vnd_q3]
+    rows:
+      - [Hoàn tiền đơn trễ, 1320]
+      - [Voucher bồi thường, 480]
+
+storyline:
+  tension: Bếp đủ người cả ngày nhưng thiếu người đúng hai lúc đơn dồn về nhiều nhất.
+  withheld: 4
+  pruned:
+    - {item: Nhật ký thời gian chế biến từng món, disposition: speaker_notes, reason: Chi tiết kỹ thuật không đổi quyết định lịch ca; trả lời khi được hỏi.}
+    - {item: Khảo sát sở thích món ăn của khách, disposition: excluded, reason: Không liên quan tới năng lực bếp theo giờ.}
+  climax:
+    slide_numbers: [3]
+    human_or_operational_peak: Tỷ lệ trễ 21,4% ở đỉnh trưa và 18,9% ở đỉnh tối.
+    financial_or_strategic_peak: Hoàn tiền và voucher tốn 1,8 tỷ đồng mỗi quý.
+  skeptic_slides:
+    - {slide_number: 3, target_skeptic: Chị Hạnh (Kế toán trưởng), objection_neutralized: 'Giao trễ đã tốn 1,8 tỷ đồng mỗi quý.'}
+    - {slide_number: 4, target_skeptic: Anh Phúc (Bếp trưởng), objection_neutralized: Tổng giờ công giữ nguyên và giờ ăn ca vẫn đủ.}
+
+qa:
+  - skeptic_name_or_role: Anh Phúc (Bếp trưởng)
+    predicted_question: Ăn ca muộn tới 14:00 có làm đầu bếp mệt và bỏ việc không?
+    evidence_backed_response: Slide 4 giữ nguyên tổng giờ công; giờ ăn ca chỉ dời sang khung 14:00–16:00 khi đơn thấp nhất (slide 2).
+    supporting_slide_numbers: [2, 4]
+  - skeptic_name_or_role: Chị Hạnh (Kế toán trưởng)
+    predicted_question: Đổi lịch có làm tăng chi phí nhân sự không?
+    evidence_backed_response: Không tuyển thêm người; slide 3 cho thấy giao trễ đang tốn 1,8 tỷ đồng mỗi quý.
+    supporting_slide_numbers: [3]
+
+slides:
+  - arc: plot
+    layout: one_sided_right_text
+    title: Tỷ lệ giao trễ vọt từ 4,1% lên 10,6% chỉ sau hai quý.
+    tie: ['vọt từ 4,1% lên 10,6%']
+    pass1: Trong hai quý vừa qua tỷ lệ đơn giao trễ của bếp đã tăng mạnh từ 4,1% lên 10,6% dù số đầu bếp không đổi.
+    question: Tỷ lệ giao trễ thay đổi thế nào trong năm nay?
+    stakeholder: Chị Ngọc Anh (Giám đốc vận hành)
+    chart_title: Tỷ lệ đơn giao trễ (%), quý 1 so với quý 3 năm 2025
+    annotations:
+      - {text: 'Số đầu bếp mỗi ca giữ nguyên 48 người, nhưng tỷ lệ trễ tăng hơn 2,5 lần.', tie: ['tỷ lệ trễ tăng hơn 2,5 lần'], anchor: Quý 3}
+    rec: {text: Tìm nguyên nhân ở cách xếp ca trước khi tính chuyện tuyển thêm.}
+    footnote: 'Nguồn: Hệ thống quản lý đơn hàng Lá Chanh, quý 1 và quý 3 năm 2025.'
+    g3: {selected: Slopegraph hai điểm, shows: Mức tăng giữa hai quý., obscures: Biến động từng tuần., rejected: [Biểu đồ cột theo tuần]}
+    claim: {construct: tỷ lệ giao trễ tăng, metric: Tỷ lệ đơn giao trễ (%)}
+    panels:
+      - id: panel_late
+        family: slopegraph
+        title: Hai quý gần nhất
+        categories: [Quý 1, Quý 3]
+        y: [0, 15]
+        format: 0%
+        series:
+          - {name: Tỷ lệ giao trễ, role: focal, labels: both_endpoints, label: '{v:.1f}%', base: {dataset: late_rate, column: late_delivery_pct}, category_key: {column: quarter, values: [Q1 2025, Q3 2025]}}
+
+  - arc: rising_action
+    layout: one_sided_right_text
+    title: Đơn hàng vượt năng lực bếp đúng giờ ăn ca và giao ca.
+    tie: [Đơn hàng vượt năng lực bếp]
+    pass1: Khi đặt số đơn theo giờ cạnh năng lực bếp ta thấy đơn hàng vượt năng lực đúng vào giờ ăn ca buổi trưa và giờ giao ca buổi tối.
+    question: Vào giờ nào đơn hàng vượt năng lực bếp?
+    stakeholder: Anh Phúc (Bếp trưởng)
+    chart_title: Đơn hàng và năng lực bếp (đơn/15 phút) theo giờ, trung bình ngày quý 3
+    axis: {x: Khung giờ, y: Đơn / 15 phút}
+    annotations:
+      - {text: Lúc 12:00 bếp nhận 52 đơn khi năng lực chỉ còn 30 vì đầu bếp đi ăn ca., tie: [52 đơn], anchor: '12:00'}
+      - {text: Lúc 18:00 đơn lên 55 đúng giờ giao ca và năng lực chỉ còn 34., tie: [đơn lên 55 đúng giờ giao ca], anchor: '18:00'}
+    rec: {text: Dời giờ ăn ca và giao ca sang lúc bếp vắng đơn.}
+    footnote: 'Nguồn: Hệ thống quản lý đơn hàng Lá Chanh, trung bình ngày quý 3 năm 2025.'
+    g3: {selected: Biểu đồ đường hai chuỗi có vùng tô chênh lệch, shows: Hai đỉnh thiếu năng lực theo giờ., obscures: Khác biệt giữa các ngày trong tuần., rejected: [Biểu đồ cột chồng theo giờ]}
+    claim: {construct: đơn hàng vượt năng lực bếp ở hai khung giờ, metric: Đơn hàng và năng lực bếp (đơn/15 phút)}
+    reveal:
+      - {step_number: 1, visible_panel_ids: [panel_hourly], visible_series_roles: [context_greyscale], show_annotations: false, show_recommendation_callout: false, speaker_notes: Đây là năng lực bếp theo giờ với 48 đầu bếp mỗi ca.}
+      - {step_number: 2, visible_panel_ids: [panel_hourly], visible_series_roles: [context_greyscale, focal_primary_tier1], show_annotations: true, show_recommendation_callout: true, speaker_notes: Đơn hàng vượt năng lực đúng lúc ăn ca và giao ca.}
+    panels:
+      - id: panel_hourly
+        family: line_chart
+        title: Mười hai khung giờ
+        categories: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+        y: [0, 60]
+        format: '0'
+        threshold_lines: [{value: 40, label: 'Trên 40: gọi hỗ trợ', line_style: dashed, color_hex: '#6B7280'}]
+        deltas:
+          - {upper_series_name: Đơn hàng, lower_series_name: Năng lực bếp, start_category: '11:00', end_category: '13:00', label_text: Thiếu 22 đơn lúc 12:00}
+          - {upper_series_name: Đơn hàng, lower_series_name: Năng lực bếp, start_category: '17:00', end_category: '19:00', label_text: Thiếu 21 đơn lúc 18:00}
+        series:
+          - {name: Năng lực bếp, role: context, labels: right_endpoint, label: '{v:.0f}', base: {dataset: hourly, column: capacity_current}, category_key: {column: hour, values: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']}}
+          - {name: Đơn hàng, role: focal, labels: peak_only, label_categories: ['12:00', '15:00'], label: '{v:.0f}', base: {dataset: hourly, column: orders_per_15min}, category_key: {column: hour, values: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']}}
+
+  - arc: climax
+    layout: two_sided_paired_views
+    title: Giao trễ dồn vào hai khung cao điểm và tốn 1,8 tỷ đồng mỗi quý.
+    tie: [hai khung cao điểm, 'tốn 1,8 tỷ đồng mỗi quý']
+    pass1: Phần lớn đơn trễ rơi vào hai khung cao điểm và trong quý 3 bếp đã phải chi gần 1,8 tỷ đồng cho hoàn tiền và voucher.
+    question: Giao trễ tập trung ở đâu và tốn bao nhiêu?
+    stakeholder: Chị Hạnh (Kế toán trưởng)
+    chart_title: Tỷ lệ trễ (%) theo khung giờ (trái) và chi phí giao trễ quý 3 (tỷ đồng, phải)
+    rec: {text: 'Coi 1,8 tỷ đồng mỗi quý là cái giá của lịch ca hiện tại.'}
+    footnote: 'Nguồn: Hệ thống quản lý đơn hàng và sổ chi phí Lá Chanh, quý 3 năm 2025.'
+    g3: {selected: Cặp biểu đồ cột ngang và cột chồng, shows: Nơi trễ tập trung và cái giá của nó., obscures: Chi phí theo từng khung giờ., rejected: [Biểu đồ kết hợp hai trục]}
+    claim: {construct: 'giao trễ dồn vào hai đỉnh và chi phí 1,8 tỷ đồng', metric: Tỷ lệ trễ theo khung giờ và chi phí hoàn tiền quý 3}
+    panels:
+      - id: panel_windows
+        role: paired_left
+        family: horizontal_bar_chart
+        headline: {text: Hai đỉnh trễ gấp 5–8 lần giờ thấp điểm, tie: [Hai đỉnh]}
+        title: Tỷ lệ trễ theo khung giờ
+        categories: [Đỉnh trưa (11:30–13:00), Đỉnh tối (17:30–19:30), Giờ khác, Giờ thấp điểm (14:00–16:30)]
+        y: [0, 25]
+        format: 0%
+        series:
+          - name: Tỷ lệ trễ
+            role: context
+            labels: bar_end
+            label: '{v:.1f}%'
+            base: {dataset: late_by_window, column: late_pct}
+            category_key: {column: window, values: [Đỉnh trưa (11:30–13:00), Đỉnh tối (17:30–19:30), Giờ khác, Giờ thấp điểm (14:00–16:30)]}
+            highlight: {Đỉnh trưa (11:30–13:00): focal, Đỉnh tối (17:30–19:30): focal}
+      - id: panel_cost
+        role: paired_right
+        family: stacked_bar_chart
+        headline: {text: 'Hoàn tiền chiếm phần lớn trong 1,8 tỷ đồng', tie: [Hoàn tiền]}
+        title: Chi phí giao trễ quý 3 (tỷ đồng)
+        categories: [Quý 3]
+        y: [0, 2]
+        format: '0,0'
+        stack_total_labels: ['1,8 tỷ đồng']
+        series:
+          - {name: Hoàn tiền đơn trễ, role: focal, labels: bar_end, label: '{v:.2f} tỷ', points: {Quý 3: {dataset: refund_cost, where: {item: Hoàn tiền đơn trễ}, column: million_vnd_q3, unit_factor: 0.001}}}
+          - {name: Voucher bồi thường, role: tier2, labels: bar_end, label: '{v:.2f} tỷ', points: {Quý 3: {dataset: refund_cost, where: {item: Voucher bồi thường}, column: million_vnd_q3, unit_factor: 0.001}}}
+
+  - arc: falling_action
+    layout: one_sided_right_text
+    title: Lệch giờ ăn ca giúp bếp theo kịp cả hai đỉnh đơn.
+    tie: [{text: theo kịp cả hai đỉnh đơn, color: alt}]
+    tie_link: Năng lực đề xuất
+    pass1: Nếu dời giờ ăn ca và giao ca sang lúc vắng đơn thì năng lực bếp theo kịp cả hai đỉnh mà không phải tuyển thêm người.
+    question: Lịch mới có theo kịp đơn hàng không?
+    stakeholder: Anh Phúc (Bếp trưởng)
+    chart_title: Đơn hàng và năng lực bếp theo lịch đề xuất (đơn/15 phút), mô phỏng quý 4
+    axis: {x: Khung giờ, y: Đơn / 15 phút}
+    annotations:
+      - {text: Năng lực lúc 12:00 tăng từ 30 lên 54 đơn/15 phút mà không tuyển thêm người., tie: [{text: tăng từ 30 lên 54 đơn/15 phút, color: alt}], anchor: '12:00'}
+    rec: {text: Giữ nguyên tổng giờ công và chỉ dời giờ ăn ca sang 14:00–16:00.}
+    footnote: 'Nguồn: Mô phỏng lịch ca đề xuất của Lá Chanh dựa trên đơn hàng quý 3 năm 2025.'
+    g3: {selected: Biểu đồ đường năng lực đề xuất so với đơn hàng, shows: Năng lực mới phủ cả hai đỉnh., obscures: Cách chia ca của từng người., rejected: [Bảng lịch ca chi tiết]}
+    claim: {construct: năng lực theo kịp hai đỉnh đơn, metric: Năng lực bếp theo lịch đề xuất (đơn/15 phút)}
+    panels:
+      - id: panel_proposed
+        family: line_chart
+        title: Sau khi dời ca
+        categories: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']
+        y: [0, 60]
+        format: '0'
+        series:
+          - {name: Đơn hàng, role: focal, labels: right_endpoint, label: '{v:.0f}', base: {dataset: hourly, column: orders_per_15min}, category_key: {column: hour, values: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']}}
+          - {name: Năng lực đề xuất, role: alt, labels: peak_only, label_categories: ['12:00'], label: '{v:.0f}', base: {dataset: hourly, column: capacity_proposed}, category_key: {column: hour, values: ['10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00']}}
+
+  - arc: resolution
+    layout: statement_or_transition
+    title: Phê duyệt lịch ăn ca lệch giờ để giữ đơn đúng hạn mùa cao điểm.
+    tie: [Phê duyệt lịch ăn ca lệch giờ]
+    pass1: Chúng tôi đề nghị phê duyệt ngay lịch ăn ca lệch giờ và dời giờ giao ca để bếp giữ được đơn đúng hạn trong mùa cao điểm.
+    question: Quyết định nào cần chốt hôm nay?
+    stakeholder: Chị Ngọc Anh (Giám đốc vận hành)
+    chart_title: Quyết định cần chốt và ba bước thực hiện
+    rec:
+      text: 'Áp dụng lịch ăn ca 14:00–16:00 và giao ca lúc 20:00 từ tháng sau (dự phòng: chạy thử hai tuần tại một bếp).'
+      tie: [lịch ăn ca 14:00–16:00]
+    steps:
+      - {title: 'Bước 1: Chốt lịch ăn ca mới', description: Dời giờ ăn ca sang 14:00–16:00 và giữ đủ 45 phút mỗi người.}
+      - {title: 'Bước 2: Dời giờ giao ca', description: Giao ca lúc 20:00 thay vì 18:00 để giữ đủ người ở đỉnh tối.}
+      - {title: 'Bước 3: Theo dõi hằng tuần', description: Báo cáo tỷ lệ giao trễ theo khung giờ mỗi tuần trong quý 4.}
+    footnote: 'Nguồn: Kế hoạch ca bếp quý 4 của Lá Chanh.'
+    claim: {construct: phê duyệt lịch ăn ca lệch giờ, metric: Đề xuất quyết định (không có biểu đồ)}

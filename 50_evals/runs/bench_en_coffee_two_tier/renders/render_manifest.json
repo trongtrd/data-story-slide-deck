@@ -1,0 +1,72 @@
+{
+  "render_source": "pptx_libreoffice",
+  "renderer": "LibreOffice 26.8.1.1 bf6ef2662401c7d6dce671ab4deb26ee0af3a7c1",
+  "generated_at": "2026-11-08T05:25:43Z",
+  "pptx_file": "presentation.pptx",
+  "pptx_sha256": "e6e7d321987959b285be9f3b332e6546b65037f6518beb060954acf95583db84",
+  "slide_spec_sha256": "b3f9fd1b76cce2d9b1655a5ad784482742346fae151a9b36cd8705dfb2ba1dcb",
+  "width_px": 1920,
+  "slide_count": 15,
+  "pngs": [
+    {
+      "file": "slide_00.png",
+      "sha256": "8600238f6174b2666f8b368fdd201271c9266d23983597e2eae68416bb5e9cff"
+    },
+    {
+      "file": "slide_01.png",
+      "sha256": "0257233bb71989c22598b4aa14c42fc4448831d80a26cdcf147e1a8217438127"
+    },
+    {
+      "file": "slide_02.png",
+      "sha256": "450dfe0a3eae41c8811c0ef6f816fe141664e68a9d93a6ff8c33eaa6583b4e2c"
+    },
+    {
+      "file": "slide_03.png",
+      "sha256": "bea322581a657773650c57b13ec67a8ef501f255959fbfd330c7978beda72a8f"
+    },
+    {
+      "file": "slide_04.png",
+      "sha256": "2cf06a54173f8e606811477f5b19c3aedd9d591791c5e0ab04039e6fdddade36"
+    },
+    {
+      "file": "slide_05.png",
+      "sha256": "b516e538b046bcc2f4be8436c9a257894644fc8e45c50173a8e25fa51ee26367"
+    },
+    {
+      "file": "slide_06.png",
+      "sha256": "7e7990f71a7511391cd7006b3aa67b6aede431b38282cccc992fac1e243a3f51"
+    },
+    {
+      "file": "slide_07.png",
+      "sha256": "2dacfe60e736b4afe201e9a68cad7c0d41189e3e7f4e2bad39072288bac034bf"
+    },
+    {
+      "file": "slide_08.png",
+      "sha256": "68ec0115a764773e669c377f44823aa1f600e3c647d285b440b7e14eb0393347"
+    },
+    {
+      "file": "slide_09.png",
+      "sha256": "e402da95aa33a7bdd111bb11de3b35001428f3d3b7bad159c7d1f9135f3e9c66"
+    },
+    {
+      "file": "slide_10.png",
+      "sha256": "da6402ba0d910dc01ba86fb6bf39c8ccd78b13110f5c0c0777639068dc374bce"
+    },
+    {
+      "file": "slide_11.png",
+      "sha256": "3bab56a42eed70432354880967a85029520f7e7b44e9f0245a19241557657d2b"
+    },
+    {
+      "file": "slide_12.png",
+      "sha256": "8fa405560e804272cb03864d19bd38e7bf9c046259cb905803427716a78b3e5f"
+    },
+    {
+      "file": "slide_13.png",
+      "sha256": "15021a9e80c3c52263e07f3f11eb62cdc901adb8add2eb42656ba0eef592e063"
+    },
+    {
+      "file": "slide_14.png",
+      "sha256": "0a6c6ee42c9136237a6a6324b2cf12078c070a778110911110cc640b6b2158b8"
+    }
+  ]
+}

@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="slide-spec-sha256" content="b3f9fd1b76cce2d9b1655a5ad784482742346fae151a9b36cd8705dfb2ba1dcb" />
+  <title>bench_en_coffee_two_tier</title>
+  <script>
+      // D-048 X1: page errors are kept for the `#qa` report (html_qa.py)
+      window.qaErrors = [];
+      window.addEventListener('error', e => window.qaErrors.push(String(e.message || e)));
+    </script>
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --text-primary: #1F2937;
+      --text-muted: #6B7280;
+      --panel-bg: #F3F4F6;
+      --accent: #D95F02;
+      --shaded: #FEE6CE;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;  /* D-029: the brand font from the G1 profile */
+      background: #111827;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .deck-viewport {
+      container-type: inline-size;  /* B-8: text is sized as a share of the slide width, like the PPTX */
+      width: min(96vw, calc(90vh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: var(--bg);
+      border-radius: 8px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+      position: relative;
+      overflow: hidden;
+    }
+    .slide {
+      --pt: calc(100cqw / 960);
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 2.6% 4.5% 2.2% 4.5%;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .slide.active { display: flex; }
+    /* D-063: key slides on the dark background; cards keep their light fills and text */
+    .slide.key { background: #1E2A38; }
+    .slide.key .takeaway-title { color: #F3F4F6; }
+    .slide.key .descriptive-chart-title, .slide.key .reading-note, .slide.key .slide-footer { color: #AEB8C4; }
+    .slide.key .slide-header { border-bottom-color: #3B4A5C; }
+    .divider-block { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .title-block { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 82%; }
+    .slide.title-slide .deck-title {
+      font-size: calc(var(--pt) * 30);
+      font-family: "Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text-primary);
+    }
+    .title-audience { margin-top: 14px; font-size: calc(var(--pt) * 15); color: var(--text-muted); }
+    .title-rule { width: 30%; margin: 22px 0 14px; border-top: 1.5pt solid var(--accent); }
+    .title-meta { font-size: calc(var(--pt) * 12); color: var(--text-muted); }
+    .section-number {
+      font-size: calc(var(--pt) * 66);
+      font-weight: 700;
+      line-height: 1.1;
+      color: #F0974A;
+    }
+    .slide.divider .takeaway-title { font-size: calc(var(--pt) * 30); }
+    .section-question { font-size: calc(var(--pt) * 15); color: #AEB8C4; line-height: 1.3; }
+    .slide-header {
+      border-bottom: 1.5px solid #E5E7EB;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .takeaway-title {
+      font-family: "Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: calc(var(--pt) * 20);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .descriptive-chart-title {
+      font-size: calc(var(--pt) * 12);
+      color: var(--text-muted);
+    }
+    .slide-body {
+      flex: 1;
+      display: grid;
+      gap: 20px;
+      min-height: 0;
+      align-items: stretch;
+    }
+    .layout-one_sided_right_text { grid-template-columns: 68% 1fr; }
+    .layout-one_sided_left_text { grid-template-columns: 32% 1fr; }
+    .layout-two_sided_paired_views,
+    .layout-two_sided_comparison,
+    .layout-small_multiples_grid,
+    .layout-1_plus_4_grid {
+      grid-template-rows: 1fr auto;
+    }
+    .layout-diagram { grid-template-rows: 1fr auto; }
+    .layout-diagram .side-zone { flex-direction: row; }
+    .layout-diagram .side-zone > div { flex: 1 1 0; min-width: 0; }
+    .diagram-zone { min-height: 0; overflow: hidden; }
+    .diagram-svg { width: 100%; height: 100%; display: block; }
+    .layout-data_table { grid-template-rows: 1fr auto; }
+    .layout-data_table .side-zone { flex-direction: row; }
+    .layout-data_table .side-zone > div { flex: 1 1 0; min-width: 0; }
+    .table-zone { min-height: 0; overflow: hidden; }
+    .data-table {
+      border-collapse: collapse;
+      min-width: 60%;
+      font-size: calc(var(--pt) * 10.5);
+      line-height: 1.25;
+      color: var(--text-primary);
+    }
+    .data-table caption {
+      caption-side: top;
+      text-align: left;
+      font-size: calc(var(--pt) * 12);
+      font-weight: 700;
+      padding-bottom: 10px;
+    }
+    .data-table th, .data-table td { padding: 0.35em 0.7em; text-align: left; vertical-align: bottom; font-weight: 400; }
+    .data-table thead th { font-weight: 700; border-bottom: 1pt solid var(--text-primary); }
+    .data-table .group-row th { text-align: center; color: var(--text-muted); border-bottom: 0.75pt solid #9CA3AF; }
+    .data-table .group-row td { border: none; }
+    .data-table tbody tr td, .data-table tbody tr th { border-bottom: 0.5pt solid #D1D5DB; }
+    .data-table tbody tr:last-child td, .data-table tbody tr:last-child th { border-bottom: none; }
+    .data-table tfoot td, .data-table tfoot th { font-weight: 700; border-top: 1pt solid var(--text-primary); }
+    .data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .data-table .focal { color: var(--table-focal); }
+    .data-table .strong { font-weight: 700; }
+    .data-table.heat tbody td, .data-table.heat tbody th { border-bottom: none; }
+    .data-table.heat tbody td { border: 2px solid var(--bg); }
+    .data-table.heat tbody tr:first-child td, .data-table.heat tbody tr:first-child th { border-top: 1pt solid var(--text-primary); }
+    .heat-key { display: flex; justify-content: flex-end; align-items: flex-start; gap: 0.6em; margin-bottom: 0.5em; font-size: calc(var(--pt) * 9); color: var(--text-muted); }
+    .heat-scale { position: relative; padding-bottom: 1.5em; margin-right: 0.8em; }
+    .heat-swatches { display: flex; }
+    .heat-swatch { display: block; width: 3.4em; height: 1.1em; }
+    .heat-tick { position: absolute; top: 1.3em; transform: translateX(-50%); white-space: nowrap; }
+    .heat-unit { padding-top: 0; }
+    .panels-zone {
+      display: grid;
+      gap: 16px;
+      min-height: 0;
+      align-items: stretch;
+    }
+    .panels-count-1 { grid-template-columns: 1fr; }
+    .panels-count-2 { grid-template-columns: 1fr 1fr; }
+    .panels-count-3 { grid-template-columns: repeat(3, 1fr); }
+    .panels-count-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .layout-1_plus_4_grid .panels-count-5 {
+      grid-template-columns: 42% 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+    .layout-1_plus_4_grid .panels-count-5 .role-hero_total_left {
+      grid-row: 1 / span 2;
+      grid-column: 1;
+    }
+    .chart-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 8px 10px;
+      border-radius: 8px;
+      min-height: 0;
+    }
+    .chart-panel.panel-shaded { background: var(--panel-bg); }
+    .swd-chart-svg { overflow: visible; }  /* enlarged tick labels may reach into the panel padding */
+    .panel-title {
+      font-size: calc(var(--pt) * 12);
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+    .panel-title-quiet { font-weight: 400; color: var(--text-muted); }
+    .summary-rows { display: flex; flex-direction: column; justify-content: space-evenly; height: 100%; }
+    .summary-row {
+      display: grid;
+      grid-template-columns: 6% 1fr 16%;
+      align-items: center;
+      gap: 2%;
+      padding: 14px 0;
+      border-bottom: 0.75pt solid var(--rule, #E5E7EB);
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-number {
+      font-size: calc(var(--pt) * 20);
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .summary-text { font-size: calc(var(--pt) * 15); line-height: 1.3; color: var(--text-primary); }
+    .summary-ref { font-size: calc(var(--pt) * 12); color: var(--text-muted); text-align: right; }
+    .panels-zone.has-findings { grid-template-rows: auto 1fr; row-gap: 6px; }
+    .panel-finding { padding: 0 10px; }
+    .layout-evidence_columns { grid-template-rows: 1fr auto; row-gap: 14px; }
+    .layout-evidence_columns .panels-zone { column-gap: 36px; }
+    .rec-line {
+      border-left: 6px solid var(--accent);
+      padding: 4px 0 4px 16px;
+      font-size: calc(var(--pt) * 15);
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+    .column-heading {
+      font-size: calc(var(--pt) * 12);
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1pt solid var(--rule, #D1D5DB);
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    .panel-headline {
+      font-size: calc(var(--pt) * 15);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .panel-text {
+      font-size: calc(var(--pt) * 10.5);
+      margin-top: 4px;
+      color: var(--text-primary);
+    }
+    .side-zone {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: flex-start;
+    }
+    .layout-small_multiples_grid .side-zone,
+    .layout-two_sided_paired_views .panels-count-2 + .side-zone {
+      flex-direction: row;
+    }
+    .ann-card, .rec-card {
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: calc(var(--pt) * 10.5);
+      line-height: 1.25;  /* PRIN-DSN-005: 1.1–1.3 */
+      flex: 0 0 auto;  /* cards follow their text; no stretched empty card */
+    }
+    .layout-small_multiples_grid .side-zone > div,
+    .layout-two_sided_paired_views .panels-count-2 + .side-zone > div {
+      flex: 1 1 0;  /* a row of cards shares the width and wraps its text instead of running off the slide */
+      min-width: 0;
+    }
+    .ann-card {
+      background: var(--panel-bg);  /* fill only, no outline (ANTI-DSN-002) */
+    }
+    .ann-anchor {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+      font-size: 0.92em;
+    }
+    .rec-card {
+      background: var(--shaded);
+    }
+    .rec-label {
+      font-weight: 700;
+      font-size: calc(var(--pt) * 9);
+      color: var(--accent);
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+    .statement-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      justify-content: center;
+    }
+    .hero-action-box {
+      background: var(--shaded);
+      border-radius: 10px;
+      padding: 24px 28px;
+    }
+    .hero-action-text {
+      font-size: calc(var(--pt) * 15);
+      line-height: 1.25;
+      margin-top: 8px;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .pillar-card {
+      background: var(--panel-bg);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .hero-action-box .rec-label { font-size: calc(var(--pt) * 12); }
+    .pillar-card h4 { margin-bottom: 8px; font-size: calc(var(--pt) * 12); }
+    .pillar-card p { font-size: calc(var(--pt) * 10.5); line-height: 1.25; color: #374151; }
+    /* D-064: the main card spans all grid columns but the last; tiles, the side image and step rows share the grid */
+    .statement-grid { flex: 1; display: grid; gap: 18px; align-content: center; }
+    .tile-number { font-size: calc(var(--pt) * 40); font-weight: 700; line-height: 1; margin-bottom: 10px; color: var(--text-primary); }
+    .tile-number.focal { color: var(--accent); }
+    .pillar-card.tile p, .statement-grid.tiles .rec-label { font-size: calc(var(--pt) * 12); }
+    .side-image { background: var(--panel-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .side-image img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .slide.spotlight { background: #A64902; }
+    .slide.spotlight, .slide.spotlight * { color: #FFFFFF !important; }
+    .slide.spotlight .hero-action-box, .slide.spotlight .pillar-card { background: transparent; }
+    .slide.spotlight .slide-header { border-bottom-color: #FFFFFF; }
+    .reading-note {
+      padding-top: 8px;
+      font-size: calc(var(--pt) * 9);
+      color: var(--text-muted);
+    }
+    .rec-card.implication { background: var(--panel-bg, #F3F4F6); }
+    .rec-card.implication .rec-label { color: var(--text-primary, #1F2937); }
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      font-size: calc(var(--pt) * 9);
+      color: var(--text-muted);
+    }
+    .hud-bar {
+      margin-top: 10px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: #E5E7EB;
+      font-size: 13px;
+    }
+    .hud-btn {
+      background: #374151;
+      color: #FFF;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12.5px;
+    }
+    .hud-btn:hover { background: #4B5563; }
+    .speaker-notes-drawer {
+      margin-top: 8px;
+      width: min(96vw, calc(90vh * 16 / 9));
+      background: #1F2937;
+      color: #F9FAFB;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 1.45;
+      border-left: 4px solid var(--accent);
+    }
+    .hidden-reveal { opacity: 0.08; pointer-events: none; transition: opacity 0.25s ease; }
+    /* D-048 X2: printing gives one slide per page at its final reveal state, without the HUD or notes */
+    body.print-all .slide { display: flex; }
+    /* `#shot`: the slide fills the window, for headless screenshots (html_qa.py) */
+    body.shot { padding: 0; background: var(--bg); }
+    body.shot .hud-bar { display: none; }
+    body.shot .deck-viewport { width: 100vw; border-radius: 0; box-shadow: none; }
+    @media print {
+      @page { size: 13.333in 7.5in; margin: 0; }
+      body { background: #FFFFFF; padding: 0; display: block; min-height: 0; }
+      .hud-bar, .speaker-notes-drawer { display: none !important; }
+      .deck-viewport { width: 100%; aspect-ratio: auto; border-radius: 0; box-shadow: none; overflow: visible; }
+      .slide { display: flex; aspect-ratio: 16 / 9; height: auto; break-after: page; overflow: hidden; }
+      .hidden-reveal { opacity: 1 !important; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="deck-viewport">
+    <section class="slide title-slide active" id="title_slide" data-slide-index="title" data-counter="Title" data-reveal='{"enabled": false, "reveal_steps": []}'><div class="title-block"><h1 class="deck-title">Recover $2.4M in FY2026 through barista hiring and the seasonal menu</h1><div class="title-audience">Pre-read for the Operating Committee</div><div class="title-rule"></div><div class="title-meta">November 2026 · Store Operations and Finance</div></div><footer class="slide-footer"><span class="source-footnote"></span><span class="slide-counter"></span></footer></section>
+            <section class="slide " id="slide_01" data-slide-index="0" data-counter="Slide 1 / 4" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#D95F02;font-weight:inherit;">Seasonal drinks fell</span> while core drinks kept growing.</h1>
+                <div class="descriptive-chart-title">Average year-over-year sales change (%) by menu segment, FY2025</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_segments"><div class="panel-title">Two menu segments</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_segments">
+<line x1="56.0" y1="366.0" x2="712.0" y2="366.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="370.0" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">-10</text>
+<line x1="56.0" y1="297.6" x2="712.0" y2="297.6" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="301.6" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">-5</text>
+<line x1="56.0" y1="229.2" x2="712.0" y2="229.2" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="233.2" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">0</text>
+<line x1="56.0" y1="160.8" x2="712.0" y2="160.8" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="164.8" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">5</text>
+<line x1="56.0" y1="92.4" x2="712.0" y2="92.4" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="96.4" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">10</text>
+<line x1="56.0" y1="24.0" x2="712.0" y2="24.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="28.0" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">15</text>
+<line x1="56.0" y1="366.0" x2="712.0" y2="366.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="220.0" y="386.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Core drinks (5)</text>
+<text x="548.0" y="386.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Seasonal drinks (5)</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="175.0" y="100.6" width="90.0" height="128.6" rx="3" fill="#9E9E9E" />
+<text x="220.0" y="94.6" text-anchor="middle" fill="#1F2937" font-size="12.5" data-pt="9.0" font-weight="700">+9.4%</text>
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<rect x="503.0" y="229.2" width="90.0" height="106.7" rx="3" fill="#D95F02" />
+<text x="548.0" y="350.4" text-anchor="middle" fill="#1F2937" font-size="12.5" data-pt="9.0" font-weight="700">-7.8%</text>
+</g>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">Core drinks averaged +9.4% while <span class="color-tie" style="color:#A74A02;font-weight:700;">seasonal drinks averaged -7.8%</span>.</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Look inside the seasonal lineup before cutting it wholesale.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf point-of-sale data, FY2025 vs. FY2024 (140 stores).</span>
+                <span class="slide-counter">FY2026 menu and staffing · 1</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_02" data-slide-index="1" data-counter="Slide 2 / 4" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#D95F02;font-weight:inherit;">Mint Chill and Hazelnut Cloud</span> fell the most among seasonal drinks.</h1>
+                <div class="descriptive-chart-title">Year-over-year sales change (%) by drink, FY2025, ranked</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_items"><div class="panel-title">Ten drinks, ranked</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_items">
+<line x1="460.0" y1="24.0" x2="460.0" y2="366.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="147.67003456901156" y="45.1" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Espresso Tonic</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="460.0" y="32.2" width="189.0" height="17.8" rx="3" fill="#9E9E9E" />
+<text x="657.0" y="45.1" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">+15%</text>
+</g>
+<text x="147.67003456901156" y="79.3" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Iced Matcha</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="460.0" y="66.4" width="151.2" height="17.8" rx="3" fill="#9E9E9E" />
+<text x="619.2" y="79.3" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">+12%</text>
+</g>
+<text x="147.67003456901156" y="113.5" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Classic Americano</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="460.0" y="100.6" width="113.4" height="17.8" rx="3" fill="#9E9E9E" />
+<text x="581.4" y="113.5" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">+9%</text>
+</g>
+<text x="147.67003456901156" y="147.7" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Flat White</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="460.0" y="134.8" width="88.2" height="17.8" rx="3" fill="#9E9E9E" />
+<text x="556.2" y="147.7" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">+7%</text>
+</g>
+<text x="147.67003456901156" y="181.9" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Chai Latte</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="460.0" y="169.0" width="50.4" height="17.8" rx="3" fill="#9E9E9E" />
+<text x="518.4" y="181.9" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">+4%</text>
+</g>
+<text x="147.67003456901156" y="216.1" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Honey Lavender Latte</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="460.0" y="203.2" width="25.2" height="17.8" rx="3" fill="#9E9E9E" />
+<text x="493.2" y="216.1" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">+2%</text>
+</g>
+<text x="147.67003456901156" y="250.3" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Maple Oat Latte</text>
+<g class="chart-series series-role-focal_secondary_tier2">
+<rect x="422.2" y="237.4" width="37.8" height="17.8" rx="3" fill="#FBB070" />
+<text x="414.2" y="250.3" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">-3%</text>
+</g>
+<text x="147.67003456901156" y="284.5" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Cocoa Crunch Frappé</text>
+<g class="chart-series series-role-focal_secondary_tier2">
+<rect x="384.4" y="271.6" width="75.6" height="17.8" rx="3" fill="#FBB070" />
+<text x="376.4" y="284.5" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">-6%</text>
+</g>
+<text x="147.67003456901156" y="318.7" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Hazelnut Cloud Mocha</text>
+<g class="chart-series series-role-focal_primary_tier1">
+<rect x="283.7" y="305.8" width="176.4" height="17.8" rx="3" fill="#D95F02" />
+<text x="275.7" y="318.7" text-anchor="end" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">-14%</text>
+</g>
+<text x="147.67003456901156" y="352.9" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Mint Chill Cold Brew</text>
+<g class="chart-series series-role-focal_primary_tier1">
+<rect x="233.3" y="340.0" width="226.8" height="17.8" rx="3" fill="#D95F02" />
+<text x="225.3" y="352.9" text-anchor="end" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">-18%</text>
+</g>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">Maple Oat (-3%) and Cocoa Crunch (-6%) also fell, <span class="color-tie" style="color:#A44E05;font-weight:700;">by far less</span>.</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Replace Mint Chill and Hazelnut Cloud first; keep watching Maple Oat and Cocoa Crunch.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf point-of-sale data, FY2025 vs. FY2024 (140 stores).</span>
+                <span class="slide-counter">FY2026 menu and staffing · 2</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_03" data-slide-index="2" data-counter="Slide 3 / 4" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Barista hiring gaps leave stores <span class="color-tie" style="color:#D95F02;font-weight:inherit;">22 baristas short</span> by December.</h1>
+                <div class="descriptive-chart-title">Store staff vs. plan by month (left) and year-end staff by role, plan vs. forecast (right)</div>
+              </header>
+              <div class="slide-body layout-two_sided_paired_views"><div class="panels-zone panels-count-2 has-findings"><div class="panel-finding" data-panel-id="panel_monthly"><div class="panel-headline">Stores end the year <span class="color-tie" style="color:#A74A02;font-weight:700;">30 staff below plan</span></div><div class="panel-text">The gap widened from May, peaked at 37 in July and holds at 30 through December.</div></div><div class="panel-finding" data-panel-id="panel_roles"><div class="panel-headline"><span class="color-tie" style="color:#A74A02;font-weight:700;">Baristas</span> make up 22 of the 30</div><div class="panel-text">Supervisors are 6 short and managers 2; bakers are on plan.</div></div><div class="chart-panel  role-paired_left" data-panel-id="panel_monthly"><div class="panel-title panel-title-quiet">Store staff vs. plan, by month</div><svg viewBox="0 0 560 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_monthly">
+<line x1="56.0" y1="296.0" x2="445.0" y2="296.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="300.0" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">700</text>
+<line x1="56.0" y1="228.0" x2="445.0" y2="228.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="232.0" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">720</text>
+<line x1="56.0" y1="160.0" x2="445.0" y2="160.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="164.0" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">740</text>
+<line x1="56.0" y1="92.0" x2="445.0" y2="92.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="96.0" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">760</text>
+<line x1="56.0" y1="24.0" x2="445.0" y2="24.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="28.0" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">780</text>
+<line x1="56.0" y1="296.0" x2="445.0" y2="296.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="70.0" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Jan</text>
+<text x="102.8" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Feb</text>
+<text x="135.6" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Mar</text>
+<text x="168.5" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Apr</text>
+<text x="201.3" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">May</text>
+<text x="234.1" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Jun</text>
+<text x="266.9" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Jul</text>
+<text x="299.7" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Aug</text>
+<text x="332.5" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Sep</text>
+<text x="365.4" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Oct</text>
+<text x="398.2" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Nov</text>
+<text x="431.0" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Dec</text>
+<polygon class="series-role-focal_primary_tier1" points="201.3,126.0 234.1,119.2 266.9,109.0 299.7,102.2 332.5,98.8 365.4,95.4 398.2,92.0 431.0,92.0 431.0,194.0 398.2,194.0 365.4,200.8 332.5,207.6 299.7,224.6 266.9,234.8 234.1,221.2 201.3,194.0" fill="#FEE6CE" fill-opacity="0.75" stroke="#D95F02" stroke-width="1" stroke-dasharray="3,2" />
+<g class="chart-series series-role-context_greyscale">
+<line x1="70.0" y1="160.0" x2="102.8" y2="153.2" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="102.8" y1="153.2" x2="135.6" y2="143.0" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="135.6" y1="143.0" x2="168.5" y2="132.8" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="168.5" y1="132.8" x2="201.3" y2="126.0" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="201.3" y1="126.0" x2="234.1" y2="119.2" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="234.1" y1="119.2" x2="266.9" y2="109.0" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="266.9" y1="109.0" x2="299.7" y2="102.2" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="299.7" y1="102.2" x2="332.5" y2="98.8" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="332.5" y1="98.8" x2="365.4" y2="95.4" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="365.4" y1="95.4" x2="398.2" y2="92.0" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+<line x1="398.2" y1="92.0" x2="431.0" y2="92.0" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round"  />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="70.0" y1="166.8" x2="102.8" y2="160.0" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="102.8" y1="160.0" x2="135.6" y2="153.2" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="135.6" y1="153.2" x2="168.5" y2="156.6" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="168.5" y1="156.6" x2="201.3" y2="194.0" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="201.3" y1="194.0" x2="234.1" y2="221.2" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="234.1" y1="221.2" x2="266.9" y2="234.8" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="266.9" y1="234.8" x2="299.7" y2="224.6" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="299.7" y1="224.6" x2="332.5" y2="207.6" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<line x1="332.5" y1="207.6" x2="365.4" y2="200.8" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="365.4" y1="200.8" x2="398.2" y2="194.0" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<line x1="398.2" y1="194.0" x2="431.0" y2="194.0" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="70.0" cy="166.8" r="5.0" fill="#D95F02" />
+<circle cx="102.8" cy="160.0" r="5.0" fill="#D95F02" />
+<circle cx="135.6" cy="153.2" r="5.0" fill="#D95F02" />
+<circle cx="168.5" cy="156.6" r="5.0" fill="#D95F02" />
+<circle cx="201.3" cy="194.0" r="5.0" fill="#D95F02" />
+<circle cx="234.1" cy="221.2" r="5.0" fill="#D95F02" />
+<circle cx="266.9" cy="234.8" r="5.0" fill="#D95F02" />
+<circle cx="299.7" cy="224.6" r="5.0" fill="#D95F02" />
+<circle cx="332.5" cy="207.6" r="5.0" fill="#D95F02" />
+<circle cx="365.4" cy="200.8" r="5.0" fill="#D95F02" />
+<circle cx="398.2" cy="194.0" r="5.0" fill="#D95F02" />
+<circle cx="431.0" cy="194.0" r="5.0" fill="#D95F02" />
+</g>
+<text class="chart-series series-role-context_greyscale" x="439.0" y="96.0" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">760 · Plan</text>
+<text class="chart-series series-role-focal_primary_tier1" x="439.0" y="198.0" text-anchor="start" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">730 · Staff</text>
+<text class="series-role-focal_primary_tier1" x="212.7" y="82.0" text-anchor="middle" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">-30 staff vs. plan by December</text>
+</svg></div><div class="chart-panel panel-shaded role-paired_right" data-panel-id="panel_roles"><div class="panel-title panel-title-quiet">Year-end staff by role</div><svg viewBox="0 0 560 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_roles">
+<line x1="56.0" y1="296.0" x2="426.73411371237455" y2="296.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="300.0" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">0</text>
+<line x1="56.0" y1="235.6" x2="426.73411371237455" y2="235.6" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="239.6" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">100</text>
+<line x1="56.0" y1="175.1" x2="426.73411371237455" y2="175.1" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="179.1" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">200</text>
+<line x1="56.0" y1="114.7" x2="426.73411371237455" y2="114.7" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="118.7" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">300</text>
+<line x1="56.0" y1="54.2" x2="426.73411371237455" y2="54.2" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="58.2" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">400</text>
+<line x1="56.0" y1="296.0" x2="426.73411371237455" y2="296.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="84.0" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Plan</text>
+<text x="398.7" y="316.0" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="12.5" data-pt="9.0">Forecast</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="84.0" y1="259.7" x2="398.7" y2="259.7" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="259.7" r="3.5" fill="#9E9E9E" />
+<circle cx="398.7" cy="259.7" r="3.5" fill="#9E9E9E" />
+</g>
+<g class="chart-series series-role-context_greyscale">
+<line x1="84.0" y1="211.4" x2="398.7" y2="212.6" stroke="#9E9E9E" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="211.4" r="3.5" fill="#9E9E9E" />
+<circle cx="398.7" cy="212.6" r="3.5" fill="#9E9E9E" />
+</g>
+<g class="chart-series series-role-focal_secondary_tier2">
+<line x1="84.0" y1="211.4" x2="398.7" y2="215.0" stroke="#FBB070" stroke-width="2.88" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="211.4" r="3.5" fill="#FBB070" />
+<circle cx="398.7" cy="215.0" r="3.5" fill="#FBB070" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="84.0" y1="42.1" x2="398.7" y2="55.4" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="42.1" r="5.0" fill="#D95F02" />
+<circle cx="398.7" cy="55.4" r="5.0" fill="#D95F02" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="76.0" y="46.1" text-anchor="end" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">420</text>
+<text class="chart-series series-role-context_greyscale" x="76.0" y="215.4" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">140</text>
+<text class="chart-series series-role-focal_secondary_tier2" x="76.0" y="230.4" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">140</text>
+<text class="chart-series series-role-context_greyscale" x="76.0" y="263.7" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">60</text>
+<text class="chart-series series-role-focal_primary_tier1" x="406.7" y="59.4" text-anchor="start" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">398 · Baristas</text>
+<text class="chart-series series-role-context_greyscale" x="406.7" y="216.6" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">138 · Managers</text>
+<text class="chart-series series-role-focal_secondary_tier2" x="406.7" y="231.6" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">134 · Supervisors</text>
+<text class="chart-series series-role-context_greyscale" x="406.7" y="263.7" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">60 · Bakers</text>
+</svg></div></div><div class="side-zone"><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Focus Q1 recruiting on baristas; other roles are within six of plan.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf HR system and FY2026 staffing forecast.</span>
+                <span class="slide-counter">FY2026 menu and staffing · 3</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_04" data-slide-index="3" data-counter="Slide 4 / 4" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Fill barista roles and refresh seasonal drinks to <span class="color-tie" style="color:#D95F02;font-weight:inherit;">recover $2.4M</span>.</h1>
+                <div class="descriptive-chart-title">Six recovery initiatives compared on payoff and effort</div>
+              </header>
+              <div class="slide-body layout-evidence_columns"><div class="panels-zone panels-count-2 has-findings"><div class="panel-finding" data-panel-id="panel_payoff"><div class="column-heading">Payoff</div><div class="panel-headline"><span class="color-tie" style="color:#A74A02;font-weight:700;">Barista hiring leads on payoff</span> at $1.5M; the menu refresh adds $0.9M.</div></div><div class="panel-finding" data-panel-id="panel_effort"><div class="column-heading">Effort</div><div class="panel-headline">Both proposals need little effort: <span class="color-tie" style="color:#A74A02;font-weight:700;">2 and 1</span> on a six-point scale.</div></div><div class="chart-panel  role-evidence_column" data-panel-id="panel_payoff"><div class="panel-title panel-title-quiet">Modeled sales recovery ($M)</div><svg viewBox="0 0 560 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_payoff">
+<line x1="206.2" y1="24.0" x2="206.2" y2="296.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="196.2458193979933" y="50.7" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Fill 22 barista roles</text>
+<g class="chart-series series-role-focal_primary_tier1">
+<rect x="206.2" y="34.9" width="227.4" height="23.6" rx="3" fill="#D95F02" />
+<text x="441.7" y="50.7" text-anchor="start" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">$1.5M</text>
+</g>
+<text x="196.2458193979933" y="96.0" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Price changes</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="206.2" y="80.2" width="212.3" height="23.6" rx="3" fill="#9E9E9E" />
+<text x="426.5" y="96.0" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">$1.4M</text>
+</g>
+<text x="196.2458193979933" y="141.3" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Refresh two seasonal drinks</text>
+<g class="chart-series series-role-focal_secondary_tier2">
+<rect x="206.2" y="125.5" width="136.5" height="23.6" rx="3" fill="#FBB070" />
+<text x="350.7" y="141.3" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">$0.9M</text>
+</g>
+<text x="196.2458193979933" y="186.7" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Loyalty app</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="206.2" y="170.9" width="106.1" height="23.6" rx="3" fill="#9E9E9E" />
+<text x="320.4" y="186.7" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">$0.7M</text>
+</g>
+<text x="196.2458193979933" y="232.0" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Extend evening hours</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="206.2" y="216.2" width="60.7" height="23.6" rx="3" fill="#9E9E9E" />
+<text x="274.9" y="232.0" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">$0.4M</text>
+</g>
+<text x="196.2458193979933" y="277.3" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Remodel flagships</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="206.2" y="261.5" width="45.5" height="23.6" rx="3" fill="#9E9E9E" />
+<text x="259.7" y="277.3" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">$0.3M</text>
+</g>
+</svg></div><div class="chart-panel  role-evidence_column" data-panel-id="panel_effort"><div class="panel-title panel-title-quiet">Effort rating (1 easiest, 6 hardest)</div><svg viewBox="0 0 560 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_effort">
+<line x1="206.2" y1="24.0" x2="206.2" y2="296.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="196.2458193979933" y="50.7" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Fill 22 barista roles</text>
+<g class="chart-series series-role-focal_primary_tier1">
+<rect x="206.2" y="34.9" width="101.9" height="23.6" rx="3" fill="#D95F02" />
+<text x="316.2" y="50.7" text-anchor="start" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">2</text>
+</g>
+<text x="196.2458193979933" y="96.0" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Price changes</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="206.2" y="80.2" width="203.8" height="23.6" rx="3" fill="#9E9E9E" />
+<text x="418.1" y="96.0" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">4</text>
+</g>
+<text x="196.2458193979933" y="141.3" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Refresh two seasonal drinks</text>
+<g class="chart-series series-role-focal_secondary_tier2">
+<rect x="206.2" y="125.5" width="51.0" height="23.6" rx="3" fill="#FBB070" />
+<text x="265.2" y="141.3" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">1</text>
+</g>
+<text x="196.2458193979933" y="186.7" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Loyalty app</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="206.2" y="170.9" width="203.8" height="23.6" rx="3" fill="#9E9E9E" />
+<text x="418.1" y="186.7" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">4</text>
+</g>
+<text x="196.2458193979933" y="232.0" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Extend evening hours</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="206.2" y="216.2" width="101.9" height="23.6" rx="3" fill="#9E9E9E" />
+<text x="316.2" y="232.0" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">2</text>
+</g>
+<text x="196.2458193979933" y="277.3" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Remodel flagships</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="206.2" y="261.5" width="254.8" height="23.6" rx="3" fill="#9E9E9E" />
+<text x="469.0" y="277.3" text-anchor="start" fill="#6B7280" font-size="12.5" data-pt="9.0" font-weight="500">5</text>
+</g>
+</svg></div></div><div class="rec-line"><span class="color-tie" style="color:#A74A02;font-weight:700;">Approve 22 barista hires</span> in Q1 and the two-drink refresh (fallback: hire now, decide the menu at the Q2 review).</div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf FY2026 sales recovery model and operations effort ratings.</span>
+                <span class="slide-counter">FY2026 menu and staffing · 4</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_05" data-slide-index="4" data-counter="Appendix 1" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#D95F02;font-weight:inherit;">Harbor Street</span> is the flagship store furthest behind on baristas.</h1>
+                <div class="descriptive-chart-title"></div>
+              </header>
+              <div class="slide-body layout-data_table"><div class="table-zone"><table class="data-table heat" style="--table-focal: #BB5202"><caption>Flagship store scorecard, FY2025</caption><thead><tr class="group-row"><td colspan="1"></td><th scope="colgroup" colspan="2" class="group">Customers</th><td colspan="1"></td></tr><tr><th scope="col">Store</th><th scope="col" class="num">Sales change, %</th><th scope="col" class="num">Avg wait (min)</th><th scope="col" class="num">Baristas short</th></tr></thead><tbody><tr><th scope="row" class="focal strong">Harbor Street</th><td class="num" style="background: #2B5C8F; color: #FFFFFF">-4.1</td><td class="num" style="background: #2B5C8F; color: #FFFFFF">6.8</td><td class="num" style="background: #2B5C8F; color: #FFFFFF">3</td></tr><tr><th scope="row">Union Square</th><td class="num" style="background: #2B5C8F; color: #FFFFFF">-2.6</td><td class="num" style="background: #4D76A1; color: #FFFFFF">5.9</td><td class="num" style="background: #4D76A1; color: #FFFFFF">2</td></tr><tr><th scope="row">Riverside</th><td class="num" style="background: #4D76A1; color: #FFFFFF">-1.8</td><td class="num" style="background: #7C9ABA; color: #1F2937">5.4</td><td class="num" style="background: #AEC1D4; color: #1F2937">1</td></tr><tr><th scope="row">Old Town</th><td class="num" style="background: #7C9ABA; color: #1F2937">+0.6</td><td class="num" style="background: #AEC1D4; color: #1F2937">4.9</td><td class="num" style="background: #AEC1D4; color: #1F2937">1</td></tr><tr><th scope="row">Market Hall</th><td class="num" style="background: #AEC1D4; color: #1F2937">+1.2</td><td class="num" style="background: #AEC1D4; color: #1F2937">4.6</td><td class="num" style="background: #AEC1D4; color: #1F2937">1</td></tr><tr><th scope="row">Lakeview</th><td class="num" style="background: #E6EBF2; color: #1F2937">+2.4</td><td class="num" style="background: #E6EBF2; color: #1F2937">4.2</td><td class="num" style="background: #AEC1D4; color: #1F2937">1</td></tr><tr><th scope="row">Station Plaza</th><td class="num" style="background: #E6EBF2; color: #1F2937">+3.0</td><td class="num" style="background: #E6EBF2; color: #1F2937">4.0</td><td class="num" style="background: #E6EBF2; color: #1F2937">0</td></tr><tr><th scope="row">Hillcrest</th><td class="num" style="background: #E6EBF2; color: #1F2937">+3.8</td><td class="num" style="background: #E6EBF2; color: #1F2937">3.7</td><td class="num" style="background: #E6EBF2; color: #1F2937">0</td></tr></tbody><tfoot><tr><th scope="row">All eight stores</th><td class="num">+0.3</td><td class="num">4.9</td><td class="num">9</td></tr></tfoot></table></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf point-of-sale data and HR system, FY2025 (eight flagship stores).</span>
+                <span class="slide-counter">Appendix 1</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_06" data-slide-index="5" data-counter="Appendix 2" data-reveal='{&quot;enabled&quot;: true, &quot;standalone_self_sufficient_verified&quot;: true, &quot;reveal_steps&quot;: [{&quot;step_number&quot;: 1, &quot;visible_panel_ids&quot;: [&quot;panel_stores&quot;], &quot;visible_series_roles&quot;: [&quot;context_greyscale&quot;, &quot;focal_primary_tier1&quot;], &quot;show_annotations&quot;: true, &quot;show_recommendation_callout&quot;: true, &quot;speaker_notes&quot;: &quot;Each store is one dot: average wait across, sales change up and down. The three stores to the right of the five-minute line are the only ones below zero.&quot;}]}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">The <span class="color-tie" style="color:#D95F02;font-weight:inherit;">three slowest stores</span> are the only ones losing sales.</h1>
+                <div class="descriptive-chart-title">Sales change vs. average wait, by flagship store, FY2025</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_stores"><div class="panel-title">Eight flagship stores</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_stores"><line x1="50.5" y1="360.0" x2="654.5144775301425" y2="360.0" stroke="#E5E7EB" stroke-width="0.70" /><text x="44.5" y="364.4" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">-6</text><line x1="50.5" y1="305.2" x2="654.5144775301425" y2="305.2" stroke="#E5E7EB" stroke-width="0.70" /><text x="44.5" y="309.5" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">-4</text><line x1="50.5" y1="250.3" x2="654.5144775301425" y2="250.3" stroke="#E5E7EB" stroke-width="0.70" /><text x="44.5" y="254.7" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">-2</text><line x1="50.5" y1="195.5" x2="654.5144775301425" y2="195.5" stroke="#E5E7EB" stroke-width="0.70" /><text x="44.5" y="199.9" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">0</text><line x1="50.5" y1="140.7" x2="654.5144775301425" y2="140.7" stroke="#E5E7EB" stroke-width="0.70" /><text x="44.5" y="145.0" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">+2</text><line x1="50.5" y1="85.8" x2="654.5144775301425" y2="85.8" stroke="#E5E7EB" stroke-width="0.70" /><text x="44.5" y="90.2" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">+4</text><line x1="50.5" y1="31.0" x2="654.5144775301425" y2="31.0" stroke="#E5E7EB" stroke-width="0.70" /><text x="44.5" y="35.4" text-anchor="end" fill="#6B7280" font-size="12.5" data-pt="9.0">+6</text><text x="50.5" y="377.5" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">3</text><text x="171.3" y="377.5" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">4</text><text x="292.1" y="377.5" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">5</text><text x="412.9" y="377.5" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">6</text><text x="533.7" y="377.5" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">7</text><text x="654.5" y="377.5" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">8</text><line x1="50.5" y1="360.0" x2="654.5144775301425" y2="360.0" stroke="#D1D5DB" stroke-width="1.25" /><line x1="50.5" y1="31.0" x2="50.5" y2="360.0" stroke="#D1D5DB" stroke-width="1.25" /><text x="0" y="12.5" fill="#6B7280" font-weight="700" font-size="12.5" data-pt="9.0">Sales change (%)</text><text x="352.5" y="406.0" text-anchor="middle" fill="#6B7280" font-weight="700" font-size="12.5" data-pt="9.0">Average wait (min)</text><line x1="292.1" y1="31.0" x2="292.1" y2="360.0" stroke="#8C8C8C" stroke-width="1.39" stroke-dasharray="6 4" /><text x="304.2" y="216.3" fill="#D95F02" font-weight="700" font-size="12.5" data-pt="9.0">Waits over 5 min</text><text x="62.6" y="73.8" fill="#6B7280" font-weight="700" font-size="12.5" data-pt="9.0">Waits under 5 min</text><circle cx="280.0" cy="179.1" r="4.5" fill="#9E9E9E" /><circle cx="243.8" cy="162.6" r="4.5" fill="#9E9E9E" /><circle cx="195.5" cy="129.7" r="4.5" fill="#9E9E9E" /><circle cx="171.3" cy="113.2" r="4.5" fill="#9E9E9E" /><circle cx="135.1" cy="91.3" r="4.5" fill="#9E9E9E" /><circle cx="509.6" cy="307.9" r="5.5" fill="#D95F02" /><text x="519.6" y="312.3" text-anchor="start" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">Harbor Street</text><circle cx="400.8" cy="266.8" r="5.5" fill="#D95F02" /><text x="410.8" y="271.2" text-anchor="start" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">Union Square</text><circle cx="340.4" cy="244.8" r="5.5" fill="#D95F02" /><text x="350.4" y="249.2" text-anchor="start" fill="#D95F02" font-size="12.5" data-pt="9.0" font-weight="700">Riverside</text></svg></div></div><div class="side-zone"><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Staff the three slowest stores first; the other five grew.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf point-of-sale data and HR system, FY2025 (eight flagship stores).</span>
+                <span class="slide-counter">Appendix 2</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_07" data-slide-index="6" data-counter="Appendix 3" data-reveal='{&quot;enabled&quot;: true, &quot;standalone_self_sufficient_verified&quot;: true, &quot;reveal_steps&quot;: [{&quot;step_number&quot;: 1, &quot;visible_panel_ids&quot;: [&quot;panel_gap&quot;], &quot;visible_series_roles&quot;: [&quot;focal_primary_tier1&quot;], &quot;show_annotations&quot;: true, &quot;show_recommendation_callout&quot;: true, &quot;speaker_notes&quot;: &quot;Start from the plan: each bar is one role falling short of its planned headcount, stacked one after another until the net gap on the right. Baristas alone are most of it.&quot;}]}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Baristas account for <span class="color-tie" style="color:#D95F02;font-weight:inherit;">22 of the 30 positions</span> missing at year-end.</h1>
+                <div class="descriptive-chart-title">Year-end headcount against the plan of 760, by role</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_gap"><div class="panel-title">Roles against plan</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_gap"><line x1="6.0" y1="8.0" x2="754.0" y2="8.0" stroke="#D1D5DB" stroke-width="1.25" /><rect x="41.1" y="8.0" width="116.9" height="232.6" fill="#D95F02" /><text x="99.5" y="23.0" text-anchor="middle" fill="#FFFFFF" font-weight="700" font-size="12.5" data-pt="9.0">−22</text><text x="99.5" y="386.2" text-anchor="middle" fill="#1F2937" font-size="12.5" data-pt="9.0">Baristas</text><rect x="228.1" y="240.6" width="116.9" height="63.4" fill="#D95F02" /><text x="286.5" y="255.6" text-anchor="middle" fill="#FFFFFF" font-weight="700" font-size="12.5" data-pt="9.0">−6</text><text x="286.5" y="386.2" text-anchor="middle" fill="#1F2937" font-size="12.5" data-pt="9.0">Shift supervisors</text><rect x="415.1" y="304.1" width="116.9" height="21.1" fill="#D95F02" /><text x="473.5" y="299.1" text-anchor="middle" fill="#1F2937" font-weight="700" font-size="12.5" data-pt="9.0">−2</text><text x="473.5" y="386.2" text-anchor="middle" fill="#1F2937" font-size="12.5" data-pt="9.0">Store managers</text><rect x="602.1" y="8.0" width="116.9" height="317.2" fill="#9E9E9E" /><text x="660.5" y="23.0" text-anchor="middle" fill="#1F2937" font-weight="700" font-size="12.5" data-pt="9.0">−30</text><text x="660.5" y="386.2" text-anchor="middle" fill="#1F2937" font-size="12.5" data-pt="9.0">Net gap</text><line x1="157.9" y1="240.6" x2="228.1" y2="240.6" stroke="#8C8C8C" stroke-width="1.04" /><line x1="344.9" y1="304.1" x2="415.1" y2="304.1" stroke="#8C8C8C" stroke-width="1.04" /><line x1="531.9" y1="325.2" x2="602.1" y2="325.2" stroke="#8C8C8C" stroke-width="1.04" /></svg></div></div><div class="side-zone"><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Filling the 22 barista roles closes most of the gap, so hire them first.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf HR system, year-end plan and forecast by role.</span>
+                <span class="slide-counter">Appendix 3</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_08" data-slide-index="7" data-counter="Appendix 4" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#D95F02;font-weight:inherit;">Hiring in two waves</span> is the longest step.</h1>
+                <div class="descriptive-chart-title"></div>
+              </header>
+              <div class="slide-body layout-diagram"><div class="diagram-zone"><svg class="diagram-svg" viewBox="0 0 1164 494" role="img" aria-label="A five-step process from budget approval through two hiring waves and training to all 22 roles filled; hiring in two waves is highlighted." preserveAspectRatio="xMidYMid meet"><title>A five-step process from budget approval through two hiring waves and training to all 22 roles filled; hiring in two waves is highlighted.</title><defs><marker id="dg-arrow-slide_08-8C8C8C" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8C8C8C"/></marker></defs><g><text x="0.0" y="18.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Recruiting plan for the 22 barista roles</text></g><g data-item="budget"><rect x="0.0" y="136.8" width="186.8" height="259.2" fill="#F3F4F6"/><text x="93.4" y="265.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Approve budget</text><text x="93.4" y="283.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">15 Jan</text></g><g data-item="open_roles"><rect x="244.4" y="136.8" width="186.8" height="259.2" fill="#F3F4F6"/><text x="337.8" y="265.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Open the roles</text><text x="337.8" y="283.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">1 Feb</text></g><g data-item="open_roles"><polyline points="186.8,266.4 244.4,266.4" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_08-8C8C8C)"/></g><g data-item="hire"><rect x="488.8" y="136.8" width="186.8" height="259.2" fill="#BB5202"/><text x="582.2" y="253.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#FFFFFF">Hire in two</text><text x="582.2" y="277.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#FFFFFF">waves</text><text x="582.2" y="295.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#FFFFFF">15 Mar and 30 Apr</text></g><g data-item="hire"><polyline points="431.2,266.4 488.8,266.4" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_08-8C8C8C)"/></g><g data-item="train"><rect x="733.2" y="136.8" width="186.8" height="259.2" fill="#F3F4F6"/><text x="826.7" y="265.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Train on shift</text><text x="826.7" y="283.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">Two weeks each</text></g><g data-item="train"><polyline points="675.6,266.4 733.2,266.4" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_08-8C8C8C)"/></g><g data-item="filled"><rect x="977.7" y="136.8" width="186.8" height="259.2" fill="#F3F4F6"/><text x="1071.1" y="253.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">All roles</text><text x="1071.1" y="277.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">filled</text><text x="1071.1" y="295.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">30 Jun</text></g><g data-item="filled"><polyline points="920.1,266.4 977.7,266.4" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_08-8C8C8C)"/></g></svg></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf recruiting plan, FY2026.</span>
+                <span class="slide-counter">Appendix 4</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_09" data-slide-index="8" data-counter="Appendix 5" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#D95F02;font-weight:inherit;">All 22 barista roles</span> are filled by 30 June.</h1>
+                <div class="descriptive-chart-title"></div>
+              </header>
+              <div class="slide-body layout-diagram"><div class="diagram-zone"><svg class="diagram-svg" viewBox="0 0 1164 494" role="img" aria-label="A 2026 timeline of seven milestones from budget approval on 15 January to the 90-day review on 15 September; all 22 roles filled on 30 June is highlighted." preserveAspectRatio="xMidYMid meet"><title>A 2026 timeline of seven milestones from budget approval on 15 January to the 90-day review on 15 September; all 22 roles filled on 30 June is highlighted.</title><defs></defs><g><text x="0.0" y="18.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Recruiting plan for the 22 barista roles, 2026</text></g><line x1="33.6" y1="266.4" x2="1130.9" y2="266.4" stroke="#9CA3AF" stroke-width="2.67"/><line x1="33.6" y1="260.6" x2="33.6" y2="272.2" stroke="#9CA3AF" stroke-width="1.33"/><g><text x="36.5" y="290.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="12.0" font-weight="400" fill="#6B7280">Jan</text></g><line x1="158.7" y1="260.6" x2="158.7" y2="272.2" stroke="#9CA3AF" stroke-width="1.33"/><g><text x="161.5" y="290.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="12.0" font-weight="400" fill="#6B7280">Feb</text></g><line x1="271.6" y1="260.6" x2="271.6" y2="272.2" stroke="#9CA3AF" stroke-width="1.33"/><g><text x="274.5" y="290.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="12.0" font-weight="400" fill="#6B7280">Mar</text></g><line x1="396.7" y1="260.6" x2="396.7" y2="272.2" stroke="#9CA3AF" stroke-width="1.33"/><g><text x="399.6" y="290.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="12.0" font-weight="400" fill="#6B7280">Apr</text></g><line x1="517.7" y1="260.6" x2="517.7" y2="272.2" stroke="#9CA3AF" stroke-width="1.33"/><g><text x="520.6" y="290.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="12.0" font-weight="400" fill="#6B7280">May</text></g><line x1="642.8" y1="260.6" x2="642.8" y2="272.2" stroke="#9CA3AF" stroke-width="1.33"/><g><text x="645.6" y="290.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="12.0" font-weight="400" fill="#6B7280">Jun</text></g><line x1="763.8" y1="260.6" x2="763.8" y2="272.2" stroke="#9CA3AF" stroke-width="1.33"/><g><text x="766.7" y="290.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="12.0" font-weight="400" fill="#6B7280">Jul</text></g><line x1="888.8" y1="260.6" x2="888.8" y2="272.2" stroke="#9CA3AF" stroke-width="1.33"/><g><text x="891.7" y="290.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="12.0" font-weight="400" fill="#6B7280">Aug</text></g><line x1="1013.9" y1="260.6" x2="1013.9" y2="272.2" stroke="#9CA3AF" stroke-width="1.33"/><g><text x="1016.8" y="290.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="12.0" font-weight="400" fill="#6B7280">Sep</text></g><line data-item="budget" x1="90.1" y1="266.4" x2="90.1" y2="218.4" stroke="#8C8C8C" stroke-width="1.33"/><g data-item="budget"><ellipse cx="90.1" cy="266.4" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="budget"><text x="92.1" y="193.9" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Budget approved</text><text x="92.1" y="212.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">15 Jan</text></g><line data-item="open_roles" x1="158.7" y1="266.4" x2="158.7" y2="314.4" stroke="#8C8C8C" stroke-width="1.33"/><g data-item="open_roles"><ellipse cx="158.7" cy="266.4" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="open_roles"><text x="158.7" y="336.5" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Roles open</text><text x="158.7" y="354.7" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">1 Feb</text></g><line data-item="wave1" x1="328.1" y1="266.4" x2="328.1" y2="218.4" stroke="#8C8C8C" stroke-width="1.33"/><g data-item="wave1"><ellipse cx="328.1" cy="266.4" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="wave1"><text x="328.1" y="193.9" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Wave 1 starts</text><text x="328.1" y="212.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">15 Mar</text></g><line data-item="trained" x1="392.6" y1="266.4" x2="392.6" y2="314.4" stroke="#8C8C8C" stroke-width="1.33"/><g data-item="trained"><ellipse cx="392.6" cy="266.4" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="trained"><text x="392.6" y="336.5" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Wave 1 trained</text><text x="392.6" y="354.7" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">31 Mar</text></g><line data-item="wave2" x1="513.7" y1="266.4" x2="513.7" y2="218.4" stroke="#8C8C8C" stroke-width="1.33"/><g data-item="wave2"><ellipse cx="513.7" cy="266.4" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="wave2"><text x="513.7" y="193.9" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Wave 2 starts</text><text x="513.7" y="212.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">30 Apr</text></g><line data-item="filled" x1="759.7" y1="266.4" x2="759.7" y2="314.4" stroke="#8C8C8C" stroke-width="1.33"/><g data-item="filled"><ellipse cx="759.7" cy="266.4" rx="16.3" ry="16.3" fill="#D95F02"/></g><g data-item="filled"><text x="759.7" y="336.5" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#D95F02">All 22 roles</text><text x="759.7" y="360.5" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#D95F02">filled</text><text x="759.7" y="378.7" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">30 Jun</text></g><line data-item="review" x1="1070.4" y1="266.4" x2="1070.4" y2="218.4" stroke="#8C8C8C" stroke-width="1.33"/><g data-item="review"><ellipse cx="1070.4" cy="266.4" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="review"><text x="1070.4" y="193.9" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">90-day review</text><text x="1070.4" y="212.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">15 Sep</text></g></svg></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf recruiting plan, FY2026.</span>
+                <span class="slide-counter">Appendix 5</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_10" data-slide-index="9" data-counter="Appendix 6" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#D95F02;font-weight:inherit;">Filling barista roles</span> recovers the most for modest effort.</h1>
+                <div class="descriptive-chart-title"></div>
+              </header>
+              <div class="slide-body layout-diagram"><div class="diagram-zone"><svg class="diagram-svg" viewBox="0 0 1164 494" role="img" aria-label="A grid of six recovery initiatives by effort and sales recovery; filling 22 barista roles sits in the low-effort, high-recovery corner and is highlighted." preserveAspectRatio="xMidYMid meet"><title>A grid of six recovery initiatives by effort and sales recovery; filling 22 barista roles sits in the low-effort, high-recovery corner and is highlighted.</title><defs></defs><g><text x="0.0" y="18.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Recovery initiatives by effort and modeled sales recovery</text></g><g><text x="192.0" y="456.0" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">Low</text></g><g><text x="1126.1" y="456.0" text-anchor="end" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">High</text></g><g><text x="659.0" y="457.9" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Effort</text></g><g><text x="182.4" y="64.3" text-anchor="end" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">High</text></g><g><text x="182.4" y="421.4" text-anchor="end" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">Low</text></g><g><text x="81.6" y="236.2" text-anchor="end" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Sales</text><text x="81.6" y="255.4" text-anchor="end" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">recovery</text></g><g><rect x="192.0" y="48.0" width="934.1" height="384.0" fill="none" stroke="#E5E7EB" stroke-width="1.00"/></g><line x1="192.0" y1="240.0" x2="1126.1" y2="240.0" stroke="#9CA3AF" stroke-width="1.67"/><line x1="659.0" y1="48.0" x2="659.0" y2="432.0" stroke="#9CA3AF" stroke-width="1.67"/><g data-item="fill_roles"><ellipse cx="500.2" cy="170.9" rx="16.3" ry="16.3" fill="#D95F02"/></g><g data-item="fill_roles"><text x="474.3" y="178.1" text-anchor="end" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#D95F02">Fill 22 barista roles</text></g><g data-item="seasonal"><ellipse cx="350.8" cy="274.6" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="seasonal"><text x="350.8" y="301.8" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="400" fill="#1F2937">Refresh two seasonal</text><text x="350.8" y="325.8" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="400" fill="#1F2937">drinks</text></g><g data-item="evenings"><ellipse cx="500.2" cy="362.9" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="evenings"><text x="479.1" y="370.1" text-anchor="end" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="400" fill="#1F2937">Extend evening hours</text></g><g data-item="loyalty"><ellipse cx="817.8" cy="309.1" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="loyalty"><text x="839.0" y="316.3" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="400" fill="#1F2937">Loyalty app</text></g><g data-item="remodel"><ellipse cx="967.3" cy="378.2" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="remodel"><text x="946.2" y="385.4" text-anchor="end" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="400" fill="#1F2937">Remodel flagships</text></g><g data-item="pricing"><ellipse cx="817.8" cy="186.2" rx="11.5" ry="11.5" fill="#8C8C8C"/></g><g data-item="pricing"><text x="839.0" y="193.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="400" fill="#1F2937">Price changes</text></g></svg></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf operations effort ratings and sales recovery model, FY2026.</span>
+                <span class="slide-counter">Appendix 6</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_11" data-slide-index="10" data-counter="Appendix 7" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Applicants without barista experience reach the trial shift through a <span class="color-tie" style="color:#D95F02;font-weight:inherit;">training cohort</span>.</h1>
+                <div class="descriptive-chart-title"></div>
+              </header>
+              <div class="slide-body layout-diagram"><div class="diagram-zone"><svg class="diagram-svg" viewBox="0 0 1164 494" role="img" aria-label="A flowchart from application to offer; applicants without barista experience join a two-week training cohort, highlighted, before the trial shift, and those who fail the trial are invited to reapply." preserveAspectRatio="xMidYMid meet"><title>A flowchart from application to offer; applicants without barista experience join a two-week training cohort, highlighted, before the trial shift, and those who fail the trial are invited to reapply.</title><defs><marker id="dg-arrow-slide_11-8C8C8C" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8C8C8C"/></marker></defs><g><text x="0.0" y="18.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Screening of barista applicants</text></g><g data-item="applied"><rect x="0.0" y="144.0" width="187.2" height="84.0" rx="42.0" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="1.67"/><text x="93.6" y="181.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Application</text><text x="93.6" y="205.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">received</text></g><g data-item="experienced"><polygon points="369.3,130.3 485.3,186.0 369.3,241.7 253.2,186.0" fill="#F3F4F6"/><text x="369.3" y="191.8" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Barista experience?</text></g><g data-item="trial"><rect x="551.4" y="148.1" width="157.1" height="75.7" fill="#F3F4F6"/><text x="629.9" y="184.8" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Trial shift</text><text x="629.9" y="203.0" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">4 hours, paid</text></g><g data-item="passed"><polygon points="868.0,130.3 954.4,186.0 868.0,241.7 781.6,186.0" fill="#F3F4F6"/><text x="868.0" y="191.8" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Passed trial?</text></g><g data-item="offer"><rect x="1027.7" y="151.8" width="136.8" height="68.4" rx="34.2" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="1.67"/><text x="1096.1" y="193.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Offer</text></g><g data-item="cohort"><rect x="275.7" y="322.6" width="187.2" height="75.7" fill="#BB5202"/><text x="369.3" y="359.3" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#FFFFFF">Training cohort</text><text x="369.3" y="377.5" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#FFFFFF">Two weeks</text></g><g data-item="reapply"><rect x="774.4" y="318.5" width="187.2" height="84.0" rx="42.0" fill="#FFFFFF" stroke="#9CA3AF" stroke-width="1.67"/><text x="868.0" y="355.7" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Invite to</text><text x="868.0" y="379.7" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">reapply</text></g><g data-item="experienced"><polyline points="187.2,186.0 253.2,186.0" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_11-8C8C8C)"/></g><g data-item="trial"><polyline points="485.3,186.0 551.4,186.0" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_11-8C8C8C)"/></g><g data-item="trial"><rect x="500.3" y="157.0" width="36.0" height="23.3" fill="#FFFFFF"/><text x="518.3" y="173.7" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="700" fill="#6B7280">Yes</text></g><g data-item="cohort"><polyline points="369.3,241.7 369.3,322.6" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_11-8C8C8C)"/></g><g data-item="cohort"><rect x="378.9" y="270.5" width="27.8" height="23.3" fill="#FFFFFF"/><text x="378.9" y="287.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="700" fill="#6B7280">No</text></g><g data-item="passed"><polyline points="708.4,186.0 781.6,186.0" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_11-8C8C8C)"/></g><g data-item="offer"><polyline points="954.4,186.0 1027.7,186.0" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_11-8C8C8C)"/></g><g data-item="offer"><rect x="973.1" y="157.0" width="36.0" height="23.3" fill="#FFFFFF"/><text x="991.1" y="173.7" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="700" fill="#6B7280">Yes</text></g><g data-item="reapply"><polyline points="868.0,241.7 868.0,318.5" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_11-8C8C8C)"/></g><g data-item="reapply"><rect x="877.6" y="268.5" width="27.8" height="23.3" fill="#FFFFFF"/><text x="877.6" y="285.1" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="700" fill="#6B7280">No</text></g><g data-item="trial"><polyline points="462.9,360.5 629.9,360.5 629.9,223.9" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_11-8C8C8C)"/></g></svg></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf recruiting plan, FY2026.</span>
+                <span class="slide-counter">Appendix 7</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_12" data-slide-index="11" data-counter="Appendix 8" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#D95F02;font-weight:inherit;">Waiting for a regional trainer</span> is the slowest hand-off in hiring.</h1>
+                <div class="descriptive-chart-title"></div>
+              </header>
+              <div class="slide-body layout-diagram"><div class="diagram-zone"><svg class="diagram-svg" viewBox="0 0 1164 494" role="img" aria-label="A swimlane of six hiring steps across the store manager, HR and a regional trainer; the hand-off from HR screening to the trainer&#x27;s trial shift, a five-day wait, is highlighted." preserveAspectRatio="xMidYMid meet"><title>A swimlane of six hiring steps across the store manager, HR and a regional trainer; the hand-off from HR screening to the trainer&#x27;s trial shift, a five-day wait, is highlighted.</title><defs><marker id="dg-arrow-slide_12-8C8C8C" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8C8C8C"/></marker><marker id="dg-arrow-slide_12-BB5202" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#BB5202"/></marker></defs><g><text x="0.0" y="18.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Hiring steps by owner</text></g><g><text x="0.0" y="120.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Store manager</text></g><g><text x="0.0" y="272.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">HR</text></g><line x1="0.0" y1="190.4" x2="1164.5" y2="190.4" stroke="#E5E7EB" stroke-width="1.33"/><g><text x="0.0" y="424.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Regional trainer</text></g><line x1="0.0" y1="342.4" x2="1164.5" y2="342.4" stroke="#E5E7EB" stroke-width="1.33"/><g data-item="request"><rect x="252.8" y="74.8" width="195.4" height="79.2" fill="#F3F4F6"/><text x="350.5" y="121.6" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Request hire</text></g><g data-item="post"><rect x="252.8" y="226.8" width="195.4" height="79.2" fill="#F3F4F6"/><text x="350.5" y="273.6" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Post role</text></g><g data-item="screen"><rect x="578.4" y="226.8" width="195.4" height="79.2" fill="#F3F4F6"/><text x="676.1" y="261.6" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Screen</text><text x="676.1" y="285.6" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">applicants</text></g><g data-item="trial"><rect x="578.4" y="378.8" width="195.4" height="79.2" fill="#F3F4F6"/><text x="676.1" y="425.6" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Trial shift</text></g><g data-item="decide"><rect x="904.0" y="74.8" width="195.4" height="79.2" fill="#F3F4F6"/><text x="1001.7" y="121.6" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Decide</text></g><g data-item="offer"><rect x="904.0" y="226.8" width="195.4" height="79.2" fill="#F3F4F6"/><text x="1001.7" y="273.6" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Send offer</text></g><g data-item="post"><polyline points="350.5,154.0 350.5,226.8" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_12-8C8C8C)"/></g><g data-item="screen"><polyline points="448.1,266.4 578.4,266.4" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_12-8C8C8C)"/></g><g data-item="trial"><polyline points="676.1,306.0 676.1,378.8" fill="none" stroke="#BB5202" stroke-width="3.33" marker-end="url(#dg-arrow-slide_12-BB5202)"/></g><g data-item="trial"><rect x="685.7" y="330.8" width="93.1" height="23.3" fill="#FFFFFF"/><text x="685.7" y="347.4" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="700" fill="#BB5202">5-day wait</text></g><g data-item="decide"><polyline points="773.7,418.4 875.2,418.4 875.2,114.4 904.0,114.4" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_12-8C8C8C)"/></g><g data-item="offer"><polyline points="1001.7,154.0 1001.7,226.8" fill="none" stroke="#8C8C8C" stroke-width="2.00" marker-end="url(#dg-arrow-slide_12-8C8C8C)"/></g></svg></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf recruiting plan, FY2026.</span>
+                <span class="slide-counter">Appendix 8</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_13" data-slide-index="12" data-counter="Appendix 9" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#D95F02;font-weight:inherit;">Baristas</span> make up 22 of the 30 roles short at year end.</h1>
+                <div class="descriptive-chart-title"></div>
+              </header>
+              <div class="slide-body layout-diagram"><div class="diagram-zone"><svg class="diagram-svg" viewBox="0 0 1164 494" role="img" aria-label="A tree splitting the 30-role year-end staffing gap into baristas 22, shift supervisors 6, store managers 2 and bakers 0; baristas are highlighted." preserveAspectRatio="xMidYMid meet"><title>A tree splitting the 30-role year-end staffing gap into baristas 22, shift supervisors 6, store managers 2 and bakers 0; baristas are highlighted.</title><defs><marker id="dg-arrow-slide_13-8C8C8C" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8C8C8C"/></marker></defs><g><text x="0.0" y="18.2" text-anchor="start" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="16.0" font-weight="700" fill="#1F2937">Year-end staffing gap by role, planned minus forecast</text></g><g data-item="gap"><rect x="284.6" y="230.9" width="201.6" height="70.9" fill="#F3F4F6"/><text x="385.4" y="265.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Roles short</text><text x="385.4" y="283.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">30 roles</text></g><g data-item="baristas"><rect x="678.2" y="59.9" width="201.6" height="70.9" fill="#BB5202"/><text x="779.0" y="94.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#FFFFFF">Baristas</text><text x="779.0" y="112.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#FFFFFF">22 roles</text></g><g data-item="supervisors"><rect x="678.2" y="173.9" width="201.6" height="70.9" fill="#F3F4F6"/><text x="779.0" y="196.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Shift</text><text x="779.0" y="220.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">supervisors</text><text x="779.0" y="238.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">6 roles</text></g><g data-item="managers"><rect x="678.2" y="287.9" width="201.6" height="70.9" fill="#F3F4F6"/><text x="779.0" y="322.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Store managers</text><text x="779.0" y="340.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">2 roles</text></g><g data-item="bakers"><rect x="678.2" y="401.9" width="201.6" height="70.9" fill="#F3F4F6"/><text x="779.0" y="436.2" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="20.0" font-weight="700" fill="#1F2937">Bakers</text><text x="779.0" y="454.4" text-anchor="middle" font-family='"Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' font-size="14.0" font-weight="400" fill="#6B7280">0 roles</text></g><g data-item="baristas"><polyline points="486.2,266.4 582.2,266.4 582.2,95.4 678.2,95.4" fill="none" stroke="#8C8C8C" stroke-width="2.00"/></g><g data-item="supervisors"><polyline points="486.2,266.4 582.2,266.4 582.2,209.4 678.2,209.4" fill="none" stroke="#8C8C8C" stroke-width="2.00"/></g><g data-item="managers"><polyline points="486.2,266.4 582.2,266.4 582.2,323.4 678.2,323.4" fill="none" stroke="#8C8C8C" stroke-width="2.00"/></g><g data-item="bakers"><polyline points="486.2,266.4 582.2,266.4 582.2,437.4 678.2,437.4" fill="none" stroke="#8C8C8C" stroke-width="2.00"/></g></svg></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf staffing plan and forecast, FY2026.</span>
+                <span class="slide-counter">Appendix 9</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_14" data-slide-index="13" data-counter="Appendix 10" data-reveal='{&quot;enabled&quot;: true, &quot;standalone_self_sufficient_verified&quot;: true, &quot;reveal_steps&quot;: [{&quot;step_number&quot;: 1, &quot;visible_panel_ids&quot;: [&quot;panel_waits&quot;], &quot;visible_series_roles&quot;: [&quot;context_greyscale&quot;, &quot;focal_primary_tier1&quot;], &quot;show_annotations&quot;: true, &quot;show_recommendation_callout&quot;: true, &quot;speaker_notes&quot;: &quot;Each dot is one of our 48 stores; Harbor Street is the orange one. The grey band in each row is the slowest fifth of stores, and Harbor Street sits inside it at every daypart.&quot;}]}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#D95F02;font-weight:inherit;">Harbor Street</span> is in the slowest fifth at every daypart.</h1>
+                <div class="descriptive-chart-title">Average wait by daypart (min), all 48 stores, FY2025</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_waits"><div class="panel-title">Each dot is one store</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_waits"><rect class="strip-band" x="474.2" y="45.8" width="73.2" height="98.4" fill="#F3F4F6" /><rect class="strip-band" x="357.8" y="152.8" width="55.2" height="98.4" fill="#F3F4F6" /><rect class="strip-band" x="329.1" y="259.8" width="30.2" height="98.4" fill="#F3F4F6" /><text x="96.6" y="380.0" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">0</text><text x="186.1" y="380.0" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">2</text><text x="275.7" y="380.0" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">4</text><text x="365.2" y="380.0" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">6</text><text x="454.8" y="380.0" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">8</text><text x="544.3" y="380.0" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">10</text><text x="633.9" y="380.0" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">12</text><line x1="96.60202074140693" y1="362.5" x2="633.8639723447908" y2="362.5" stroke="#D1D5DB" stroke-width="1.25" /><text x="365.2" y="406.0" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">Average wait (min)</text><text x="86.6" y="99.4" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Morning rush</text><line class="strip-median" x1="425.7" y1="50.1" x2="425.7" y2="139.9" stroke="#6B7280" stroke-width="1.74" /><circle class="strip-dot" cx="436.9" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="392.1" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="356.3" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="342.8" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="513.0" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="450.3" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="535.4" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="472.7" cy="112.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="414.5" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="410.0" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="419.0" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="351.8" cy="77.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="401.1" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="365.2" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="477.2" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="356.3" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="414.5" cy="103.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="436.9" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="517.5" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="307.0" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="396.6" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="450.3" cy="103.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="333.9" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="387.6" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="356.3" cy="103.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="338.4" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="477.2" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="365.2" cy="103.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="369.7" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="347.3" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="544.3" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="526.4" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="432.4" cy="77.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="405.5" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="477.2" cy="103.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="405.5" cy="103.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="324.9" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="410.0" cy="77.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="477.2" cy="77.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="463.7" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="436.9" cy="103.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="432.4" cy="112.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="504.0" cy="86.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="495.1" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="454.8" cy="95.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="432.4" cy="68.7" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="508.5" cy="103.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot strip-focal" cx="504.0" cy="95.0" r="6.3" fill="#D95F02" stroke="#FFFFFF" stroke-width="0.6" /><text class="strip-value" x="645.9" y="99.4" fill="#D95F02" font-weight="700" font-size="12.5" data-pt="9.0">9.1 min · rank 7</text><text x="86.6" y="206.4" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Midday</text><line class="strip-median" x1="329.4" y1="157.1" x2="329.4" y2="246.9" stroke="#6B7280" stroke-width="1.74" /><circle class="strip-dot" cx="320.5" cy="210.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="342.8" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="329.4" cy="210.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="387.6" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="365.2" cy="210.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="329.4" cy="219.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="356.3" cy="210.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="360.8" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="369.7" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="275.7" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="307.0" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="329.4" cy="175.7" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="302.6" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="271.2" cy="210.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="378.7" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="383.1" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="333.9" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="356.3" cy="184.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="298.1" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="253.3" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="351.8" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="329.4" cy="228.3" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="271.2" cy="184.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="333.9" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="289.1" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="324.9" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="320.5" cy="184.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="324.9" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="302.6" cy="210.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="311.5" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="351.8" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="302.6" cy="184.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="365.2" cy="184.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="320.5" cy="219.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="316.0" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="360.8" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="266.7" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="410.0" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="333.9" cy="184.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="244.3" cy="202.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="338.4" cy="210.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="374.2" cy="210.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="320.5" cy="175.7" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="342.8" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="275.7" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="293.6" cy="193.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="347.3" cy="210.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot strip-focal" cx="369.7" cy="202.0" r="6.3" fill="#D95F02" stroke="#FFFFFF" stroke-width="0.6" /><text class="strip-value" x="645.9" y="206.4" fill="#D95F02" font-weight="700" font-size="12.5" data-pt="9.0">6.1 min · rank 6</text><text x="86.6" y="313.4" text-anchor="end" fill="#1F2937" font-size="12.5" data-pt="9.0">Evening</text><line class="strip-median" x1="304.8" y1="264.1" x2="304.8" y2="353.9" stroke="#6B7280" stroke-width="1.74" /><circle class="strip-dot" cx="311.5" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="298.1" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="324.9" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="333.9" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="257.8" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="275.7" cy="317.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="311.5" cy="317.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="316.0" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="333.9" cy="317.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="320.5" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="329.4" cy="326.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="338.4" cy="326.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="280.2" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="320.5" cy="317.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="307.0" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="266.7" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="302.6" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="347.3" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="329.4" cy="282.7" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="226.4" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="257.8" cy="317.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="307.0" cy="326.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="248.8" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="356.3" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="262.3" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="284.6" cy="317.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="253.3" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="289.1" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="275.7" cy="291.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="244.3" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="280.2" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="347.3" cy="317.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="302.6" cy="317.8" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="289.1" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="329.4" cy="335.3" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="311.5" cy="291.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="235.4" cy="300.2" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="333.9" cy="291.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="347.3" cy="291.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="342.8" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="307.0" cy="282.7" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="307.0" cy="335.3" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="284.6" cy="291.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="280.2" cy="326.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="275.7" cy="282.7" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="239.9" cy="309.0" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot" cx="302.6" cy="291.5" r="4.2" fill="#9E9E9E" stroke="#FFFFFF" stroke-width="0.6" /><circle class="strip-dot strip-focal" cx="333.9" cy="309.0" r="6.3" fill="#D95F02" stroke="#FFFFFF" stroke-width="0.6" /><text class="strip-value" x="645.9" y="313.4" fill="#D95F02" font-weight="700" font-size="12.5" data-pt="9.0">5.3 min · rank 7</text><text x="510.7" y="40.2" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">Slowest fifth</text><text x="425.7" y="21.4" text-anchor="middle" fill="#6B7280" font-size="12.5" data-pt="9.0">Median</text></svg></div></div><div class="side-zone"><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Staff Harbor Street for the whole day, not only the morning rush.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Copperleaf point-of-sale timestamps, FY2025 (48 stores).</span>
+                <span class="slide-counter">Appendix 10</span>
+              </footer>
+            </section>
+            
+  </div>
+  <div class="hud-bar">
+    <button class="hud-btn" onclick="prevStep()">← Prev</button>
+    <span id="hud-status">Slide 1</span>
+    <button class="hud-btn" onclick="nextStep()">Next →</button>
+    <button class="hud-btn" onclick="toggleRevealMode()" id="reveal-btn">Progressive Reveal: ON</button>
+    <button class="hud-btn" onclick="toggleNotes()" id="notes-btn">Speaker notes: OFF (N)</button>
+  </div>
+  <div class="speaker-notes-drawer" id="speaker-notes" hidden>Speaker Notes</div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let curSlide = 0;
+    let curStepIdx = 0;
+    let revealEnabled = true;
+
+    function applyState() {
+      requestAnimationFrame(fitChartText);
+      slides.forEach((s, i) => s.classList.toggle('active', i === curSlide));
+      const active = slides[curSlide];
+      const pr = JSON.parse(active.getAttribute('data-reveal') || '{}');
+      const steps = (revealEnabled && pr.enabled && pr.reveal_steps && pr.reveal_steps.length) ? pr.reveal_steps : null;
+
+      if (!steps) {
+        active.querySelectorAll('.hidden-reveal').forEach(el => el.classList.remove('hidden-reveal'));
+        document.getElementById('hud-status').textContent = `${active.dataset.counter} (Full View)`;
+        const allNotes = (pr.reveal_steps || []).map(st => `[Beat ${st.step_number}] ${st.speaker_notes || ''}`).join(' ');
+        document.getElementById('speaker-notes').textContent = allNotes || 'No speaker notes for this slide.';
+        return;
+      }
+
+      const st = steps[Math.min(curStepIdx, steps.length - 1)];
+      const visPanels = new Set(st.visible_panel_ids || []);
+      const visRoles = new Set(st.visible_series_roles || []);
+
+      active.querySelectorAll('.chart-panel, .panel-finding').forEach(p => {
+        const pid = p.getAttribute('data-panel-id');
+        p.classList.toggle('hidden-reveal', !visPanels.has(pid));
+      });
+      ['context_greyscale', 'focal_secondary_tier2', 'focal_primary_tier1'].forEach(role => {
+        active.querySelectorAll(`.series-role-${role}`).forEach(el => {
+          el.classList.toggle('hidden-reveal', !visRoles.has(role));
+        });
+      });
+      if (st.visible_item_ids && st.visible_item_ids.length) {
+        const visItems = new Set(st.visible_item_ids);
+        active.querySelectorAll('[data-item]').forEach(el => el.classList.toggle('hidden-reveal', !visItems.has(el.getAttribute('data-item'))));
+      }
+      active.querySelectorAll('.ann-card, .ann-note').forEach(el => el.classList.toggle('hidden-reveal', !st.show_annotations));
+      active.querySelectorAll('.rec-card, .rec-line').forEach(el => el.classList.toggle('hidden-reveal', !st.show_recommendation_callout));
+
+      document.getElementById('hud-status').textContent = `${active.dataset.counter} · Reveal Step ${st.step_number}/${steps.length}`;
+      document.getElementById('speaker-notes').textContent = `[Beat ${st.step_number}] ${st.speaker_notes || ''}`;
+    }
+
+    function nextStep() {
+      const active = slides[curSlide];
+      const pr = JSON.parse(active.getAttribute('data-reveal') || '{}');
+      const steps = (revealEnabled && pr.enabled && pr.reveal_steps) ? pr.reveal_steps : [];
+      if (steps.length && curStepIdx < steps.length - 1) {
+        curStepIdx++;
+      } else if (curSlide < slides.length - 1) {
+        curSlide++;
+        curStepIdx = 0;
+      }
+      applyState();
+    }
+
+    function prevStep() {
+      if (curStepIdx > 0) {
+        curStepIdx--;
+      } else if (curSlide > 0) {
+        curSlide--;
+        const pr = JSON.parse(slides[curSlide].getAttribute('data-reveal') || '{}');
+        const steps = (revealEnabled && pr.enabled && pr.reveal_steps) ? pr.reveal_steps : [];
+        curStepIdx = Math.max(0, steps.length - 1);
+      }
+      applyState();
+    }
+
+    function toggleRevealMode() {
+      revealEnabled = !revealEnabled;
+      document.getElementById('reveal-btn').textContent = `Progressive Reveal: ${revealEnabled ? 'ON' : 'OFF'}`;
+      applyState();
+    }
+
+    // B-8: chart text keeps its slide-point size whatever scale the browser gives each SVG; then crowded
+    // category labels are thinned (every k-th, D-029) and the viewBox grows to hold every label.
+    function overlaps(a, b) { return a.left < b.right + 2 && b.left < a.right + 2 && a.top < b.bottom && b.top < a.bottom; }
+    function fitChartText() {
+      const vp = document.querySelector('.deck-viewport').getBoundingClientRect().width;
+      const scope = document.body.classList.contains('print-all') ? '.slide' : '.slide.active';
+      document.querySelectorAll(`${scope} svg.swd-chart-svg`).forEach(svg => {
+        if (!svg.dataset.vb) svg.dataset.vb = svg.getAttribute('viewBox');
+        svg.setAttribute('viewBox', svg.dataset.vb);
+        const setSizes = () => {
+          const ctm = svg.getScreenCTM();
+          if (!ctm || !ctm.a) return false;
+          svg.querySelectorAll('text[data-pt]').forEach(t => {
+            t.setAttribute('font-size', (parseFloat(t.dataset.pt) * vp / 960 / ctm.a).toFixed(2));
+          });
+          return true;
+        };
+        for (let pass = 0; pass < 3; pass++) {
+          if (!setSizes()) return;
+          const ticks = [...svg.querySelectorAll('text.cat-tick')];
+          for (let k = 1; k <= ticks.length; k++) {
+            ticks.forEach((t, i) => t.style.display = (i % k === 0) ? '' : 'none');
+            const shown = ticks.filter(t => t.style.display !== 'none').map(t => t.getBoundingClientRect());
+            if (shown.every((r, i) => i === 0 || !overlaps(shown[i - 1], r))) break;
+          }
+          const [x0, y0, w0, h0] = svg.dataset.vb.split(' ').map(Number);
+          const bb = svg.getBBox();
+          const x1 = Math.min(x0, bb.x), y1 = Math.min(y0, bb.y);
+          const x2 = Math.max(x0 + w0, bb.x + bb.width), y2 = Math.max(y0 + h0, bb.y + bb.height);
+          svg.setAttribute('viewBox', `${x1} ${y1} ${x2 - x1} ${y2 - y1}`);
+        }
+        setSizes();  // the grown viewBox shrinks the scale a little; restore the slide-point sizes
+      });
+    }
+    window.addEventListener('resize', fitChartText);
+    // Sizes are a ratio of the slide width, so fitting every slide on screen holds for the printed page
+    window.addEventListener('beforeprint', () => { document.body.classList.add('print-all'); fitChartText(); });
+    window.addEventListener('afterprint', () => { document.body.classList.remove('print-all'); applyState(); });
+
+    function toggleNotes() {
+      const drawer = document.getElementById('speaker-notes');
+      drawer.hidden = !drawer.hidden;
+      document.getElementById('notes-btn').textContent = `Speaker notes: ${drawer.hidden ? 'OFF' : 'ON'} (N)`;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'n' || e.key === 'N') { toggleNotes(); }
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextStep(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prevStep(); }
+    });
+    // `#slide=3` opens a slide, `&full` shows every reveal step at once (bookmarks and browser screenshots)
+    const hashArgs = new URLSearchParams(location.hash.slice(1));
+    if (hashArgs.has('slide')) curSlide = Math.min(Math.max(parseInt(hashArgs.get('slide'), 10) - 1 || 0, 0), slides.length - 1);
+    if (hashArgs.has('full')) revealEnabled = false;
+    if (hashArgs.has('shot')) document.body.classList.add('shot');
+    applyState();
+
+    // D-048 X1: `#qa` measures every slide at its final state and writes a JSON report into the page
+    function qaReport() {
+      const keep = [curSlide, revealEnabled];
+      revealEnabled = false;
+      const report = { errors: window.qaErrors.slice(), slides: [] };
+      slides.forEach((s, i) => {
+        curSlide = i;
+        applyState();
+        fitChartText();
+        const frame = s.getBoundingClientRect();
+        const foot = s.querySelector('.slide-footer').getBoundingClientRect();
+        const issues = [], flagged = [];
+        const flag = (el, what) => {
+          if (flagged.some(f => f.contains(el))) return;  // report the outermost element only
+          flagged.push(el);
+          issues.push(`${what}: ${name(el)}`);
+        };
+        const name = el => (el.className && el.className.baseVal !== undefined ? el.className.baseVal : el.className) || el.tagName.toLowerCase();
+        s.querySelectorAll('*').forEach(el => {
+          if (el.closest('svg') && el.tagName.toLowerCase() !== 'svg') return;
+          const r = el.getBoundingClientRect();
+          if (!r.width || !r.height) return;
+          if (r.left < frame.left - 1 || r.right > frame.right + 1 || r.top < frame.top - 1 || r.bottom > frame.bottom + 1) {
+            flag(el, 'outside the slide frame');
+          } else if (!el.closest('.slide-footer') && el.parentElement === s && r.bottom > foot.top + 1) {
+            flag(el, 'runs into the footer');
+          }
+          const st = getComputedStyle(el);
+          if (/hidden|clip/.test(st.overflow) && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1) && el !== s) {
+            flag(el, 'content clipped inside');
+          }
+        });
+        report.slides.push({ index: i + 1, id: s.id, counter: s.dataset.counter, issues });
+      });
+      [curSlide, revealEnabled] = keep;
+      applyState();
+      const out = document.createElement('script');
+      out.type = 'application/json';
+      out.id = 'qa-report';
+      out.textContent = JSON.stringify(report);
+      document.body.appendChild(out);
+    }
+    if (hashArgs.has('qa')) qaReport();
+  </script>
+</body>
+</html>

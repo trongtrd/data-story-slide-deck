@@ -1,0 +1,11 @@
+{
+  "name": "data-story-slide-deck",
+  "displayName": "Data Story Slide Deck",
+  "version": "0.1.0",
+  "description": "Stage-gated deck builder grounded in storytelling-with-data principles: grills for context, drafts a storyline, plans visuals, and compiles native editable PowerPoint charts with machine-checked data traceability.",
+  "author": {
+    "name": "Trong Truong"
+  },
+  "license": "Apache-2.0 AND CC-BY-4.0",
+  "keywords": ["presentations", "pptx", "data-storytelling", "charts", "slides"]
+}

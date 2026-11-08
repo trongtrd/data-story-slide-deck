@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="slide-spec-sha256" content="973c0fe061768337a7bd8dfceb94fdea91156bfe821493e9f3e56a31d1f99d91" />
+  <title>bench_en_nurse_staffing</title>
+  <script>
+      // D-048 X1: page errors are kept for the `#qa` report (html_qa.py)
+      window.qaErrors = [];
+      window.addEventListener('error', e => window.qaErrors.push(String(e.message || e)));
+    </script>
+  <style>
+    :root {
+      --bg: #FFFFFF;
+      --text-primary: #1F2937;
+      --text-muted: #6B7280;
+      --panel-bg: #F3F4F6;
+      --accent: #D95F02;
+      --shaded: #FEE6CE;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;  /* D-029: the brand font from the G1 profile */
+      background: #111827;
+      color: var(--text-primary);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .deck-viewport {
+      container-type: inline-size;  /* B-8: text is sized as a share of the slide width, like the PPTX */
+      width: min(96vw, calc(90vh * 16 / 9));
+      aspect-ratio: 16 / 9;
+      background: var(--bg);
+      border-radius: 8px;
+      box-shadow: 0 20px 45px rgba(0,0,0,0.45);
+      position: relative;
+      overflow: hidden;
+    }
+    .slide {
+      --pt: calc(100cqw / 960);
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 2.6% 4.5% 2.2% 4.5%;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .slide.active { display: flex; }
+    /* D-063: key slides on the dark background; cards keep their light fills and text */
+    .slide.key { background: #1E2A38; }
+    .slide.key .takeaway-title { color: #F3F4F6; }
+    .slide.key .descriptive-chart-title, .slide.key .reading-note, .slide.key .slide-footer { color: #AEB8C4; }
+    .slide.key .slide-header { border-bottom-color: #3B4A5C; }
+    .divider-block { flex: 1; display: flex; flex-direction: column; justify-content: center; }
+    .title-block { flex: 1; display: flex; flex-direction: column; justify-content: center; max-width: 82%; }
+    .slide.title-slide .deck-title {
+      font-size: calc(var(--pt) * 36);
+      font-family: "Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text-primary);
+    }
+    .title-audience { margin-top: 14px; font-size: calc(var(--pt) * 20); color: var(--text-muted); }
+    .title-rule { width: 30%; margin: 22px 0 14px; border-top: 1.5pt solid var(--accent); }
+    .title-meta { font-size: calc(var(--pt) * 16); color: var(--text-muted); }
+    .section-number {
+      font-size: calc(var(--pt) * 79.2);
+      font-weight: 700;
+      line-height: 1.1;
+      color: #F0974A;
+    }
+    .slide.divider .takeaway-title { font-size: calc(var(--pt) * 36); }
+    .section-question { font-size: calc(var(--pt) * 20); color: #AEB8C4; line-height: 1.3; }
+    .slide-header {
+      border-bottom: 1.5px solid #E5E7EB;
+      padding-bottom: 10px;
+      margin-bottom: 12px;
+    }
+    .takeaway-title {
+      font-family: "Arial", Arial, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: calc(var(--pt) * 24);
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .descriptive-chart-title {
+      font-size: calc(var(--pt) * 16);
+      color: var(--text-muted);
+    }
+    .slide-body {
+      flex: 1;
+      display: grid;
+      gap: 20px;
+      min-height: 0;
+      align-items: stretch;
+    }
+    .layout-one_sided_right_text { grid-template-columns: 68% 1fr; }
+    .layout-one_sided_left_text { grid-template-columns: 32% 1fr; }
+    .layout-two_sided_paired_views,
+    .layout-two_sided_comparison,
+    .layout-small_multiples_grid,
+    .layout-1_plus_4_grid {
+      grid-template-rows: 1fr auto;
+    }
+    .layout-diagram { grid-template-rows: 1fr auto; }
+    .layout-diagram .side-zone { flex-direction: row; }
+    .layout-diagram .side-zone > div { flex: 1 1 0; min-width: 0; }
+    .diagram-zone { min-height: 0; overflow: hidden; }
+    .diagram-svg { width: 100%; height: 100%; display: block; }
+    .layout-data_table { grid-template-rows: 1fr auto; }
+    .layout-data_table .side-zone { flex-direction: row; }
+    .layout-data_table .side-zone > div { flex: 1 1 0; min-width: 0; }
+    .table-zone { min-height: 0; overflow: hidden; }
+    .data-table {
+      border-collapse: collapse;
+      min-width: 60%;
+      font-size: calc(var(--pt) * 14);
+      line-height: 1.25;
+      color: var(--text-primary);
+    }
+    .data-table caption {
+      caption-side: top;
+      text-align: left;
+      font-size: calc(var(--pt) * 16);
+      font-weight: 700;
+      padding-bottom: 10px;
+    }
+    .data-table th, .data-table td { padding: 0.35em 0.7em; text-align: left; vertical-align: bottom; font-weight: 400; }
+    .data-table thead th { font-weight: 700; border-bottom: 1pt solid var(--text-primary); }
+    .data-table .group-row th { text-align: center; color: var(--text-muted); border-bottom: 0.75pt solid #9CA3AF; }
+    .data-table .group-row td { border: none; }
+    .data-table tbody tr td, .data-table tbody tr th { border-bottom: 0.5pt solid #D1D5DB; }
+    .data-table tbody tr:last-child td, .data-table tbody tr:last-child th { border-bottom: none; }
+    .data-table tfoot td, .data-table tfoot th { font-weight: 700; border-top: 1pt solid var(--text-primary); }
+    .data-table .num { text-align: right; font-variant-numeric: tabular-nums; }
+    .data-table .focal { color: var(--table-focal); }
+    .data-table .strong { font-weight: 700; }
+    .data-table.heat tbody td, .data-table.heat tbody th { border-bottom: none; }
+    .data-table.heat tbody td { border: 2px solid var(--bg); }
+    .data-table.heat tbody tr:first-child td, .data-table.heat tbody tr:first-child th { border-top: 1pt solid var(--text-primary); }
+    .heat-key { display: flex; justify-content: flex-end; align-items: flex-start; gap: 0.6em; margin-bottom: 0.5em; font-size: calc(var(--pt) * 12); color: var(--text-muted); }
+    .heat-scale { position: relative; padding-bottom: 1.5em; margin-right: 0.8em; }
+    .heat-swatches { display: flex; }
+    .heat-swatch { display: block; width: 3.4em; height: 1.1em; }
+    .heat-tick { position: absolute; top: 1.3em; transform: translateX(-50%); white-space: nowrap; }
+    .heat-unit { padding-top: 0; }
+    .panels-zone {
+      display: grid;
+      gap: 16px;
+      min-height: 0;
+      align-items: stretch;
+    }
+    .panels-count-1 { grid-template-columns: 1fr; }
+    .panels-count-2 { grid-template-columns: 1fr 1fr; }
+    .panels-count-3 { grid-template-columns: repeat(3, 1fr); }
+    .panels-count-4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .layout-1_plus_4_grid .panels-count-5 {
+      grid-template-columns: 42% 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+    }
+    .layout-1_plus_4_grid .panels-count-5 .role-hero_total_left {
+      grid-row: 1 / span 2;
+      grid-column: 1;
+    }
+    .chart-panel {
+      display: flex;
+      flex-direction: column;
+      padding: 8px 10px;
+      border-radius: 8px;
+      min-height: 0;
+    }
+    .chart-panel.panel-shaded { background: var(--panel-bg); }
+    .swd-chart-svg { overflow: visible; }  /* enlarged tick labels may reach into the panel padding */
+    .panel-title {
+      font-size: calc(var(--pt) * 16);
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--text-primary);
+    }
+    .panel-title-quiet { font-weight: 400; color: var(--text-muted); }
+    .summary-rows { display: flex; flex-direction: column; justify-content: space-evenly; height: 100%; }
+    .summary-row {
+      display: grid;
+      grid-template-columns: 6% 1fr 16%;
+      align-items: center;
+      gap: 2%;
+      padding: 14px 0;
+      border-bottom: 0.75pt solid var(--rule, #E5E7EB);
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .summary-number {
+      font-size: calc(var(--pt) * 24);
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .summary-text { font-size: calc(var(--pt) * 20); line-height: 1.3; color: var(--text-primary); }
+    .summary-ref { font-size: calc(var(--pt) * 16); color: var(--text-muted); text-align: right; }
+    .panels-zone.has-findings { grid-template-rows: auto 1fr; row-gap: 6px; }
+    .panel-finding { padding: 0 10px; }
+    .layout-evidence_columns { grid-template-rows: 1fr auto; row-gap: 14px; }
+    .layout-evidence_columns .panels-zone { column-gap: 36px; }
+    .rec-line {
+      border-left: 6px solid var(--accent);
+      padding: 4px 0 4px 16px;
+      font-size: calc(var(--pt) * 20);
+      line-height: 1.3;
+      color: var(--text-primary);
+    }
+    .column-heading {
+      font-size: calc(var(--pt) * 16);
+      font-weight: 700;
+      color: var(--text-muted);
+      border-bottom: 1pt solid var(--rule, #D1D5DB);
+      padding-bottom: 4px;
+      margin-bottom: 10px;
+    }
+    .panel-headline {
+      font-size: calc(var(--pt) * 20);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text-primary);
+    }
+    .panel-text {
+      font-size: calc(var(--pt) * 16);
+      margin-top: 4px;
+      color: var(--text-primary);
+    }
+    .side-zone {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      justify-content: flex-start;
+    }
+    .layout-small_multiples_grid .side-zone,
+    .layout-two_sided_paired_views .panels-count-2 + .side-zone {
+      flex-direction: row;
+    }
+    .ann-card, .rec-card {
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: calc(var(--pt) * 16);
+      line-height: 1.25;  /* PRIN-DSN-005: 1.1–1.3 */
+      flex: 0 0 auto;  /* cards follow their text; no stretched empty card */
+    }
+    .layout-small_multiples_grid .side-zone > div,
+    .layout-two_sided_paired_views .panels-count-2 + .side-zone > div {
+      flex: 1 1 0;  /* a row of cards shares the width and wraps its text instead of running off the slide */
+      min-width: 0;
+    }
+    .ann-card {
+      background: var(--panel-bg);  /* fill only, no outline (ANTI-DSN-002) */
+    }
+    .ann-anchor {
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+      font-size: 0.92em;
+    }
+    .rec-card {
+      background: var(--shaded);
+    }
+    .rec-label {
+      font-weight: 700;
+      font-size: calc(var(--pt) * 12);
+      color: var(--accent);
+      letter-spacing: 0.03em;
+      margin-bottom: 4px;
+    }
+    .statement-layout {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      justify-content: center;
+    }
+    .hero-action-box {
+      background: var(--shaded);
+      border-radius: 10px;
+      padding: 24px 28px;
+    }
+    .hero-action-text {
+      font-size: calc(var(--pt) * 20);
+      line-height: 1.25;
+      margin-top: 8px;
+    }
+    .pillars-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+    }
+    .pillar-card {
+      background: var(--panel-bg);
+      border-radius: 8px;
+      padding: 18px;
+    }
+    .hero-action-box .rec-label { font-size: calc(var(--pt) * 14); }
+    .pillar-card h4 { margin-bottom: 8px; font-size: calc(var(--pt) * 16); }
+    .pillar-card p { font-size: calc(var(--pt) * 16); line-height: 1.25; color: #374151; }
+    /* D-064: the main card spans all grid columns but the last; tiles, the side image and step rows share the grid */
+    .statement-grid { flex: 1; display: grid; gap: 18px; align-content: center; }
+    .tile-number { font-size: calc(var(--pt) * 54); font-weight: 700; line-height: 1; margin-bottom: 10px; color: var(--text-primary); }
+    .tile-number.focal { color: var(--accent); }
+    .pillar-card.tile p, .statement-grid.tiles .rec-label { font-size: calc(var(--pt) * 16); }
+    .side-image { background: var(--panel-bg); border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .side-image img { max-width: 100%; max-height: 100%; object-fit: contain; }
+    .slide.spotlight { background: #A64902; }
+    .slide.spotlight, .slide.spotlight * { color: #FFFFFF !important; }
+    .slide.spotlight .hero-action-box, .slide.spotlight .pillar-card { background: transparent; }
+    .slide.spotlight .slide-header { border-bottom-color: #FFFFFF; }
+    .reading-note {
+      padding-top: 8px;
+      font-size: calc(var(--pt) * 10);
+      color: var(--text-muted);
+    }
+    .rec-card.implication { background: var(--panel-bg, #F3F4F6); }
+    .rec-card.implication .rec-label { color: var(--text-primary, #1F2937); }
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 8px;
+      font-size: calc(var(--pt) * 10);
+      color: var(--text-muted);
+    }
+    .hud-bar {
+      margin-top: 10px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      color: #E5E7EB;
+      font-size: 13px;
+    }
+    .hud-btn {
+      background: #374151;
+      color: #FFF;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 12.5px;
+    }
+    .hud-btn:hover { background: #4B5563; }
+    .speaker-notes-drawer {
+      margin-top: 8px;
+      width: min(96vw, calc(90vh * 16 / 9));
+      background: #1F2937;
+      color: #F9FAFB;
+      padding: 10px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      line-height: 1.45;
+      border-left: 4px solid var(--accent);
+    }
+    .hidden-reveal { opacity: 0.08; pointer-events: none; transition: opacity 0.25s ease; }
+    /* D-048 X2: printing gives one slide per page at its final reveal state, without the HUD or notes */
+    body.print-all .slide { display: flex; }
+    /* `#shot`: the slide fills the window, for headless screenshots (html_qa.py) */
+    body.shot { padding: 0; background: var(--bg); }
+    body.shot .hud-bar { display: none; }
+    body.shot .deck-viewport { width: 100vw; border-radius: 0; box-shadow: none; }
+    @media print {
+      @page { size: 13.333in 7.5in; margin: 0; }
+      body { background: #FFFFFF; padding: 0; display: block; min-height: 0; }
+      .hud-bar, .speaker-notes-drawer { display: none !important; }
+      .deck-viewport { width: 100%; aspect-ratio: auto; border-radius: 0; box-shadow: none; overflow: visible; }
+      .slide { display: flex; aspect-ratio: 16 / 9; height: auto; break-after: page; overflow: hidden; }
+      .hidden-reveal { opacity: 1 !important; }
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+    
+  </style>
+</head>
+<body>
+  <div class="deck-viewport">
+    <section class="slide title-slide active" id="title_slide" data-slide-index="title" data-counter="Title" data-reveal='{"enabled": false, "reveal_steps": []}'><div class="title-block"><h1 class="deck-title">Move to unit-based staffing to keep new nurses and cut agency spend</h1><div class="title-audience">Decision for the Executive Leadership Team</div><div class="title-rule"></div><div class="title-meta">November 2026 · Dr. Lena Okafor, Chief Nursing Officer</div></div><footer class="slide-footer"><span class="source-footnote"></span><span class="slide-counter"></span></footer></section>
+            <section class="slide " id="slide_01" data-slide-index="0" data-counter="Slide 1 / 7" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Every nursing unit follows <span class="color-tie" style="color:#D95F02;font-weight:inherit;">one monthly rotation</span> today.</h1>
+                <div class="descriptive-chart-title">How nurses are assigned across Northvale’s units since January 2024</div>
+              </header>
+              <div class="statement-grid" style="grid-template-columns: repeat(3, 1fr)"><div class="hero-action-box" style="grid-column: 1 / span 2"><div class="rec-label">WHAT CHANGED IN 2024</div><div class="hero-action-text">All 1,800 nurses now move to a different unit every month, whatever that unit’s care model.</div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Northvale Health nursing workforce policy, January 2024.</span>
+                <span class="slide-counter">1</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_02" data-slide-index="1" data-counter="Slide 2 / 7" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Outpatient nurses <span class="color-tie" style="color:#D95F02;font-weight:inherit;">see more patients</span> when teams stay together.</h1>
+                <div class="descriptive-chart-title">Patients seen per nurse shift in outpatient clinics, 2025</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_throughput"><div class="panel-title">By care model</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_throughput">
+<line x1="56.0" y1="366.0" x2="712.0" y2="366.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="370.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">0</text>
+<line x1="56.0" y1="282.0" x2="712.0" y2="282.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="286.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">5</text>
+<line x1="56.0" y1="198.0" x2="712.0" y2="198.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="202.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">10</text>
+<line x1="56.0" y1="114.0" x2="712.0" y2="114.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="118.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">15</text>
+<line x1="56.0" y1="30.1" x2="712.0" y2="30.1" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="34.1" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">20</text>
+<line x1="56.0" y1="366.0" x2="712.0" y2="366.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="220.0" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">Monthly rotation</text>
+<text x="548.0" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">Fixed team (pilot clinics)</text>
+<g class="chart-series series-role-context_greyscale">
+<rect x="175.0" y="112.4" width="90.0" height="253.6" rx="3" fill="#8C8C8C" />
+<text x="220.0" y="106.4" text-anchor="middle" fill="#1F2937" font-size="16.7" data-pt="12.0" font-weight="700">15.1</text>
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<rect x="503.0" y="53.6" width="90.0" height="312.4" rx="3" fill="#D95F02" />
+<text x="548.0" y="47.6" text-anchor="middle" fill="#1F2937" font-size="16.7" data-pt="12.0" font-weight="700">18.6</text>
+</g>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">Fixed-team clinics saw <span class="color-tie" style="color:#A74A02;font-weight:700;">18.6 patients per nurse shift</span> versus 15.1 under rotation.</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Keep outpatient nurses on stable home teams.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Northvale outpatient scheduling system, 2025 (pilot clinics vs. rotating clinics).</span>
+                <span class="slide-counter">2</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_03" data-slide-index="2" data-counter="Slide 3 / 7" data-reveal='{&quot;enabled&quot;: true, &quot;standalone_self_sufficient_verified&quot;: true, &quot;reveal_steps&quot;: [{&quot;step_number&quot;: 1, &quot;visible_panel_ids&quot;: [&quot;panel_cc&quot;, &quot;panel_ed&quot;, &quot;panel_op&quot;], &quot;visible_series_roles&quot;: [&quot;context_greyscale&quot;], &quot;show_annotations&quot;: false, &quot;show_recommendation_callout&quot;: false, &quot;speaker_notes&quot;: &quot;Experienced and senior nurses held steady in every unit.&quot;}, {&quot;step_number&quot;: 2, &quot;visible_panel_ids&quot;: [&quot;panel_cc&quot;, &quot;panel_ed&quot;, &quot;panel_op&quot;], &quot;visible_series_roles&quot;: [&quot;context_greyscale&quot;, &quot;focal_primary_tier1&quot;], &quot;show_annotations&quot;: true, &quot;show_recommendation_callout&quot;: true, &quot;speaker_notes&quot;: &quot;New graduates fell in every unit, most of all in Critical Care.&quot;}]}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Competency scores fell for <span class="color-tie" style="color:#D95F02;font-weight:inherit;">new-graduate nurses</span> after rotation began.</h1>
+                <div class="descriptive-chart-title">Mean competency score (1–5) by unit and tenure, 2023 (before rotation) vs. 2025</div>
+              </header>
+              <div class="slide-body layout-small_multiples_grid"><div class="panels-zone panels-count-3"><div class="chart-panel panel-shaded role-small_multiple_cell" data-panel-id="panel_cc"><div class="panel-title">Critical Care</div><svg viewBox="0 0 420 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_cc">
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="295.1" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">2.5</text>
+<line x1="57.38795986622074" y1="239.7" x2="217.75418060200667" y2="239.7" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="243.7" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">3</text>
+<line x1="57.38795986622074" y1="188.2" x2="217.75418060200667" y2="188.2" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="192.2" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">3.5</text>
+<line x1="57.38795986622074" y1="136.8" x2="217.75418060200667" y2="136.8" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="140.8" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">4</text>
+<line x1="57.38795986622074" y1="85.3" x2="217.75418060200667" y2="85.3" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="89.3" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">4.5</text>
+<line x1="57.38795986622074" y1="33.8" x2="217.75418060200667" y2="33.8" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="37.8" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">5</text>
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="85.4" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2023</text>
+<text x="189.8" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2025</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="95.6" x2="189.8" y2="95.6" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="95.6" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="95.6" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="116.2" x2="189.8" y2="126.5" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="116.2" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="126.5" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="85.4" y1="147.0" x2="189.8" y2="219.1" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<circle cx="85.4" cy="147.0" r="5.0" fill="#D95F02" />
+<circle cx="189.8" cy="219.1" r="5.0" fill="#D95F02" />
+</g>
+<text class="chart-series series-role-context_greyscale" x="77.4" y="99.6" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0" font-weight="500">4.4</text>
+<text class="chart-series series-role-context_greyscale" x="77.4" y="122.1" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0" font-weight="500">4.2</text>
+<text class="chart-series series-role-focal_primary_tier1" x="77.4" y="151.0" text-anchor="end" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">3.9</text>
+<text class="chart-series series-role-context_greyscale" x="197.8" y="99.6" text-anchor="start" fill="#6B7280" font-size="18.8" data-pt="12.0" font-weight="500">4.4 · Senior</text>
+<text class="chart-series series-role-context_greyscale" x="197.8" y="130.5" text-anchor="start" fill="#6B7280" font-size="18.8" data-pt="12.0" font-weight="500">4.1 · Experienced</text>
+<text class="chart-series series-role-focal_primary_tier1" x="197.8" y="223.1" text-anchor="start" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">3.2 · New graduate</text>
+</svg></div><div class="chart-panel  role-small_multiple_cell" data-panel-id="panel_ed"><div class="panel-title">Emergency</div><svg viewBox="0 0 420 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_ed">
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="295.1" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">2.5</text>
+<line x1="57.38795986622074" y1="239.7" x2="217.75418060200667" y2="239.7" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="243.7" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">3</text>
+<line x1="57.38795986622074" y1="188.2" x2="217.75418060200667" y2="188.2" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="192.2" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">3.5</text>
+<line x1="57.38795986622074" y1="136.8" x2="217.75418060200667" y2="136.8" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="140.8" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">4</text>
+<line x1="57.38795986622074" y1="85.3" x2="217.75418060200667" y2="85.3" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="89.3" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">4.5</text>
+<line x1="57.38795986622074" y1="33.8" x2="217.75418060200667" y2="33.8" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="37.8" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">5</text>
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="85.4" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2023</text>
+<text x="189.8" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2025</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="105.9" x2="189.8" y2="116.2" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="105.9" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="116.2" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="126.5" x2="189.8" y2="136.8" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="126.5" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="136.8" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="85.4" y1="157.3" x2="189.8" y2="208.8" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<circle cx="85.4" cy="157.3" r="5.0" fill="#D95F02" />
+<circle cx="189.8" cy="208.8" r="5.0" fill="#D95F02" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="77.4" y="161.3" text-anchor="end" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">3.8</text>
+<text class="chart-series series-role-focal_primary_tier1" x="197.8" y="212.8" text-anchor="start" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">3.3 · New graduate</text>
+</svg></div><div class="chart-panel  role-small_multiple_cell" data-panel-id="panel_op"><div class="panel-title">Outpatient</div><svg viewBox="0 0 420 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_op">
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="295.1" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">2.5</text>
+<line x1="57.38795986622074" y1="239.7" x2="217.75418060200667" y2="239.7" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="243.7" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">3</text>
+<line x1="57.38795986622074" y1="188.2" x2="217.75418060200667" y2="188.2" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="192.2" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">3.5</text>
+<line x1="57.38795986622074" y1="136.8" x2="217.75418060200667" y2="136.8" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="140.8" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">4</text>
+<line x1="57.38795986622074" y1="85.3" x2="217.75418060200667" y2="85.3" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="89.3" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">4.5</text>
+<line x1="57.38795986622074" y1="33.8" x2="217.75418060200667" y2="33.8" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="37.8" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">5</text>
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="85.4" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2023</text>
+<text x="189.8" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2025</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="85.3" x2="189.8" y2="85.3" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="85.3" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="85.3" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="105.9" x2="189.8" y2="105.9" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="105.9" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="105.9" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="85.4" y1="136.8" x2="189.8" y2="157.3" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<circle cx="85.4" cy="136.8" r="5.0" fill="#D95F02" />
+<circle cx="189.8" cy="157.3" r="5.0" fill="#D95F02" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="77.4" y="140.8" text-anchor="end" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">4.0</text>
+<text class="chart-series series-role-focal_primary_tier1" x="197.8" y="161.3" text-anchor="start" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">3.8 · New graduate</text>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">The steepest fall is in <span class="color-tie" style="color:#A74A02;font-weight:700;">Critical Care (3.9 to 3.2)</span> for new graduates.</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Give new graduates a stable home unit for their first two years.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Northvale annual competency assessments, 2023 and 2025 (n = 1,800 nurses).</span>
+                <span class="slide-counter">3</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_04" data-slide-index="3" data-counter="Slide 4 / 7" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">First-year turnover <span class="color-tie" style="color:#D95F02;font-weight:inherit;">nearly doubled in Critical Care</span> after rotation.</h1>
+                <div class="descriptive-chart-title">First-year turnover (%) by unit and tenure, 2023 (before rotation) vs. 2025</div>
+              </header>
+              <div class="slide-body layout-small_multiples_grid"><div class="panels-zone panels-count-3"><div class="chart-panel panel-shaded role-small_multiple_cell" data-panel-id="panel_t_cc"><div class="panel-title">Critical Care</div><svg viewBox="0 0 420 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_t_cc">
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="295.1" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">0</text>
+<line x1="57.38795986622074" y1="248.2" x2="217.75418060200667" y2="248.2" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="252.2" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">5</text>
+<line x1="57.38795986622074" y1="205.4" x2="217.75418060200667" y2="205.4" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="209.4" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">10</text>
+<line x1="57.38795986622074" y1="162.5" x2="217.75418060200667" y2="162.5" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="166.5" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">15</text>
+<line x1="57.38795986622074" y1="119.6" x2="217.75418060200667" y2="119.6" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="123.6" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">20</text>
+<line x1="57.38795986622074" y1="76.7" x2="217.75418060200667" y2="76.7" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="80.7" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">25</text>
+<line x1="57.38795986622074" y1="33.8" x2="217.75418060200667" y2="33.8" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="37.8" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">30</text>
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="85.4" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2023</text>
+<text x="189.8" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2025</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="248.2" x2="189.8" y2="248.2" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="248.2" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="248.2" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="222.5" x2="189.8" y2="213.9" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="222.5" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="213.9" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="85.4" y1="171.1" x2="189.8" y2="59.6" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<circle cx="85.4" cy="171.1" r="5.0" fill="#D95F02" />
+<circle cx="189.8" cy="59.6" r="5.0" fill="#D95F02" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="77.4" y="175.1" text-anchor="end" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">14%</text>
+<text class="chart-series series-role-context_greyscale" x="77.4" y="226.5" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0" font-weight="500">8%</text>
+<text class="chart-series series-role-context_greyscale" x="77.4" y="252.2" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0" font-weight="500">5%</text>
+<text class="chart-series series-role-focal_primary_tier1" x="197.8" y="63.6" text-anchor="start" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">27% · New graduate</text>
+<text class="chart-series series-role-context_greyscale" x="197.8" y="217.9" text-anchor="start" fill="#6B7280" font-size="18.8" data-pt="12.0" font-weight="500">9% · Experienced</text>
+<text class="chart-series series-role-context_greyscale" x="197.8" y="252.2" text-anchor="start" fill="#6B7280" font-size="18.8" data-pt="12.0" font-weight="500">5% · Senior</text>
+</svg></div><div class="chart-panel  role-small_multiple_cell" data-panel-id="panel_t_ed"><div class="panel-title">Emergency</div><svg viewBox="0 0 420 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_t_ed">
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="295.1" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">0</text>
+<line x1="57.38795986622074" y1="248.2" x2="217.75418060200667" y2="248.2" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="252.2" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">5</text>
+<line x1="57.38795986622074" y1="205.4" x2="217.75418060200667" y2="205.4" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="209.4" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">10</text>
+<line x1="57.38795986622074" y1="162.5" x2="217.75418060200667" y2="162.5" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="166.5" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">15</text>
+<line x1="57.38795986622074" y1="119.6" x2="217.75418060200667" y2="119.6" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="123.6" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">20</text>
+<line x1="57.38795986622074" y1="76.7" x2="217.75418060200667" y2="76.7" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="80.7" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">25</text>
+<line x1="57.38795986622074" y1="33.8" x2="217.75418060200667" y2="33.8" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="37.8" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">30</text>
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="85.4" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2023</text>
+<text x="189.8" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2025</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="239.7" x2="189.8" y2="239.7" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="239.7" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="239.7" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="213.9" x2="189.8" y2="205.4" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="213.9" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="205.4" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="85.4" y1="162.5" x2="189.8" y2="85.3" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<circle cx="85.4" cy="162.5" r="5.0" fill="#D95F02" />
+<circle cx="189.8" cy="85.3" r="5.0" fill="#D95F02" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="77.4" y="166.5" text-anchor="end" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">15%</text>
+<text class="chart-series series-role-focal_primary_tier1" x="197.8" y="89.3" text-anchor="start" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">24% · New graduate</text>
+</svg></div><div class="chart-panel  role-small_multiple_cell" data-panel-id="panel_t_op"><div class="panel-title">Outpatient</div><svg viewBox="0 0 420 340" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_t_op">
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="295.1" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">0</text>
+<line x1="57.38795986622074" y1="248.2" x2="217.75418060200667" y2="248.2" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="252.2" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">5</text>
+<line x1="57.38795986622074" y1="205.4" x2="217.75418060200667" y2="205.4" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="209.4" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">10</text>
+<line x1="57.38795986622074" y1="162.5" x2="217.75418060200667" y2="162.5" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="166.5" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">15</text>
+<line x1="57.38795986622074" y1="119.6" x2="217.75418060200667" y2="119.6" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="123.6" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">20</text>
+<line x1="57.38795986622074" y1="76.7" x2="217.75418060200667" y2="76.7" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="80.7" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">25</text>
+<line x1="57.38795986622074" y1="33.8" x2="217.75418060200667" y2="33.8" stroke="#E5E7EB" stroke-width="0.78" />
+<text x="47.38795986622074" y="37.8" text-anchor="end" fill="#6B7280" font-size="18.8" data-pt="12.0">30</text>
+<line x1="57.38795986622074" y1="291.1" x2="217.75418060200667" y2="291.1" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="85.4" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2023</text>
+<text x="189.8" y="321.2" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="18.8" data-pt="12.0">2025</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="256.8" x2="189.8" y2="256.8" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="256.8" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="256.8" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-context_greyscale">
+<line x1="85.4" y1="231.1" x2="189.8" y2="231.1" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round"  />
+<circle cx="85.4" cy="231.1" r="3.5" fill="#8C8C8C" />
+<circle cx="189.8" cy="231.1" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="85.4" y1="196.8" x2="189.8" y2="153.9" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round"  />
+<circle cx="85.4" cy="196.8" r="5.0" fill="#D95F02" />
+<circle cx="189.8" cy="153.9" r="5.0" fill="#D95F02" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="77.4" y="200.8" text-anchor="end" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">11%</text>
+<text class="chart-series series-role-focal_primary_tier1" x="197.8" y="157.9" text-anchor="start" fill="#D95F02" font-size="18.8" data-pt="12.0" font-weight="700">16% · New graduate</text>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">Critical Care new-graduate turnover rose from <span class="color-tie" style="color:#A74A02;font-weight:700;">14% to 27%</span>.</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Treat new-graduate retention as the first savings lever.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Northvale HR separations data, 2023 and 2025.</span>
+                <span class="slide-counter">4</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_05" data-slide-index="4" data-counter="Slide 5 / 7" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Unit-based staffing would save <span class="color-tie" style="color:#D95F02;font-weight:inherit;">about $4.3M a year</span>.</h1>
+                <div class="descriptive-chart-title">Modeled annual savings from unit-based staffing ($M)</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_savings"><div class="panel-title">Savings components</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_savings">
+<line x1="56.0" y1="366.0" x2="712.0" y2="366.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="370.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">0</text>
+<line x1="56.0" y1="298.8" x2="712.0" y2="298.8" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="302.8" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">1</text>
+<line x1="56.0" y1="231.6" x2="712.0" y2="231.6" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="235.6" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">2</text>
+<line x1="56.0" y1="164.4" x2="712.0" y2="164.4" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="168.4" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">3</text>
+<line x1="56.0" y1="97.2" x2="712.0" y2="97.2" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="101.2" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">4</text>
+<line x1="56.0" y1="30.1" x2="712.0" y2="30.1" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="34.1" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">5</text>
+<line x1="56.0" y1="366.0" x2="712.0" y2="366.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="384.0" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">Unit-based staffing (modeled)</text>
+<rect class="stack-segment series-role-focal_primary_tier1" x="339.0" y="191.3" width="90.0" height="174.7" fill="#D95F02" stroke="#FFFFFF" stroke-width="1.04" />
+<rect class="stack-segment series-role-focal_secondary_tier2" x="339.0" y="77.1" width="90.0" height="114.2" fill="#F0974A" stroke="#FFFFFF" stroke-width="1.04" />
+<text class="series-role-focal_primary_tier1" x="384.0" y="284.5" text-anchor="middle" fill="#FFFFFF" font-size="16.7" data-pt="12.0" font-weight="700">$2.6M</text>
+<text class="series-role-focal_secondary_tier2" x="384.0" y="140.0" text-anchor="middle" fill="#1F2937" font-size="16.7" data-pt="12.0" font-weight="500">$1.7M</text>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">$2.6M comes from <span class="color-tie" style="color:#A74A02;font-weight:700;">fewer agency nurses</span> and $1.7M from replacing fewer leavers.</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Book the agency savings in the FY2026 nursing budget.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Northvale finance model of unit-based staffing, FY2026.</span>
+                <span class="slide-counter">5</span>
+              </footer>
+            </section>
+            
+            <section class="slide " id="slide_06" data-slide-index="5" data-counter="Slide 6 / 7" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title">Weekend coverage <span class="color-tie" style="color:#D95F02;font-weight:inherit;">holds steady</span> under unit-based staffing.</h1>
+                <div class="descriptive-chart-title">Open weekend shifts per month, current rotation vs. modeled unit-based staffing</div>
+              </header>
+              <div class="slide-body layout-one_sided_right_text"><div class="panels-zone panels-count-1"><div class="chart-panel  role-primary_single" data-panel-id="panel_weekend"><div class="panel-title">Three units</div><svg viewBox="0 0 760 410" width="100%" height="100%" class="swd-chart-svg" data-panel-id="panel_weekend">
+<line x1="56.0" y1="366.0" x2="587.9739608217869" y2="366.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="370.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">0</text>
+<line x1="56.0" y1="310.0" x2="587.9739608217869" y2="310.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="314.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">2</text>
+<line x1="56.0" y1="254.0" x2="587.9739608217869" y2="254.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="258.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">4</text>
+<line x1="56.0" y1="198.0" x2="587.9739608217869" y2="198.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="202.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">6</text>
+<line x1="56.0" y1="142.0" x2="587.9739608217869" y2="142.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="146.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">8</text>
+<line x1="56.0" y1="86.0" x2="587.9739608217869" y2="86.0" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="90.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">10</text>
+<line x1="56.0" y1="30.1" x2="587.9739608217869" y2="30.1" stroke="#E5E7EB" stroke-width="0.70" />
+<text x="46.0" y="34.1" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0">12</text>
+<line x1="56.0" y1="366.0" x2="587.9739608217869" y2="366.0" stroke="#D1D5DB" stroke-width="1.25" />
+<text x="84.0" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">Current rotation</text>
+<text x="560.0" y="392.7" text-anchor="middle" class="cat-tick" fill="#6B7280" font-size="16.7" data-pt="12.0">Unit-based model</text>
+<g class="chart-series series-role-context_greyscale">
+<line x1="84.0" y1="198.0" x2="560.0" y2="226.0" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="198.0" r="3.5" fill="#8C8C8C" />
+<circle cx="560.0" cy="226.0" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-context_greyscale">
+<line x1="84.0" y1="310.0" x2="560.0" y2="310.0" stroke="#8C8C8C" stroke-width="1.72" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="310.0" r="3.5" fill="#8C8C8C" />
+<circle cx="560.0" cy="310.0" r="3.5" fill="#8C8C8C" />
+</g>
+<g class="chart-series series-role-focal_primary_tier1">
+<line x1="84.0" y1="114.0" x2="560.0" y2="142.0" stroke="#D95F02" stroke-width="3.74" stroke-linecap="round" stroke-dasharray="7,5" />
+<circle cx="84.0" cy="114.0" r="5.0" fill="#D95F02" />
+<circle cx="560.0" cy="142.0" r="5.0" fill="#D95F02" />
+</g>
+<text class="chart-series series-role-focal_primary_tier1" x="76.0" y="118.0" text-anchor="end" fill="#D95F02" font-size="16.7" data-pt="12.0" font-weight="700">9</text>
+<text class="chart-series series-role-context_greyscale" x="76.0" y="202.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">6</text>
+<text class="chart-series series-role-context_greyscale" x="76.0" y="314.0" text-anchor="end" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">2</text>
+<text class="chart-series series-role-focal_primary_tier1" x="568.0" y="146.0" text-anchor="start" fill="#D95F02" font-size="16.7" data-pt="12.0" font-weight="700">8 · Emergency</text>
+<text class="chart-series series-role-context_greyscale" x="568.0" y="230.0" text-anchor="start" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">5 · Critical Care</text>
+<text class="chart-series series-role-context_greyscale" x="568.0" y="314.0" text-anchor="start" fill="#6B7280" font-size="16.7" data-pt="12.0" font-weight="500">2 · Outpatient</text>
+</svg></div></div><div class="side-zone"><div class="ann-card"><div class="ann-body">Open weekend shifts <span class="color-tie" style="color:#A74A02;font-weight:700;">stay flat</span> or fall by one in every unit; Emergency stays the hardest to fill.</div></div><div class="rec-card"><div class="rec-label">KEY IMPLICATION &amp; ACTION</div><div class="rec-body">Keep the weekend float pool for Emergency only.</div></div></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Northvale operations scheduling model, FY2026.</span>
+                <span class="slide-counter">6</span>
+              </footer>
+            </section>
+            
+            <section class="slide key " id="slide_07" data-slide-index="6" data-counter="Slide 7 / 7" data-reveal='{&quot;enabled&quot;: false, &quot;reveal_steps&quot;: []}'>
+              <header class="slide-header">
+                <h1 class="takeaway-title"><span class="color-tie" style="color:#F0974A;font-weight:inherit;">Approve unit-based staffing</span> to stop the turnover and agency drain.</h1>
+                <div class="descriptive-chart-title">Decision requested and first three steps</div>
+              </header>
+              <div class="statement-grid" style="grid-template-columns: repeat(3, 1fr)"><div class="hero-action-box" style="grid-column: 1 / span 2"><div class="rec-label">PRIMARY ACTION REQUESTED TODAY</div><div class="hero-action-text"><span class="color-tie" style="color:#A74A02;font-weight:700;">Approve unit-based staffing</span> from next quarter (fallback: a six-month pilot in Critical Care and Emergency).</div></div><div class="pillar-card" style="grid-column: 1; grid-row: 2"><h4>Step 1: Home units</h4><p>Assign every nurse a home unit; new graduates stay put for two years.</p></div><div class="pillar-card" style="grid-column: 2; grid-row: 2"><h4>Step 2: Planned cross-training</h4><p>Two scheduled cross-unit shifts per quarter for experienced nurses.</p></div><div class="pillar-card" style="grid-column: 3; grid-row: 2"><h4>Step 3: Track the savings</h4><p>Report agency spend and first-year turnover monthly against the $4.3M target.</p></div></div>
+              
+              <footer class="slide-footer">
+                <span class="source-footnote">Source: Northvale nursing workforce review, FY2026.</span>
+                <span class="slide-counter">7</span>
+              </footer>
+            </section>
+            
+  </div>
+  <div class="hud-bar">
+    <button class="hud-btn" onclick="prevStep()">← Prev</button>
+    <span id="hud-status">Slide 1</span>
+    <button class="hud-btn" onclick="nextStep()">Next →</button>
+    <button class="hud-btn" onclick="toggleRevealMode()" id="reveal-btn">Progressive Reveal: ON</button>
+    <button class="hud-btn" onclick="toggleNotes()" id="notes-btn">Speaker notes: OFF (N)</button>
+  </div>
+  <div class="speaker-notes-drawer" id="speaker-notes" hidden>Speaker Notes</div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let curSlide = 0;
+    let curStepIdx = 0;
+    let revealEnabled = true;
+
+    function applyState() {
+      requestAnimationFrame(fitChartText);
+      slides.forEach((s, i) => s.classList.toggle('active', i === curSlide));
+      const active = slides[curSlide];
+      const pr = JSON.parse(active.getAttribute('data-reveal') || '{}');
+      const steps = (revealEnabled && pr.enabled && pr.reveal_steps && pr.reveal_steps.length) ? pr.reveal_steps : null;
+
+      if (!steps) {
+        active.querySelectorAll('.hidden-reveal').forEach(el => el.classList.remove('hidden-reveal'));
+        document.getElementById('hud-status').textContent = `${active.dataset.counter} (Full View)`;
+        const allNotes = (pr.reveal_steps || []).map(st => `[Beat ${st.step_number}] ${st.speaker_notes || ''}`).join(' ');
+        document.getElementById('speaker-notes').textContent = allNotes || 'No speaker notes for this slide.';
+        return;
+      }
+
+      const st = steps[Math.min(curStepIdx, steps.length - 1)];
+      const visPanels = new Set(st.visible_panel_ids || []);
+      const visRoles = new Set(st.visible_series_roles || []);
+
+      active.querySelectorAll('.chart-panel, .panel-finding').forEach(p => {
+        const pid = p.getAttribute('data-panel-id');
+        p.classList.toggle('hidden-reveal', !visPanels.has(pid));
+      });
+      ['context_greyscale', 'focal_secondary_tier2', 'focal_primary_tier1'].forEach(role => {
+        active.querySelectorAll(`.series-role-${role}`).forEach(el => {
+          el.classList.toggle('hidden-reveal', !visRoles.has(role));
+        });
+      });
+      if (st.visible_item_ids && st.visible_item_ids.length) {
+        const visItems = new Set(st.visible_item_ids);
+        active.querySelectorAll('[data-item]').forEach(el => el.classList.toggle('hidden-reveal', !visItems.has(el.getAttribute('data-item'))));
+      }
+      active.querySelectorAll('.ann-card, .ann-note').forEach(el => el.classList.toggle('hidden-reveal', !st.show_annotations));
+      active.querySelectorAll('.rec-card, .rec-line').forEach(el => el.classList.toggle('hidden-reveal', !st.show_recommendation_callout));
+
+      document.getElementById('hud-status').textContent = `${active.dataset.counter} · Reveal Step ${st.step_number}/${steps.length}`;
+      document.getElementById('speaker-notes').textContent = `[Beat ${st.step_number}] ${st.speaker_notes || ''}`;
+    }
+
+    function nextStep() {
+      const active = slides[curSlide];
+      const pr = JSON.parse(active.getAttribute('data-reveal') || '{}');
+      const steps = (revealEnabled && pr.enabled && pr.reveal_steps) ? pr.reveal_steps : [];
+      if (steps.length && curStepIdx < steps.length - 1) {
+        curStepIdx++;
+      } else if (curSlide < slides.length - 1) {
+        curSlide++;
+        curStepIdx = 0;
+      }
+      applyState();
+    }
+
+    function prevStep() {
+      if (curStepIdx > 0) {
+        curStepIdx--;
+      } else if (curSlide > 0) {
+        curSlide--;
+        const pr = JSON.parse(slides[curSlide].getAttribute('data-reveal') || '{}');
+        const steps = (revealEnabled && pr.enabled && pr.reveal_steps) ? pr.reveal_steps : [];
+        curStepIdx = Math.max(0, steps.length - 1);
+      }
+      applyState();
+    }
+
+    function toggleRevealMode() {
+      revealEnabled = !revealEnabled;
+      document.getElementById('reveal-btn').textContent = `Progressive Reveal: ${revealEnabled ? 'ON' : 'OFF'}`;
+      applyState();
+    }
+
+    // B-8: chart text keeps its slide-point size whatever scale the browser gives each SVG; then crowded
+    // category labels are thinned (every k-th, D-029) and the viewBox grows to hold every label.
+    function overlaps(a, b) { return a.left < b.right + 2 && b.left < a.right + 2 && a.top < b.bottom && b.top < a.bottom; }
+    function fitChartText() {
+      const vp = document.querySelector('.deck-viewport').getBoundingClientRect().width;
+      const scope = document.body.classList.contains('print-all') ? '.slide' : '.slide.active';
+      document.querySelectorAll(`${scope} svg.swd-chart-svg`).forEach(svg => {
+        if (!svg.dataset.vb) svg.dataset.vb = svg.getAttribute('viewBox');
+        svg.setAttribute('viewBox', svg.dataset.vb);
+        const setSizes = () => {
+          const ctm = svg.getScreenCTM();
+          if (!ctm || !ctm.a) return false;
+          svg.querySelectorAll('text[data-pt]').forEach(t => {
+            t.setAttribute('font-size', (parseFloat(t.dataset.pt) * vp / 960 / ctm.a).toFixed(2));
+          });
+          return true;
+        };
+        for (let pass = 0; pass < 3; pass++) {
+          if (!setSizes()) return;
+          const ticks = [...svg.querySelectorAll('text.cat-tick')];
+          for (let k = 1; k <= ticks.length; k++) {
+            ticks.forEach((t, i) => t.style.display = (i % k === 0) ? '' : 'none');
+            const shown = ticks.filter(t => t.style.display !== 'none').map(t => t.getBoundingClientRect());
+            if (shown.every((r, i) => i === 0 || !overlaps(shown[i - 1], r))) break;
+          }
+          const [x0, y0, w0, h0] = svg.dataset.vb.split(' ').map(Number);
+          const bb = svg.getBBox();
+          const x1 = Math.min(x0, bb.x), y1 = Math.min(y0, bb.y);
+          const x2 = Math.max(x0 + w0, bb.x + bb.width), y2 = Math.max(y0 + h0, bb.y + bb.height);
+          svg.setAttribute('viewBox', `${x1} ${y1} ${x2 - x1} ${y2 - y1}`);
+        }
+        setSizes();  // the grown viewBox shrinks the scale a little; restore the slide-point sizes
+      });
+    }
+    window.addEventListener('resize', fitChartText);
+    // Sizes are a ratio of the slide width, so fitting every slide on screen holds for the printed page
+    window.addEventListener('beforeprint', () => { document.body.classList.add('print-all'); fitChartText(); });
+    window.addEventListener('afterprint', () => { document.body.classList.remove('print-all'); applyState(); });
+
+    function toggleNotes() {
+      const drawer = document.getElementById('speaker-notes');
+      drawer.hidden = !drawer.hidden;
+      document.getElementById('notes-btn').textContent = `Speaker notes: ${drawer.hidden ? 'OFF' : 'ON'} (N)`;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'n' || e.key === 'N') { toggleNotes(); }
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextStep(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); prevStep(); }
+    });
+    // `#slide=3` opens a slide, `&full` shows every reveal step at once (bookmarks and browser screenshots)
+    const hashArgs = new URLSearchParams(location.hash.slice(1));
+    if (hashArgs.has('slide')) curSlide = Math.min(Math.max(parseInt(hashArgs.get('slide'), 10) - 1 || 0, 0), slides.length - 1);
+    if (hashArgs.has('full')) revealEnabled = false;
+    if (hashArgs.has('shot')) document.body.classList.add('shot');
+    applyState();
+
+    // D-048 X1: `#qa` measures every slide at its final state and writes a JSON report into the page
+    function qaReport() {
+      const keep = [curSlide, revealEnabled];
+      revealEnabled = false;
+      const report = { errors: window.qaErrors.slice(), slides: [] };
+      slides.forEach((s, i) => {
+        curSlide = i;
+        applyState();
+        fitChartText();
+        const frame = s.getBoundingClientRect();
+        const foot = s.querySelector('.slide-footer').getBoundingClientRect();
+        const issues = [], flagged = [];
+        const flag = (el, what) => {
+          if (flagged.some(f => f.contains(el))) return;  // report the outermost element only
+          flagged.push(el);
+          issues.push(`${what}: ${name(el)}`);
+        };
+        const name = el => (el.className && el.className.baseVal !== undefined ? el.className.baseVal : el.className) || el.tagName.toLowerCase();
+        s.querySelectorAll('*').forEach(el => {
+          if (el.closest('svg') && el.tagName.toLowerCase() !== 'svg') return;
+          const r = el.getBoundingClientRect();
+          if (!r.width || !r.height) return;
+          if (r.left < frame.left - 1 || r.right > frame.right + 1 || r.top < frame.top - 1 || r.bottom > frame.bottom + 1) {
+            flag(el, 'outside the slide frame');
+          } else if (!el.closest('.slide-footer') && el.parentElement === s && r.bottom > foot.top + 1) {
+            flag(el, 'runs into the footer');
+          }
+          const st = getComputedStyle(el);
+          if (/hidden|clip/.test(st.overflow) && (el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1) && el !== s) {
+            flag(el, 'content clipped inside');
+          }
+        });
+        report.slides.push({ index: i + 1, id: s.id, counter: s.dataset.counter, issues });
+      });
+      [curSlide, revealEnabled] = keep;
+      applyState();
+      const out = document.createElement('script');
+      out.type = 'application/json';
+      out.id = 'qa-report';
+      out.textContent = JSON.stringify(report);
+      document.body.appendChild(out);
+    }
+    if (hashArgs.has('qa')) qaReport();
+  </script>
+</body>
+</html>
