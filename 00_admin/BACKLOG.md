@@ -82,7 +82,9 @@ Living list of pending tasks, upcoming batches, and parked ideas.
   - [x] **D-024 spot-check** of the re-cast cards: done 2026-11-08 (`D-100`); all 25 cards stay `accepted`.
   - [x] **Release candidate:** done 2026-11-08 (`D-101`): public history restarted as one commit, three old CI runs deleted, tag `v0.1.0-rc1`, repository public, GitHub pre-release with topics; CI green on `main` and the tag.
   - [ ] **Old commits reachable by SHA:** the three replaced public commits (`b726cdb`, `0203d1f`, `41c03d0`, which contain the dated reports) still open by full or short SHA until GitHub prunes them; nothing links to them. Ask GitHub Support to purge them only if the owner wants it.
-  - [ ] **0.1.0 final:** after the platform checks below, update the README limitations, bump nothing else unless a check fails, tag `v0.1.0` and publish a full release (owner authorization).
+  - [x] **README redesign (`D-102`, 2026-11-08):** root `README.md` rewritten for first-time readers (real hero slide, quickstart with sample prompt, Mermaid gate diagram, HTML gallery, "Is this for you?"); the tested/untested table moved to `40_plugin/README.md` under "Status and limitations", with a pre-release note in the root.
+  - [ ] **Check the live README after the push:** GitHub's own render of light mode, dark mode and a phone-width view (Mermaid, the badges, relative image paths and the gallery thumbnails, about 145 px wide on a phone, could not be checked in the local preview). Fix anything that differs.
+  - [ ] **0.1.0 final:** after the platform checks below, update the pre-release note in the root README and the "Status and limitations" table in `40_plugin/README.md` together (`D-102`), bump nothing else unless a check fails, tag `v0.1.0` and publish a full release (owner authorization).
 
 Detailed existing implementation gaps remain listed below; this sequence does not mark them resolved.
 
@@ -98,7 +100,7 @@ Detailed existing implementation gaps remain listed below; this sequence does no
   - `EX-001`..`EX-004`, 27 other cards, the contracts' golden references, `workflow.md` section 5, and the skills re-cast to the new scenarios.
   - `50_evals/scripts/export_public_tree.py`: public export + audit (n-gram overlap vs. raw sources, source case-study names, secrets, personal paths, raw sources in git history, license files). 0 findings; runs in CI.
   - **Owner action:** spot-check the re-cast cards listed in the P7.2 handoff (`D-024`). Done 2026-11-08 (`D-100`).
-- [x] **P7.3 (Human-Facing Documentation & Release Readiness):** done 2026-11-08: root `README.md` rewritten (how it works, quickstart per platform, gallery of eight QA renders, tested vs. untested limitations, repository map); new `50_evals/README.md` (eval guide); `40_plugin/README.md` lists `deck-finisher`, names the real marketplace, and describes HTML screenshots correctly. Revisit the limitations after each platform test.
+- [x] **P7.3 (Human-Facing Documentation & Release Readiness):** done 2026-11-08: root `README.md` rewritten (how it works, quickstart per platform, gallery of eight QA renders, tested vs. untested limitations, repository map); new `50_evals/README.md` (eval guide); `40_plugin/README.md` lists `deck-finisher`, names the real marketplace, and describes HTML screenshots correctly. Revisit the limitations after each platform test. The root README was redesigned later the same day (`D-102`); the limitations table now lives in `40_plugin/README.md`.
 
 ## Discovered During P7.0–P7.2 (fold into P7.3 or later)
 
