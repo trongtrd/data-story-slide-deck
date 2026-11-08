@@ -1,8 +1,8 @@
 # Project Status (`00_admin/STATUS.md`)
 
-> **Last Updated:** 2026-11-08 18:00 (+07:00)
+> **Last Updated:** 2026-11-08 18:30 (+07:00)
 > **Active Phase:** **P7 — Public Plugin Packaging & Release** (milestone A closed `D-039`; milestone B in progress)
-> **Latest Handoff:** `2026-11-08_1800_claude-code_release-candidate-public.md` (internal handoff, not published)
+> **Latest Handoff:** `2026-11-08_1830_claude-code_readme-redesign-transition.md` (internal handoff, not published)
 
 ## 1. Current State
 
@@ -17,7 +17,8 @@
 
 ## 2. Remaining Work
 
-1. **Next:** platform checks toward 0.1.0 final: clean-profile `claude plugin marketplace add trongtrd/data-story-slide-deck`, Codex discovery, macOS PowerPoint, a projection test. Update the README limitations after each.
+0. **Next:** review and redesign the GitHub README (see the latest handoff).
+1. Platform checks toward 0.1.0 final: clean-profile `claude plugin marketplace add trongtrd/data-story-slide-deck`, Codex discovery, macOS PowerPoint, a projection test. Update the README limitations after each.
 2. Then tag `v0.1.0` and a full release (owner authorization).
 3. Optional: ask GitHub Support to purge the three replaced commits (still reachable by SHA).
 4. Deferred: three-column and Vietnamese evidence-column benchmarks (need a dataset with three honest criteria).

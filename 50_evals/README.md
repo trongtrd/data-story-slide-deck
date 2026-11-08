@@ -38,6 +38,6 @@ The suite writes its report to `reports/latest_eval_report.md` and `reports/eval
 
 After a renderer change, run step 3 for every run (no arguments), then the suite.
 
-## Limits
+## Agent runs so far
 
-The suite does not run the skills on an agent platform. Whether an agent follows them is tested by hand with real reports; the results so far are summarised under Limitations in the main [`README.md`](../README.md).
+The suite does not run the skills on an agent platform. Whether an agent follows them is tested by hand with real reports. So far, three decks were built end to end from a real survey report: two on Antigravity (run 1 and run 2, after fixes) and one on ZCode. On the project's 20-point review rubric they scored 9, 11 and 15. Codex has not yet been confirmed to discover the skills. The tested and untested platform checks are listed under [Status and limitations](../40_plugin/README.md#status-and-limitations) in the plugin README.

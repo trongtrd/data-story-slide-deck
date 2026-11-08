@@ -71,6 +71,23 @@ Contracts and knowledge are synced copies of the repository's `30_design/` and `
 
 **Colour kits.** Every deck uses one of five tested kits: Orange (default), Blue, Plum, Amber, or Indigo, or your own brand colours run through the same checks. A kit is not a theme: it gives the focal data, a quieter second tier, a comparison entity, and the grey context one colour each. The kits were built lightness-first and checked so that every pair of colours that can share a chart stays distinguishable for people with red-green or blue-yellow colour blindness, in greyscale print, and on a projector. The values and a short "which kit when" guide are in [`contracts/colour_kits.yaml`](./contracts/colour_kits.yaml).
 
+## Status and limitations
+
+This is a pre-release (`v0.1.0-rc1`). What has and has not been tested:
+
+| Area | Status | Detail |
+|---|---|---|
+| Evaluation suite and clean install | Verified | CI on Ubuntu, Windows and macOS (Python 3.12) |
+| PowerPoint 16 on Windows 11 | Verified | Six decks opened, edited, saved, reopened and exported; 37 of 37 native charts intact |
+| Agent runs | Partly | Three decks built end to end from a real survey report (two on Antigravity, one on ZCode); rubric scores of 9, 11 and 15 out of 20. See [`50_evals/README.md`](../50_evals/README.md). |
+| `claude plugin install` on a clean profile | Not yet tested | The Claude Code commands in the install section have not been run on a clean profile. |
+| Codex skill discovery | Not yet confirmed | Codex has not yet been confirmed to discover the skills. |
+| PowerPoint on macOS, including QA rendering through it | Not yet tested | The automation that exports QA images from PowerPoint on a Mac is untested. |
+| Projection on a real projector | Not yet tested | No deck has been shown on a real projector. |
+| Excel's chart-data window | Not yet tested | Editing chart data in Excel's own window has not been tested. |
+
+Some numbers in the rules (for example the title length limit) are project heuristics, not SWD rules. The deck always needs your review at G4.
+
 ## Limits
 
 - `build` requires approved G1–G3 artifacts and validates data before writing outputs. The bundled `smoke` command is a synthetic fixture and does not represent human approval. `smoke --keep` requires a new destination directory.
