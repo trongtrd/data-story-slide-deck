@@ -80,7 +80,9 @@ Living list of pending tasks, upcoming batches, and parked ideas.
   - [x] **Public repository (`D-098`, `D-099`, 2026-11-08):** private GitHub repo `trongtrd/data-story-slide-deck` created from a clean export (fresh history, noreply author); first CI run green on Ubuntu, Windows and macOS; Contributors shows the owner only. Sync with `50_evals/scripts/publish_public.py -m "<message>" [--push]`.
   - [x] **P7.3 documentation:** done 2026-11-08 (see the P7.3 item below).
   - [x] **D-024 spot-check** of the re-cast cards: done 2026-11-08 (`D-100`); all 25 cards stay `accepted`.
-  - [ ] **Release candidate:** tag `v0.1.0-rc1`, then switch the repository to public and publish a GitHub release; each step needs the owner's authorization. Add repository topics at the same time.
+  - [x] **Release candidate:** done 2026-11-08 (`D-101`): public history restarted as one commit, three old CI runs deleted, tag `v0.1.0-rc1`, repository public, GitHub pre-release with topics; CI green on `main` and the tag.
+  - [ ] **Old commits reachable by SHA:** the three replaced public commits (`b726cdb`, `0203d1f`, `41c03d0`, which contain the dated reports) still open by full or short SHA until GitHub prunes them; nothing links to them. Ask GitHub Support to purge them only if the owner wants it.
+  - [ ] **0.1.0 final:** after the platform checks below, update the README limitations, bump nothing else unless a check fails, tag `v0.1.0` and publish a full release (owner authorization).
 
 Detailed existing implementation gaps remain listed below; this sequence does not mark them resolved.
 
@@ -102,7 +104,7 @@ Detailed existing implementation gaps remain listed below; this sequence does no
 
 - [ ] **Platform verification (release blocker):**
   - [x] Push to GitHub and get CI green on all three operating systems (2026-11-08, private repo, run `42452283131`).
-  - Install via `claude plugin marketplace add trongtrd/data-story-slide-deck` on a clean profile (the repository must be public, or the profile must have GitHub access to it).
+  - Install via `claude plugin marketplace add trongtrd/data-story-slide-deck` on a clean profile (possible now that the repository is public).
   - Confirm Codex (`~/.agents/skills`, plugin marketplace) and Antigravity (`~/.gemini/config/skills` vs. legacy `~/.gemini/antigravity/skills`) load the six skills, and run one real deck end to end on each.
 
 - [x] **Benchmark content (P7.2 re-cast):** Resolved by the new scenarios: two-hue growth/decline, claim-matched titles, no analyst-process slide, VI callout states an action, CSVs hold data only (highlights live in the scenario YAML).
