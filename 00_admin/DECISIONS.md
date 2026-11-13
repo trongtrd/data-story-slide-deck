@@ -944,3 +944,58 @@ This is an **append-only** log of all project, knowledge-base, and product archi
 - **Context & Trade-off:** A survey of CyberPPT and oh-my-ppt for ideas found one real gap: `PRIN-AI-003` forbids invented numbers but is silent when two of the user's inputs disagree. CyberPPT's rule (keep both values, trace each, explain the gap, then propose how to show it) fits. The rest of CyberPPT (image blueprints, dense consulting pages, eight fixed styles) conflicts with the native-chart and white-space choices of `D-078`; oh-my-ppt is an app, and only its checklist and chart-gate ideas may be compared later.
 - **Decision:** Register `SRC-SEC-024` (secondary, MIT, ideas only). The owner approved the draft card `PRIN-AI-004` (inputs that disagree: keep both figures, the owner chooses, one value on the slide with the other in a note). It stays `proposed`, so it is not compiled into `40_plugin/skills/` yet.
 - **Boundary:** accepting the card and binding it to `deck-context-griller` (G1) is a separate step with its own owner approval and its own suite run. Backlog ideas only: two candidate storylines at G2, and a P0/P1/P2 comparison of oh-my-ppt's layout checklist with `design_qa.py`.
+
+### D-104 — Template Study: Three Layout Families for Text and Image Slides; No Template Mode (2026-11-13)
+- **Status:** Accepted
+- **Context & Trade-off:** The owner asked how slides whose content is text or images (not charts) should be laid out, and whether a theme/template mode belongs in this plugin or in a separate one. A read-only study of three commercial template folders from the owner's own collection (`SRC-SEC-025` to `SRC-SEC-027`; no licence file in any folder, so ideas only) found 15 layout families. Three fit the design system if every image is evidence and the takeaway title stays at the top left: an evidence image in half or two-thirds of the slide (P4), an equal-size grid of two to four captioned images with at most one focal panel (P5), and a traced quotation slide (P6). The rest either exist already (numbered points, process lines, big-number tiles) or conflict with `D-075` §8, `CONF-013`, `ANTI-DSN-002`, `CONF-015` and `PRIN-DSN-010` (prose columns, icons, cards over photos, device frames, mosaics, photo backgrounds, per-slide chrome). The owner approved the four recommendations ("Duyệt khuyến nghị").
+- **Decision:**
+  1. **Mock-ups:** P4, P5 and P6 are mocked up and rendered in PowerPoint on benchmark data in a proposal report under `50_evals/reports/`, with owner-made placeholder images only.
+  2. **`D-075` §8 stays:** full-text slides remain rejected. A quotation slide is a bounded exception: one to three short quotes, each traced to `inputs/` like a data point, under a takeaway title that states what the quotes prove.
+  3. **No template mode and no separate plugin:** new layouts go into the existing parametric renderer and design system (`D-054`, `D-080`, `D-089`). Accepting a user-supplied brand `.potx` (master, logo, brand fonts and colours through `colour_kit: brand`) is a backlog question.
+  4. **Sources:** register the three folders as `SRC-SEC-025` (`elements-mini-powerpoint`), `SRC-SEC-026` (`Pattern_Free_Presentation`) and `SRC-SEC-027` (`pro-presentation-smooth-animated`): secondary, commercial templates, ideas only, notes private.
+- **Boundary:** no template file, image, font, screenshot or render enters the repository or the public tree. Building any of P4-P6 needs the owner's ruling on the proposal, then a decision entry, then the usual order (schema, validator, both renderers, regression tests, one benchmark slide, the suite).
+
+### D-105 — Image and Quote Layouts: Round-2 Rulings and Build Order (2026-11-13)
+- **Status:** Accepted
+- **Context & Trade-off:** The round-2 proposal (`50_evals/reports/2026-11-13_p7-text-image-layouts-proposal.md`) showed six PowerPoint mock-ups for slides whose evidence is an image or a quotation and asked four questions. The owner replied "Commit rồi làm tiếp vòng 2", taken as approval of the four recommendations.
+- **Decision:**
+  1. **Build three layout types:** `image_evidence` (one image in the primary-visual area, cards in the right third), `image_grid` (two or three panels in a row with cards in the bottom strip, four as a 2 x 2 grid with cards beside), `quote_evidence` (one quote with cards beside, or two to three in columns with cards in the bottom strip). The half-and-half image layout (P4-B) is not built.
+  2. **Images are fitted without cropping** (as `D-064` §2), top-left aligned in their area, inside a 0.75 pt `hairline` frame.
+  3. **Quotes:** verbatim text, a required `source_ref`, speakers described by role and place, never by name unless the brief allows it; word limits per the proposal §3.3.
+  4. **Build order:** `image_evidence`, then `image_grid`, then `quote_evidence`; each is its own commit after the owner sees a PowerPoint render (schema, validator, both renderers, regression tests, one benchmark slide with an owner-made image, the suite).
+- **Boundary:** no template asset is used; benchmark images are made for the benchmark. Card text (`PAT-DSN-001`, `ANTI-DSN-002`) is revised with the build steps.
+
+### D-106 — Build Step 1 of D-105: `image_evidence` (2026-11-13)
+- **Status:** Accepted
+- **Context & Trade-off:** First build step of `D-105`. The owner saw the PowerPoint render of the new showcase appendix slide (an applicant-tracker screenshot drawn for the benchmark, fictional data that matches the source report) and approved ("Duyệt").
+- **Decision:**
+  1. **Contract:** `layout_type: image_evidence` and a slide-level `image_spec` (`path`, `alt_text`, `referenced_in`, `panel_title`, optional `credit`, which joins the source line).
+  2. **Validator:** errors for a missing or non-PNG/JPEG image, missing `alt_text` or `panel_title`, `image_spec` on another layout, or a chart, table or diagram spec on an image slide; warnings below 150 dpi at the placed width, for speaker notes that are said to discuss the image but are empty, and when no finding or callout sits beside the image.
+  3. **Renderers:** PowerPoint, HTML and Pillow previews place the image in the chart area of a one-sided slide, fitted without cropping at the top left in a 0.75 pt hairline frame, with alt text; notes stay cards.
+  4. **Suite:** PPTX.2 no longer counts declared content images (`pai:side_image`, `pai:image_evidence`) as raster charts; other pictures still fail it.
+  5. **Cards and skills:** `PAT-DSN-001` revised; `deck-visual-planner` and `deck-builder` name the layout.
+  6. **Benchmark:** showcase appendix slide 15 with `inputs/applicant_tracker.png`; the content digest is updated.
+- **Boundary:** suite 100/100 ×6, lint 82/82, negative 75/75, regression 215/215, sync 0 drift, audit 0 findings. Next: `image_grid`.
+
+### D-107 — Build Step 2 of D-105: `image_grid` (2026-11-13)
+- **Status:** Accepted
+- **Context & Trade-off:** Second build step of `D-105`. The owner saw the PowerPoint render of the new showcase appendix slide (three menu-board cards drawn for the benchmark) and approved ("Duyệt. Commit."). The cards in the bottom strip stay at the foot of the slide, as on other multi-panel layouts, leaving space under the captions.
+- **Decision:**
+  1. **Contract:** `layout_type: image_grid` and a slide-level `image_panels` list (2-4; `path`, `alt_text`, `panel_title`, `caption`, `focal`, `source_cell_ref`).
+  2. **Validator:** errors for a count outside 2-4, more than one focal panel, missing fields, a caption over 12 English words or 20 Vietnamese syllables, a caption number without `source_cell_ref` or not matching the source, and `image_panels` on another layout; warnings below 150 dpi, for images that differ in shape by more than 15 %, and for a Color Tie title with no focal panel.
+  3. **Renderers:** 2-3 equal panels in a row with cards in the bottom strip, 4 as a 2 x 2 grid in two-thirds with cards beside; one caption line per row; the focal caption in the text-safe focal colour, bold.
+  4. **Cards and skills:** `PAT-DSN-001`, `deck-visual-planner`, `deck-builder`.
+  5. **Benchmark:** showcase appendix slide 16 with three `inputs/menu_*.png`; content digest updated.
+- **Boundary:** suite 100/100 ×6, lint 82/82, negative 75/75, regression 218/218, sync 0 drift, audit 0 findings. Next: `quote_evidence`.
+
+### D-108 — Build Step 3 of D-105: `quote_evidence` (2026-11-13)
+- **Status:** Accepted
+- **Context & Trade-off:** Last build step of `D-105`. The proposal §3.3 left four points open; the owner accepted the four recommendations in one round.
+- **Decision:**
+  1. **Verbatim check:** each quote's `source_ref` names one CSV cell (`file.csv!RxCy`) or one Markdown line or heading. The fragments of `text` between ellipses (`…` or `...`) must appear in that source in order, word for word; only whitespace, quotation-mark style and the case of a fragment's first letter may differ. A mismatch is an error; a source the validator cannot read is a warning.
+  2. **Focal quote and Color Tie:** a quote may be `focal` (at most one); the focal column takes a 1.5 pt focal-colour rule and a bold focal-colour group label, the others a 0.75 pt `hairline` rule. At most one `color_tie_spans` entry across all quotes on the slide may colour a phrase inside a quote; a single quote uses the span only.
+  3. **Counts:** a number in `group_label` (for example "14 of 40") needs `count_ref`, resolved like `source_cell_ref`; missing or mismatched is an error.
+  4. **Type and speakers:** quotes always take the headline role (16 pt standalone, 20 pt live); no step up for a single quote, so the slide keeps at most five sizes. A `speaker` that looks like a personal name (two capitalised words before the first comma) is a warning unless the brief sets `quote_speaker_names: allowed`.
+  5. **Build:** schema `quotes` (`QuoteItem`) and the brief's optional `quote_speaker_names`; `quote_evidence_checks` in `validate_spec.py` (a label passes when any of its numbers matches `count_ref`); PowerPoint, HTML and Pillow renderers put the speaker right under each quote; tests `QuoteEvidence`; `PAT-DSN-001`, `deck-visual-planner`, `deck-builder`.
+  6. **Benchmark:** showcase appendix slide 17 from two fictional inputs made for the benchmark (`inputs/withdrawal_reasons.csv`, `inputs/withdrawal_comments.csv`); content digest updated.
+- **Boundary:** suite 100/100 ×6, lint 82/82, negative 75/75, regression 221/221, sync 0 drift, audit 0 findings. This closes `D-105`.

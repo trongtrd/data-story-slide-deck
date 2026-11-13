@@ -1,12 +1,12 @@
 {
   "render_source": "pptx_powerpoint",
   "renderer": "Microsoft PowerPoint 16.0",
-  "generated_at": "2026-11-08T05:26:32Z",
+  "generated_at": "2026-11-13T15:08:37Z",
   "pptx_file": "presentation.pptx",
-  "pptx_sha256": "991eb4ffb19cd52d530dd3a0eea0722a1c7a8c8093eb67d50c38a43da40706ba",
-  "slide_spec_sha256": "f07bd0cba02ed4b525ae7d32786ba034dde6d234f1e631af2abca3b80c9678db",
+  "pptx_sha256": "53f33c63cb19893095bd8c6f912999cee1b401d7015bafa1db2af8d7a38a1656",
+  "slide_spec_sha256": "2d079c6f26128ea67d928d974a2bbeef0fe843dc5a7ebde5550a3befe865ea28",
   "width_px": 1920,
-  "slide_count": 15,
+  "slide_count": 18,
   "pngs": [
     {
       "file": "slide_00.png",
@@ -14,59 +14,71 @@
     },
     {
       "file": "slide_01.png",
-      "sha256": "4a18d35f309829b2cd8f302a0434fc1592d7297c3e9c2f7737d845ccd7ea028e"
+      "sha256": "ef0c2cb66f20ae19fe79132fb1ed941f156527e5577a8b9c07a0578dbde6568d"
     },
     {
       "file": "slide_02.png",
-      "sha256": "893faae29272a5b6acd1dcb266d7b6e455dc79d979ab13d1cba558b7744ae7d5"
+      "sha256": "2bfa4c1bd7d6b1c0c16ad7cd8abd4e46e3d0693b36077fc4d1af7e30e2085c57"
     },
     {
       "file": "slide_03.png",
-      "sha256": "626b9b60b46d6b21a15897032470512b5aca0b116bb5098fc23aae821334f625"
+      "sha256": "43e8a049b2ac7b7af76277be3bdc5e028d7a609271dc68d75bbd3285bf4cf2f2"
     },
     {
       "file": "slide_04.png",
-      "sha256": "db24146ce0cc30772f0f78b8ce5d8470ce85b64144ef5a3ebd855db52df2ba8f"
+      "sha256": "01f87f065eb207768333138a09d31e9fb1d8c25f0f1b2825702803be9a83e84c"
     },
     {
       "file": "slide_05.png",
-      "sha256": "056f973f59e255e71a26de4959cb73d698692d24723a5efc7f580d9e60d918af"
+      "sha256": "7117cddc13aaf9caff66ad69718ff75453fdb23edd5e1aebc03f04cdbe340dbb"
     },
     {
       "file": "slide_06.png",
-      "sha256": "6db9485ef67ab3e65d23ba2584c43aced7d212bc00dc062ca9deee5461b852aa"
+      "sha256": "e83ed9ad4a5946f3ec11772464c1ab7faf20da05c6048b80d994b09d6c8abb77"
     },
     {
       "file": "slide_07.png",
-      "sha256": "23a82b434d09f5020e9be06ecaa9567856ba9126a871d148462d7c9d46cd2ab1"
+      "sha256": "b4071498d8ae2d03bf12ec524a00659887f386f912e20d92969bf930441672ed"
     },
     {
       "file": "slide_08.png",
-      "sha256": "9a5e257b92b0d84fd6cce6703ccbf3b8bbb560157956d4af87632b9c233d83f1"
+      "sha256": "c9217a592a63ee30b9d2fe45025643249f5597ac1457ac973aeaf5c01abc3249"
     },
     {
       "file": "slide_09.png",
-      "sha256": "5ec3543783816074cc9d61312a38b8fc2acf8a2ca876a951db43ccc2963e5b5e"
+      "sha256": "2963e54c4942cef4c41d11dc6376c77330eb7a6b78a97bf612574ed2f04d0571"
     },
     {
       "file": "slide_10.png",
-      "sha256": "90cee0dd4dc2ec6e64865d19f7f6b98980af9963606da61db7804fd3317d4ed3"
+      "sha256": "f94ab21f9ffb41c96b057154fa88932f0e255d25b3e0cab20ebe7e21164088b2"
     },
     {
       "file": "slide_11.png",
-      "sha256": "3b5adfeee96c2d705f3e2bf7a2fb6456d544e35e8d8d3a2e27814e13a9aac595"
+      "sha256": "4e72d765ad946fa1e8d0b4720ed43ed0c176f45d09b67baa3dcab4ac056e4842"
     },
     {
       "file": "slide_12.png",
-      "sha256": "bef104c688b05f12f18bd731d5e7ffba349bde69faeb4aefd79b040a654dbeb1"
+      "sha256": "a1ae2f5d6dc605d7c2a4342ae38eecc49cbcee43a522e27f0fc0b3d487f502c1"
     },
     {
       "file": "slide_13.png",
-      "sha256": "db10a40c70424c4d25f00ff30244c7f9f6cd9759454f5a6a3f7738ce9816871b"
+      "sha256": "069629043958103d8d3dbb568f5ac386eaa877dbd86b076c3f6dfdf2c6b55b02"
     },
     {
       "file": "slide_14.png",
-      "sha256": "925465ecab616dbaa669ad500336efdd5e4c4fd579ca05c36deb7b8139993371"
+      "sha256": "b1e4048c075f06ae553964e9e58910f25f8786cc0a9066455de1afbb88abf4ad"
+    },
+    {
+      "file": "slide_15.png",
+      "sha256": "3ff4c3328b614ca9c52c180e0072fb005b15d87433353c5f55dbe99882d085b1"
+    },
+    {
+      "file": "slide_16.png",
+      "sha256": "6877a67539b4b69308135ada1b74c74098a9acb735329eb9b52399ca2541334d"
+    },
+    {
+      "file": "slide_17.png",
+      "sha256": "a3874816fe02c7c8dacea14a6151bb14cae8132ea17efc704b166399982ae8d9"
     }
   ]
 }

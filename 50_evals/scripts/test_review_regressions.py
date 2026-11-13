@@ -2140,6 +2140,274 @@ class TilesImageSpotlight(CoffeeWorkspace, unittest.TestCase):
         self.assertEqual(len(html_renderer.export_slide_pngs(spot, self.work / 'png')), len(spec['slides']) + len(spec.get('appendix_slides') or []))
 
 
+class ImageEvidence(CoffeeWorkspace, unittest.TestCase):
+    """D-105: the image_evidence layout in the contract, validator and three renderers."""
+
+    def result(self, spec):
+        return validate_spec.validate_slide_spec_dict(spec, 't', self.work)
+
+    def image_slide(self, spec, size=(1800, 1100)):
+        from PIL import Image
+        Image.new('RGB', size, '#888888').save(self.work / 'inputs/tracker.png')
+        slide = next(s for s in spec['slides'] if (s.get('layout_spec') or {}).get('layout_type') == 'one_sided_right_text')
+        slide.pop('visual_spec')
+        slide['layout_spec']['layout_type'] = 'image_evidence'
+        slide['image_spec'] = {'path': 'tracker.png', 'alt_text': 'Applicant tracker queue', 'referenced_in': 'slide_text', 'panel_title': 'Applicant tracker'}
+        return slide
+
+    def d105(self, res, key='errors'):
+        return [m for m in res[key] if 'D-105' in m]
+
+    def test_valid_slide_and_errors(self):
+        spec = self.spec()
+        self.image_slide(spec)
+        res = self.result(spec)
+        self.assertEqual(self.d105(res), [])
+        self.assertEqual(self.d105(res, 'warnings'), [])
+        spec = self.spec()
+        slide = self.image_slide(spec)
+        slide['image_spec'].update({'path': 'missing.gif', 'alt_text': ' ', 'panel_title': ''})
+        errs = ' '.join(self.result(spec)['errors'])
+        for msg in ('was not found in inputs/', '`alt_text` is required', '`panel_title` is required', 'is not a PNG or JPEG'):
+            self.assertIn(msg, errs)
+        spec = self.spec()
+        slide = self.image_slide(spec)
+        spec['slides'][-1]['image_spec'] = slide.pop('image_spec')
+        slide['visual_spec'] = {'render_mode': 'native_editable_chart', 'panels': []}
+        errs = ' '.join(self.result(spec)['errors'])
+        self.assertIn('requires `image_spec`', errs)
+        self.assertIn('carries `image_spec`, not `visual_spec`', errs)
+        self.assertIn('`image_spec` belongs only on `image_evidence` slides', errs)
+
+    def test_low_resolution_and_missing_cards_warn(self):
+        spec = self.spec()
+        slide = self.image_slide(spec, size=(600, 400))
+        slide['word_jobs'].pop('annotations', None)
+        slide['word_jobs'].pop('recommendation_callout', None)
+        slide['image_spec']['referenced_in'] = 'speaker_notes'
+        slide.pop('progressive_reveal', None)
+        warns = ' '.join(self.d105(self.result(spec), 'warnings'))
+        self.assertIn('dpi at its placed width', warns)
+        self.assertIn('no finding or callout beside the image', warns)
+        self.assertIn('referenced in the speaker notes, but the slide has none', warns)
+
+    def test_renderers_draw_the_image(self):
+        from pptx.util import Emu
+        spec = self.spec()
+        slide_spec = self.image_slide(spec)
+        slide_spec['image_spec']['credit'] = 'Screenshot: Copperleaf HR.'
+        idx = spec['slides'].index(slide_spec)
+        deck = pptx_renderer.compile_pptx(spec, self.work / 'output/img.pptx')
+        slide = content_slides(deck)[idx]
+        pic = next(sh for sh in slide.shapes if sh.name == 'pai:image_evidence')
+        self.assertEqual(pic._element.find('.//{*}cNvPr').get('descr'), 'Applicant tracker queue')
+        self.assertAlmostEqual(Emu(pic.left).inches, 0.60, places=2)  # top-left of the chart area
+        self.assertAlmostEqual(pic.width / pic.height, 1800 / 1100, places=2)  # fitted, not cropped
+        self.assertEqual(pic.line.width.pt, 0.75)
+        side = [sh for sh in slide.shapes if sh.left >= pic.left + pic.width and sh.has_text_frame and sh.name != 'pai:footer']
+        self.assertTrue(side)
+        self.assertFalse([sh for sh in slide.shapes if getattr(sh, 'has_chart', False) and sh.has_chart])
+        source = next(sh for sh in slide.shapes if sh.name == 'pai:source_footnote').text_frame.text
+        self.assertTrue(source.endswith('Screenshot: Copperleaf HR.'), source)
+        page = html_renderer.compile_html(spec, self.work / 'output/img.html').read_text(encoding='utf-8')
+        self.assertIn('class="evidence-image"', page)
+        self.assertIn('layout-image_evidence', page)
+        pngs = html_renderer.export_slide_pngs(spec, self.work / 'png')
+        self.assertEqual(len(pngs), len(spec['slides']) + len(spec.get('appendix_slides') or []))
+
+
+class ImageGrid(CoffeeWorkspace, unittest.TestCase):
+    """D-105: the image_grid layout in the contract, validator and three renderers."""
+
+    def result(self, spec):
+        return validate_spec.validate_slide_spec_dict(spec, 't', self.work)
+
+    def grid_slide(self, spec, n=3, size=(1600, 1000)):
+        from PIL import Image
+        slide = next(s for s in spec['slides'] if (s.get('layout_spec') or {}).get('layout_type') == 'one_sided_right_text')
+        slide.pop('visual_spec')
+        slide['layout_spec']['layout_type'] = 'image_grid'
+        names = ['Mint Chill Cold Brew', 'Hazelnut Cloud Mocha', 'Espresso Tonic', 'Maple Oat Latte']
+        slide['image_panels'] = []
+        for i in range(n):
+            Image.new('RGB', size, '#888888').save(self.work / f'inputs/drink{i}.png')
+            slide['image_panels'].append({'path': f'drink{i}.png', 'alt_text': names[i], 'panel_title': names[i], 'caption': 'Sold in every store'})
+        slide['image_panels'][0]['focal'] = True
+        return slide
+
+    def d105(self, res, key='errors'):
+        return [m for m in res[key] if 'D-105' in m]
+
+    def test_valid_grid_and_errors(self):
+        spec = self.spec()
+        self.grid_slide(spec)
+        res = self.result(spec)
+        self.assertEqual(self.d105(res), [])
+        self.assertEqual(self.d105(res, 'warnings'), [])
+        spec = self.spec()
+        slide = self.grid_slide(spec, n=4)
+        slide['image_panels'][1].update({'focal': True, 'path': 'nope.gif', 'caption': 'Fell 14% in the year, far more than every other drink on the menu'})
+        slide['image_panels'][2]['panel_title'] = ''
+        errs = ' '.join(self.result(spec)['errors'])
+        for msg in ('at most one image panel is `focal`', 'is not a PNG or JPEG', 'was not found in inputs/', '`panel_title` is required', 'the caption must stay short', "shows '14%'; add `source_cell_ref`"):
+            self.assertIn(msg, errs)
+        spec = self.spec()
+        slide = self.grid_slide(spec)
+        spec['slides'][-1]['image_panels'] = slide.pop('image_panels')
+        errs = ' '.join(self.result(spec)['errors'])
+        self.assertIn('shows 2-4 images (found 0)', errs)
+        self.assertIn('`image_panels` belong only on `image_grid` slides', errs)
+
+    def test_shape_and_resolution_warnings(self):
+        from PIL import Image
+        spec = self.spec()
+        slide = self.grid_slide(spec, size=(500, 400))
+        Image.new('RGB', (1600, 600), '#888888').save(self.work / 'inputs/drink2.png')
+        for p in slide['image_panels']:
+            p.pop('focal', None)
+        slide['word_jobs']['takeaway_title']['color_tie_spans'] = [{'substring': slide['word_jobs']['takeaway_title']['text'].split()[0], 'color_hex': '#D95F02', 'linked_series_or_category': 'focal series'}]
+        warns = ' '.join(self.d105(self.result(spec), 'warnings'))
+        self.assertIn('dpi at its placed width', warns)
+        self.assertIn('differ in shape by more than 15 %', warns)
+        self.assertIn('no image panel is `focal`', warns)
+
+    def test_renderers_draw_the_grid(self):
+        from pptx.util import Emu
+        for n in (3, 4):
+            spec = self.spec()
+            slide_spec = self.grid_slide(spec, n=n)
+            idx = spec['slides'].index(slide_spec)
+            slide = content_slides(pptx_renderer.compile_pptx(spec, self.work / f'output/grid{n}.pptx'))[idx]
+            pics = [sh for sh in slide.shapes if sh.name == 'pai:image_evidence']
+            self.assertEqual(len(pics), n)
+            self.assertEqual(len({(p.width, p.height) for p in pics}), 1)  # equal panels
+            self.assertAlmostEqual(Emu(pics[0].left).inches, 0.60, places=2)
+            caps = [sh for sh in slide.shapes if sh.name == 'pai:image_caption']
+            self.assertEqual(len({c.top for c in caps}), 2 if n == 4 else 1)  # one caption line per row
+            focal = pptx_renderer.readable_text_hex(spec['deck_meta']['theme_palette']['two_tier_accent']['primary_focal_hex'], '#FFFFFF', 4.5).lstrip('#')
+            self.assertEqual(str(caps[0].text_frame.paragraphs[0].font.color.rgb), focal)
+            self.assertNotEqual(str(caps[1].text_frame.paragraphs[0].font.color.rgb), focal)
+            cards = [sh for sh in slide.shapes if sh.has_text_frame and sh.name not in ('pai:image_caption', 'pai:panel_title') and sh.top > pics[0].top and sh.top < Emu(int(6.8 * 914400))]
+            if n == 4:  # cards beside the 2 x 2 grid
+                self.assertTrue(all(c.left >= pics[1].left + pics[1].width for c in cards), [c.name for c in cards])
+            else:  # cards in the bottom strip
+                self.assertTrue(all(c.top >= caps[0].top + caps[0].height for c in cards), [c.name for c in cards])
+            page = html_renderer.compile_html(spec, self.work / f'output/grid{n}.html').read_text(encoding='utf-8')
+            self.assertEqual(page.count('class="evidence-image"'), n)
+            self.assertIn('class="image-caption focal"', page)
+        self.assertEqual(len(html_renderer.export_slide_pngs(spec, self.work / 'png')), len(spec['slides']) + len(spec.get('appendix_slides') or []))
+
+
+
+class QuoteEvidence(CoffeeWorkspace, unittest.TestCase):
+    """D-105 / D-108: the quote_evidence layout in the contract, validator and three renderers."""
+
+    COMMENTS = [
+        'I passed the interview, then heard nothing about a trial shift for over a week. By then I had taken another job.',
+        'The hourly rate in the offer was lower than the café across the street pays.',
+        'They could only offer early mornings, and I have classes until ten.',
+    ]
+
+    def result(self, spec):
+        return validate_spec.validate_slide_spec_dict(spec, 't', self.work)
+
+    def quote_slide(self, spec, n=3):
+        import csv
+        with (self.work / 'inputs/quotes.csv').open('w', encoding='utf-8', newline='') as fh:
+            w = csv.writer(fh)
+            w.writerow(['id', 'store', 'comment'])
+            for i, c in enumerate(self.COMMENTS):
+                w.writerow([f'W{i}', 'Harbor Street', c])
+        with (self.work / 'inputs/reasons.csv').open('w', encoding='utf-8', newline='') as fh:
+            fh.write('reason,applicants\nWaited,14\nPay,9\nHours,7\n')
+        slide = next(s for s in spec['slides'] if (s.get('layout_spec') or {}).get('layout_type') == 'one_sided_right_text')
+        slide.pop('visual_spec')
+        slide['layout_spec']['layout_type'] = 'quote_evidence'
+        texts = ['I passed the interview, then heard nothing about a trial shift for over a week… I had taken another job.', self.COMMENTS[1], self.COMMENTS[2]]
+        slide['quotes'] = [
+            {'text': texts[i], 'speaker': 'Barista applicant, Harbor Street', 'source_ref': f'quotes.csv!R{i + 2}C3',
+             'group_label': f'Reason {i + 1}: {(14, 9, 7)[i]} applicants', 'count_ref': f'reasons.csv!R{i + 2}C2'}
+            for i in range(n)
+        ]
+        slide['quotes'][0]['focal'] = True
+        return slide
+
+    def d108(self, res, key='errors'):
+        return [m for m in res[key] if 'D-108' in m or 'D-105' in m]
+
+    def test_valid_quotes_and_errors(self):
+        for n in (1, 3):
+            spec = self.spec()
+            self.quote_slide(spec, n=n)
+            res = self.result(spec)
+            self.assertEqual(self.d108(res), [])
+            self.assertEqual(self.d108(res, 'warnings'), [])
+        spec = self.spec()
+        slide = self.quote_slide(spec)
+        slide['quotes'][1].update({'focal': True, 'text': 'The hourly rate was lower than the café across the street.'})
+        slide['quotes'][2].update({'speaker': '', 'count_ref': 'reasons.csv!R2C2'})
+        slide['quotes'][0]['count_ref'] = ''
+        slide['quotes'][0]['color_tie_spans'] = [{'substring': 'trial shift', 'color_hex': '#D95F02', 'linked_series_or_category': 'focal'}]
+        slide['quotes'][1]['color_tie_spans'] = [{'substring': 'no such words', 'color_hex': '#D95F02', 'linked_series_or_category': 'focal'}]
+        errs = ' '.join(self.result(spec)['errors'])
+        for msg in ('at most one quote is `focal`', 'is not verbatim', '`speaker` is required', "shows '1', '14'; add `count_ref`",
+                    'at most one Color Tie span across the quotes', 'is not an exact substring of the quote', 'does not match source'):
+            self.assertIn(msg, errs)
+        spec = self.spec()
+        slide = self.quote_slide(spec)
+        slide['quotes'][1]['text'] = ' '.join(['word'] * 21)
+        slide['quotes'][2]['source_ref'] = 'quotes.csv!R2C3:R3C3'
+        spec['slides'][-1]['quotes'] = [dict(slide['quotes'][0])]
+        errs = ' '.join(self.result(spec)['errors'])
+        self.assertIn('the quote must stay short (<= 20 words', errs)
+        self.assertIn('a quote cites one CSV cell', errs)
+        self.assertIn('`quotes` belong only on `quote_evidence` slides', errs)
+        spec = self.spec()
+        slide = self.quote_slide(spec)
+        slide['quotes'] = slide['quotes'] * 2
+        self.assertIn('shows 1-3 quotes (found 6)', ' '.join(self.result(spec)['errors']))
+
+    def test_warnings(self):
+        spec = self.spec()
+        slide = self.quote_slide(spec)
+        slide['quotes'][0].pop('focal')
+        slide['quotes'][1]['speaker'] = 'Maria Lopez, Union Square'
+        slide['quotes'][2]['text'] = '"' + slide['quotes'][2]['text'] + '"'
+        slide['word_jobs']['takeaway_title']['color_tie_spans'] = [{'substring': slide['word_jobs']['takeaway_title']['text'].split()[0], 'color_hex': '#D95F02', 'linked_series_or_category': 'focal series'}]
+        warns = ' '.join(self.d108(self.result(spec), 'warnings'))
+        self.assertIn('looks like a personal name', warns)
+        self.assertIn('drop the quotation marks', warns)
+        self.assertIn('no quote is `focal`', warns)
+        self.assertTrue(validate_spec.quote_is_verbatim('the trainer came… five days later', 'The trainer came only five days later.'))
+        self.assertFalse(validate_spec.quote_is_verbatim('five days later… the trainer came', 'The trainer came only five days later.'))
+
+    def test_renderers_draw_the_quotes(self):
+        from pptx.util import Emu
+        for n in (1, 3):
+            spec = self.spec()
+            slide_spec = self.quote_slide(spec, n=n)
+            idx = spec['slides'].index(slide_spec)
+            slide = content_slides(pptx_renderer.compile_pptx(spec, self.work / f'output/quotes{n}.pptx'))[idx]
+            boxes = [sh for sh in slide.shapes if sh.name == 'pai:quote_text']
+            self.assertEqual(len(boxes), n)
+            self.assertAlmostEqual(Emu(boxes[0].left).inches, 0.65, places=2)
+            first = boxes[0].text_frame.paragraphs[0].text
+            self.assertTrue(first.startswith('\u201c') and first.endswith('\u201d'), first)
+            self.assertEqual(boxes[0].text_frame.paragraphs[1].text, 'Barista applicant, Harbor Street')
+            rules = [sh for sh in slide.shapes if sh.name == 'pai:quote_rule']
+            self.assertEqual(len(rules), n)
+            self.assertEqual(rules[0].line.width, pptx_renderer.Pt(1.5))
+            cards = [sh for sh in slide.shapes if sh.has_text_frame and not sh.name.startswith('pai:quote') and sh.top > boxes[0].top and sh.top < Emu(int(6.8 * 914400))]
+            if n == 1:  # cards beside the quote
+                self.assertTrue(cards and all(c.left >= boxes[0].left + boxes[0].width for c in cards), [c.name for c in cards])
+            else:  # cards in the bottom strip, columns of equal width
+                self.assertEqual(len({b.width for b in boxes}), 1)
+                self.assertTrue(cards and all(c.top >= boxes[0].top + boxes[0].height for c in cards), [c.name for c in cards])
+            page = html_renderer.compile_html(spec, self.work / f'output/quotes{n}.html').read_text(encoding='utf-8')
+            self.assertEqual(page.count('<blockquote class="quote-text">'), n)
+            self.assertIn('class="quote-rule focal"', page)
+            self.assertEqual(len(html_renderer.export_slide_pngs(spec, self.work / f'png{n}')), len(spec['slides']) + len(spec.get('appendix_slides') or []))
+
 class ScatterPlots(CoffeeWorkspace, unittest.TestCase):
     """D-065 / PAT-VIS-010: scatter contract, validator rules and the three renderers."""
 

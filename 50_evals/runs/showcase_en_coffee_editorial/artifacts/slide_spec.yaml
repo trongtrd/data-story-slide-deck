@@ -2764,6 +2764,194 @@ appendix_slides:
       rendered_image_path: renders/slide_14.png
       zero_text_overlap_or_clipping: true
       compound_word_linebreak_safe: true
+- slide_id: slide_15
+  slide_number: 15
+  arc_stage: appendix
+  analytical_question: Where do barista applicants wait longest before a decision?
+  target_stakeholder: Amara Diallo (Regional Operations Director)
+  layout_spec:
+    layout_type: image_evidence
+    upper_left_z_anchor: true
+    grid_alignment_verified: true
+  word_jobs:
+    takeaway_title:
+      text: Applicants wait a median of five days for a regional trainer.
+      token_count: 11
+      sentence_case_verified: true
+      active_verb_verified: true
+      color_tie_spans: []
+    no_triple_headline_repetition_verified: true
+    chart_title: Trial-shift queue in the applicant tracker, Region North, 12 November
+    direct_labels_mode: none_statement_slide
+    annotations:
+    - text: Nine applicants are waiting; the longest wait is nine days, at Harbor Street.
+      target_panel_id: image
+      anchor_data_point: '-'
+      color_tie_spans: []
+    recommendation_callout:
+      text: Add a second regional trainer before the first hiring wave on 15 March.
+      distinct_from_takeaway_title: true
+      color_tie_spans: []
+    source_footnote: 'Source: Copperleaf HR process review, FY2025; applicant tracker, 12 November.'
+  audience_need: Regional directors asked which hiring hand-off holds applicants longest, before they plan the March wave.
+  image_spec:
+    path: applicant_tracker.png
+    alt_text: Applicant tracker showing nine applicants waiting for a trial shift, from 2 to 9 days, median 5 days.
+    referenced_in: slide_text
+    panel_title: Applicant tracker, trial-shift step
+  progressive_reveal:
+    enabled: true
+    standalone_self_sufficient_verified: true
+    reveal_steps:
+    - step_number: 1
+      visible_panel_ids: []
+      visible_series_roles: []
+      show_annotations: true
+      show_recommendation_callout: true
+      speaker_notes: This is the tracker as HR sees it. Every applicant here passed screening and is waiting for a regional trainer to run the trial shift; the median wait is five days, the longest of any hand-off.
+  claim_evidence_contract:
+    claimed_construct_in_title: median wait for a regional trainer
+    plotted_metric_on_chart: Days waiting for a trial shift, by applicant
+    strict_claim_match_verified: true
+    numeric_source_traceability_verified: true
+    rendered_png_qa:
+      rendered_image_path: renders/slide_15.png
+      zero_text_overlap_or_clipping: true
+      compound_word_linebreak_safe: true
+- slide_id: slide_16
+  slide_number: 16
+  arc_stage: appendix
+  analytical_question: Which drinks does the March menu refresh replace, and which one is the model?
+  target_stakeholder: Amara Diallo (Regional Operations Director)
+  layout_spec:
+    layout_type: image_grid
+    upper_left_z_anchor: true
+    grid_alignment_verified: true
+  word_jobs:
+    takeaway_title:
+      text: Mint Chill fell 18%, the most of any drink.
+      token_count: 9
+      sentence_case_verified: true
+      active_verb_verified: true
+      color_tie_spans:
+      - substring: Mint Chill fell 18%
+        color_hex: '#D95F02'
+        linked_series_or_category: focal panel
+    no_triple_headline_repetition_verified: true
+    chart_title: Menu-board cards and year-over-year sales change, FY2025
+    direct_labels_mode: none_statement_slide
+    annotations: []
+    recommendation_callout:
+      text: Replace Mint Chill and Hazelnut Cloud in March; model the new drink on Espresso Tonic.
+      distinct_from_takeaway_title: true
+      color_tie_spans: []
+    source_footnote: 'Source: Copperleaf point-of-sale data, FY2025 vs. FY2024 (140 stores); menu-board cards, FY2025.'
+  audience_need: Store managers asked which drinks the March refresh replaces and which drink the new one should follow.
+  image_panels:
+  - path: menu_mint_chill.png
+    alt_text: Menu-board card for Mint Chill Cold Brew, a seasonal cold brew with mint syrup and cream.
+    panel_title: Mint Chill Cold Brew
+    caption: -18%, the steepest fall
+    focal: true
+    source_cell_ref: menu_yoy.csv!R11C3
+  - path: menu_hazelnut_cloud.png
+    alt_text: Menu-board card for Hazelnut Cloud Mocha, a seasonal mocha with hazelnut foam.
+    panel_title: Hazelnut Cloud Mocha
+    caption: -14%, the second steepest
+    source_cell_ref: menu_yoy.csv!R10C3
+  - path: menu_espresso_tonic.png
+    alt_text: Menu-board card for Espresso Tonic, a core drink of espresso over tonic and ice.
+    panel_title: Espresso Tonic
+    caption: +15%, the fastest growth
+    source_cell_ref: menu_yoy.csv!R2C3
+  progressive_reveal:
+    enabled: true
+    standalone_self_sufficient_verified: true
+    reveal_steps:
+    - step_number: 1
+      visible_panel_ids: []
+      visible_series_roles: []
+      show_annotations: true
+      show_recommendation_callout: true
+      speaker_notes: These are the three drinks the refresh turns on. Mint Chill and Hazelnut Cloud fell the most and leave the menu in March; Espresso Tonic grew fastest and is the model for the new seasonal drink.
+  claim_evidence_contract:
+    claimed_construct_in_title: Mint Chill's year-over-year sales change
+    plotted_metric_on_chart: Year-over-year sales change (%) for three drinks, with their menu cards
+    strict_claim_match_verified: true
+    numeric_source_traceability_verified: true
+    rendered_png_qa:
+      rendered_image_path: renders/slide_16.png
+      zero_text_overlap_or_clipping: true
+      compound_word_linebreak_safe: true
+- slide_id: slide_17
+  slide_number: 17
+  arc_stage: appendix
+  analytical_question: Why do barista applicants withdraw before an offer?
+  target_stakeholder: Amara Diallo (Regional Operations Director)
+  layout_spec:
+    layout_type: quote_evidence
+    upper_left_z_anchor: true
+    grid_alignment_verified: true
+  word_jobs:
+    takeaway_title:
+      text: The trainer wait was the top reason applicants withdrew.
+      token_count: 9
+      sentence_case_verified: true
+      active_verb_verified: true
+      color_tie_spans:
+      - substring: The trainer wait
+        color_hex: '#D95F02'
+        linked_series_or_category: focal quote
+    no_triple_headline_repetition_verified: true
+    chart_title: Withdrawn barista applicants by reason, with one answer for each, FY2025
+    direct_labels_mode: none_statement_slide
+    annotations:
+    - text: 14 of 40 applicants who withdrew named the wait for a trainer, more than pay or hours.
+      target_panel_id: quotes
+      anchor_data_point: '-'
+      color_tie_spans: []
+    recommendation_callout:
+      text: Book every trial shift within two days of the interview from the March wave.
+      distinct_from_takeaway_title: true
+      color_tie_spans: []
+    source_footnote: 'Source: Copperleaf applicant withdrawal survey, FY2025 (40 barista applicants who withdrew).'
+  audience_need: Regional directors asked whether pay or the hiring process loses applicants, before they plan the March wave.
+  quotes:
+  - text: I passed the interview, then heard nothing about a trial shift for over a week… I had taken another job.
+    speaker: Barista applicant, Harbor Street
+    source_ref: withdrawal_comments.csv!R2C5
+    group_label: 'Waited for a trainer: 14 applicants'
+    count_ref: withdrawal_reasons.csv!R2C2
+    focal: true
+  - text: The hourly rate in the offer was lower than the café across the street pays.
+    speaker: Barista applicant, Union Square
+    source_ref: withdrawal_comments.csv!R16C5
+    group_label: 'Pay offer too low: 9 applicants'
+    count_ref: withdrawal_reasons.csv!R3C2
+  - text: They could only offer early mornings, and I have classes until ten.
+    speaker: Barista applicant, Riverside
+    source_ref: withdrawal_comments.csv!R25C5
+    group_label: 'Shift hours did not fit: 7 applicants'
+    count_ref: withdrawal_reasons.csv!R4C2
+  progressive_reveal:
+    enabled: true
+    standalone_self_sufficient_verified: true
+    reveal_steps:
+    - step_number: 1
+      visible_panel_ids: []
+      visible_series_roles: []
+      show_annotations: true
+      show_recommendation_callout: true
+      speaker_notes: These are the three most common reasons, each with one applicant’s own words. Fourteen of forty withdrew while they waited for a trainer to run the trial shift, more than left over pay or hours; ten gave other reasons.
+  claim_evidence_contract:
+    claimed_construct_in_title: most common reason for withdrawing
+    plotted_metric_on_chart: Withdrawn applicants by reason (counts), with one verbatim answer per reason
+    strict_claim_match_verified: true
+    numeric_source_traceability_verified: true
+    rendered_png_qa:
+      rendered_image_path: renders/slide_17.png
+      zero_text_overlap_or_clipping: true
+      compound_word_linebreak_safe: true
 g4_review_audit:
   status: agent_review_complete
   human_g4:
@@ -2796,4 +2984,4 @@ g4_review_audit:
     supporting_slide_numbers:
     - 3
   finish:
-    content_digest: 4a975e8c22b895ab0587d11343cfcae96c1accf449595d0cfd92cf63dcccf927
+    content_digest: c3ad6202a87a94bd7ef04e16030e2929a7c1f1e51abef263497b801950501201

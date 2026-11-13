@@ -1,0 +1,41 @@
+response_id,role_applied,store,reason,comment
+W01,Barista,Harbor Street,Waited for a trainer,"I passed the interview, then heard nothing about a trial shift for over a week. By then I had taken another job."
+W02,Barista,Bayview,Waited for a trainer,"Nobody could tell me when the trainer would be free, so I stopped waiting."
+W03,Barista,Alder Park,Waited for a trainer,The trial shift kept moving. After the second reschedule I said no.
+W04,Barista,Canal Walk,Waited for a trainer,Five days of silence after a good interview felt like a no.
+W05,Barista,Alder Park,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W06,Barista,Bayview,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W07,Barista,Bridgeport,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W08,Barista,Canal Walk,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W09,Barista,Harbor Street,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W10,Barista,Union Square,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W11,Barista,Riverside,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W12,Barista,Old Town,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W13,Barista,Alder Park,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W14,Barista,Bayview,Waited for a trainer,I waited for the trial shift date and accepted another offer first.
+W15,Barista,Union Square,Pay offer too low,The hourly rate in the offer was lower than the café across the street pays.
+W16,Barista,Old Town,Pay offer too low,"I liked the team, but the pay did not cover my bus pass and rent."
+W17,Barista,Harbor Street,Pay offer too low,The offer was below what I earn now.
+W18,Barista,Union Square,Pay offer too low,The offer was below what I earn now.
+W19,Barista,Riverside,Pay offer too low,The offer was below what I earn now.
+W20,Barista,Old Town,Pay offer too low,The offer was below what I earn now.
+W21,Barista,Alder Park,Pay offer too low,The offer was below what I earn now.
+W22,Barista,Bayview,Pay offer too low,The offer was below what I earn now.
+W23,Barista,Bridgeport,Pay offer too low,The offer was below what I earn now.
+W24,Barista,Riverside,Shift hours did not fit,"They could only offer early mornings, and I have classes until ten."
+W25,Barista,Bridgeport,Shift hours did not fit,I needed weekend shifts only and the store wanted weekdays.
+W26,Barista,Union Square,Shift hours did not fit,The shifts on offer did not fit my other commitments.
+W27,Barista,Riverside,Shift hours did not fit,The shifts on offer did not fit my other commitments.
+W28,Barista,Old Town,Shift hours did not fit,The shifts on offer did not fit my other commitments.
+W29,Barista,Alder Park,Shift hours did not fit,The shifts on offer did not fit my other commitments.
+W30,Barista,Bayview,Shift hours did not fit,The shifts on offer did not fit my other commitments.
+W31,Barista,Old Town,Other,I moved to another city before the start date.
+W32,Barista,Harbor Street,Other,I decided to stay in my current job after they offered me more hours.
+W33,Barista,Harbor Street,Other,My plans changed before the trial shift.
+W34,Barista,Union Square,Other,My plans changed before the trial shift.
+W35,Barista,Riverside,Other,My plans changed before the trial shift.
+W36,Barista,Old Town,Other,My plans changed before the trial shift.
+W37,Barista,Alder Park,Other,My plans changed before the trial shift.
+W38,Barista,Bayview,Other,My plans changed before the trial shift.
+W39,Barista,Bridgeport,Other,My plans changed before the trial shift.
+W40,Barista,Canal Walk,Other,My plans changed before the trial shift.

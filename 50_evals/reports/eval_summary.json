@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-08T02:52:28Z",
+  "timestamp": "2026-11-13T15:13:05Z",
   "overall_passed": true,
   "allowed_failures": [],
   "mean_score": 100.0,
@@ -32,7 +32,7 @@
       {
         "skill": "deck-visual-planner",
         "valid": true,
-        "bound_card_count": 39,
+        "bound_card_count": 40,
         "errors": []
       },
       {
@@ -548,7 +548,7 @@
       "total_score": 100.0,
       "max_score": 100.0,
       "passed": true,
-      "machine_checks": 1300,
+      "machine_checks": 1342,
       "self_attested_flags": [
         "context_brief: brand_profile.palette.colorblind_safe_verified",
         "context_brief: g1_gate_audit.G1_1_explanatory_mode",
@@ -621,7 +621,7 @@
       "total_score": 100.0,
       "max_score": 100.0,
       "passed": true,
-      "machine_checks": 518,
+      "machine_checks": 539,
       "self_attested_flags": [
         "context_brief: brand_profile.palette.colorblind_safe_verified",
         "context_brief: g1_gate_audit.G1_1_explanatory_mode",
@@ -694,7 +694,7 @@
       "total_score": 100.0,
       "max_score": 100.0,
       "passed": true,
-      "machine_checks": 660,
+      "machine_checks": 675,
       "self_attested_flags": [
         "context_brief: brand_profile.palette.colorblind_safe_verified",
         "context_brief: g1_gate_audit.G1_1_explanatory_mode",
@@ -767,7 +767,7 @@
       "total_score": 100.0,
       "max_score": 100.0,
       "passed": true,
-      "machine_checks": 450,
+      "machine_checks": 465,
       "self_attested_flags": [
         "context_brief: brand_profile.palette.colorblind_safe_verified",
         "context_brief: g1_gate_audit.G1_1_explanatory_mode",
@@ -840,7 +840,7 @@
       "total_score": 100.0,
       "max_score": 100.0,
       "passed": true,
-      "machine_checks": 346,
+      "machine_checks": 364,
       "self_attested_flags": [
         "context_brief: brand_profile.palette.colorblind_safe_verified",
         "context_brief: g1_gate_audit.G1_1_explanatory_mode",
@@ -913,7 +913,7 @@
       "total_score": 100.0,
       "max_score": 100.0,
       "passed": true,
-      "machine_checks": 1292,
+      "machine_checks": 1406,
       "self_attested_flags": [
         "context_brief: brand_profile.palette.colorblind_safe_verified",
         "context_brief: g1_gate_audit.G1_1_explanatory_mode",
@@ -941,7 +941,7 @@
         "storyline: narrative_architecture.evidence_before_indictment_verified"
       ],
       "pptx_stats": {
-        "slides_count": 15,
+        "slides_count": 18,
         "expected_chart_panels": 9,
         "native_editable_charts_verified": 9,
         "static_raster_images_count": 0,

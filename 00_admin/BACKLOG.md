@@ -280,3 +280,10 @@ Owner feedback after viewing the pilot in Microsoft PowerPoint is the current pr
 - [ ] **Later (`D-090`/`D-091`):** an Editorial run in the negative battery (its base run is classic, so design checks and finish rules are covered only by regression tests); `chart_height_in` in the HTML deck (done 2026-11-08); the finish block in the Pillow previews (done 2026-11-08).
 - [ ] **Step 7 input (`D-090`):** capitals card labels written in the nurse (slides 2, 8) and software (slide 5) specs; steer authors to sentence case when skills switch to Editorial.
 - [x] **Side column and total-beside-breakdown ideas (`D-088`, `D-095`, 2026-11-08):** mocked up in PowerPoint; the side column of changes beside horizontal bars is built (`side_column`, showcase slide 3), the total column beside a breakdown column is declined.
+
+## Template Study 2026-11-13 (`D-104`: `SRC-SEC-025` to `SRC-SEC-027`)
+- [x] **Proposal with PowerPoint mock-ups** (2026-11-13, `50_evals/reports/2026-11-13_p7-text-image-layouts-proposal.md`; awaiting round-2 rulings): P4 evidence image in half or two-thirds of the slide, P5 grid of two to four captioned images with at most one focal panel, P6 traced quotation slide (one to three quotes). Report under `50_evals/reports/`; owner-made placeholder images only.
+- [x] **`image_evidence`** (`D-106`, 2026-11-13) and **`image_grid`** (`D-107`, 2026-11-13) built.
+- [x] **`quote_evidence`** (`D-108`, 2026-11-13) built; showcase appendix slide 17 from fictional `inputs/withdrawal_*.csv`. Closes `D-105`; the three layouts were published to the public repository on 2026-11-13.
+- [ ] **Quote layout follow-ups (not commitments):** a Vietnamese quote benchmark (the 50/33-syllable limits are untested on real text); a single-quote showcase slide (only tests and previews cover it); the lower half of a quote slide stays empty, as the mock-up showed.
+- [ ] **Later question:** accept a user-supplied brand `.potx` as an input (master, logo, brand fonts and colours through `colour_kit: brand`), without a template gallery (`D-030`).

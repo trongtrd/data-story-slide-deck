@@ -1,6 +1,6 @@
 # Data Story Slide Deck Evaluation Report
 
-> **Generated At:** `2026-11-08T02:52:28Z`
+> **Generated At:** `2026-11-13T15:13:05Z`
 > **Rubric:** [`50_evals/rubrics/swd_deck_audit_rubric.md`](../rubrics/swd_deck_audit_rubric.md)
 > **Overall Suite Status:** **`PASS`** — 6/6 benchmark runs pass
 > **Mean Benchmark Score:** `100.0 / 100.0`
@@ -103,7 +103,7 @@ Defects injected into copies of `bench_en_software_1plus4` (control run passes: 
 | `deck-orchestrator` | PASS | `11` | None |
 | `deck-context-griller` | PASS | `19` | None |
 | `deck-storyline-builder` | PASS | `23` | None |
-| `deck-visual-planner` | PASS | `39` | None |
+| `deck-visual-planner` | PASS | `40` | None |
 | `deck-builder` | PASS | `43` | None |
 | `deck-reviewer` | PASS | `43` | None |
 | `deck-finisher` | PASS | `5` | None |
@@ -114,12 +114,12 @@ Defects injected into copies of `bench_en_software_1plus4` (control run passes: 
 
 | Run | Lang | Slides | Native charts | Renders | P1 (15) | P2 (20) | P3 (25) | P4 (25) | P5 (15) | Total | Machine checks | Self-attested | Status |
 |---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| `bench_en_coffee_two_tier` | `en` | 4 | 9 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 1300 | 24 | PASS |
-| `bench_en_nurse_staffing` | `en` | 7 | 9 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 518 | 24 | PASS |
-| `bench_en_software_1plus4` | `en` | 4 | 9 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 660 | 24 | PASS |
-| `bench_vi_bep_giao_do_an` | `vi` | 5 | 5 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 450 | 24 | PASS |
-| `bench_vi_briefing_no_ask` | `vi` | 5 | 4 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 346 | 24 | PASS |
-| `showcase_en_coffee_editorial` | `en` | 4 | 9 | `pptx_powerpoint` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 1292 | 24 | PASS |
+| `bench_en_coffee_two_tier` | `en` | 4 | 9 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 1342 | 24 | PASS |
+| `bench_en_nurse_staffing` | `en` | 7 | 9 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 539 | 24 | PASS |
+| `bench_en_software_1plus4` | `en` | 4 | 9 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 675 | 24 | PASS |
+| `bench_vi_bep_giao_do_an` | `vi` | 5 | 5 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 465 | 24 | PASS |
+| `bench_vi_briefing_no_ask` | `vi` | 5 | 4 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 364 | 24 | PASS |
+| `showcase_en_coffee_editorial` | `en` | 4 | 9 | `pptx_powerpoint` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 1406 | 24 | PASS |
 
 ---
 

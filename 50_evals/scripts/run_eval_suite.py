@@ -211,7 +211,8 @@ def inspect_pptx_binary(pptx_path: Path, spec_dict: Dict[str, Any], expected_dig
             total_panels += len(panels)
 
         charts = [sh for sh in ppt_slide.shapes if getattr(sh, "has_chart", False)]
-        pics = [sh for sh in ppt_slide.shapes if sh.shape_type == MSO_SHAPE_TYPE.PICTURE]
+        # D-064 / D-105: declared content images (screenshots, photos) are evidence, not raster charts
+        pics = [sh for sh in ppt_slide.shapes if sh.shape_type == MSO_SHAPE_TYPE.PICTURE and sh.name not in ("pai:side_image", "pai:image_evidence")]
         total_native += len(charts)
         raster += len(pics)
         if layout_type != "statement_or_transition" and len(charts) != len(panels):

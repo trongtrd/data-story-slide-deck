@@ -2554,6 +2554,287 @@ def panel_finding_checks(
             )
 
 
+IMAGE_EXTENSIONS = (".png", ".jpg", ".jpeg")
+IMAGE_MIN_DPI = 150  # D-105: below this at the placed size a screenshot's text blurs on a projector
+IMAGE_AREA_IN = (8.10, 4.96)  # chart area of a one-sided slide with side cards (compute_panel_bboxes)
+
+
+def image_evidence_checks(
+    slide: Dict[str, Any], s_id: str, layout_type: str, workspace: Optional[Path], errors: List[str], warnings: List[str]
+) -> None:
+    """D-105: an `image_evidence` slide carries one content image in `image_spec`, and only that slide does."""
+    image = slide.get("image_spec")
+    if layout_type != "image_evidence":
+        if image:
+            errors.append(f"{s_id} [D-105]: `image_spec` belongs only on `image_evidence` slides (layout is '{layout_type}').")
+        return
+    for key in ("visual_spec", "table_spec", "diagram_spec"):
+        if slide.get(key):
+            errors.append(f"{s_id} [D-105]: an `image_evidence` slide carries `image_spec`, not `{key}`.")
+    if not image:
+        errors.append(f"{s_id} [D-105]: layout `image_evidence` requires `image_spec`.")
+        return
+    where = f"{s_id}.image_spec"
+    for key in ("alt_text", "panel_title"):
+        if not str(image.get(key, "")).strip():
+            errors.append(f"{where} [D-049 / D-105]: `{key}` is required.")
+    path = str(image.get("path", "")).strip()
+    if path and not path.lower().endswith(IMAGE_EXTENSIONS):
+        errors.append(f"{where} [D-105]: '{path}' is not a PNG or JPEG image.")
+    found = None
+    if workspace is not None and path:
+        found = next((workspace / base / path for base in ("inputs", ".") if (workspace / base / path).is_file()), None)
+        if found is None:
+            errors.append(f"{where} [D-105]: image '{path}' was not found in inputs/.")
+    if found is not None and path.lower().endswith(IMAGE_EXTENSIONS):
+        try:
+            from PIL import Image as PILImage
+            with PILImage.open(found) as im:
+                w_px, h_px = im.size
+        except Exception:  # unreadable file: the renderer will say so
+            w_px = h_px = 0
+        if w_px and h_px:
+            area_w, area_h = IMAGE_AREA_IN
+            placed_w = min(area_w, area_h * w_px / h_px)
+            dpi = w_px / placed_w
+            if dpi < IMAGE_MIN_DPI:
+                warnings.append(
+                    f"{where} [D-105]: the image is {w_px} px wide, {dpi:.0f} dpi at its placed width of {placed_w:.1f} in "
+                    f"(< {IMAGE_MIN_DPI}); use a larger screenshot or photo."
+                )
+    notes = " ".join(str(st.get("speaker_notes", "")) for st in (slide.get("progressive_reveal") or {}).get("reveal_steps") or [])
+    if image.get("referenced_in") == "speaker_notes" and not notes.strip():
+        warnings.append(f"{where} [ANTI-DSN-002 / D-105]: the image is said to be referenced in the speaker notes, but the slide has none.")
+    wj = slide.get("word_jobs") or {}
+    if not (wj.get("annotations") or str((wj.get("recommendation_callout") or {}).get("text", "")).strip()):
+        warnings.append(f"{where} [PAT-DSN-001 / D-105]: no finding or callout beside the image; say what the image proves in the right third.")
+
+
+
+IMAGE_CAPTION_MAX = {"en": 12, "vi": 20}  # D-105: words (en) or syllables (vi)
+IMAGE_NUMBER_RE = re.compile(r"[-+−]?\d[\d.,]*\s?%?")
+
+
+def image_file(workspace: Optional[Path], path: str) -> Optional[Path]:
+    if workspace is None or not path:
+        return None
+    return next((workspace / base / path for base in ("inputs", ".") if (workspace / base / path).is_file()), None)
+
+
+def image_size(path: Optional[Path]) -> Optional[Tuple[int, int]]:
+    if path is None:
+        return None
+    try:
+        from PIL import Image as PILImage
+        with PILImage.open(path) as im:
+            return im.size
+    except Exception:  # unreadable file: the renderer will say so
+        return None
+
+
+def image_grid_cell_width_in(n: int) -> float:
+    """Placed width of one panel: 2-3 in a row across the body, 4 as a 2 x 2 grid in two-thirds (pptx_renderer)."""
+    return (12.13 - 0.30 * (n - 1)) / n if n <= 3 else (8.10 - 0.30) / 2
+
+
+def image_grid_checks(
+    slide: Dict[str, Any], s_id: str, layout_type: str, workspace: Optional[Path], deck_lang: str, title: str,
+    resolver: Any, errors: List[str], warnings: List[str],
+) -> None:
+    """D-105: an `image_grid` slide shows 2-4 equal content images, each with a title and a traced caption, one focal at most."""
+    panels = slide.get("image_panels") or []
+    if layout_type != "image_grid":
+        if panels:
+            errors.append(f"{s_id} [D-105]: `image_panels` belong only on `image_grid` slides (layout is '{layout_type}').")
+        return
+    for key in ("visual_spec", "table_spec", "diagram_spec", "image_spec"):
+        if slide.get(key):
+            errors.append(f"{s_id} [D-105]: an `image_grid` slide carries `image_panels`, not `{key}`.")
+    if not 2 <= len(panels) <= 4:
+        errors.append(f"{s_id} [D-105]: an `image_grid` shows 2-4 images (found {len(panels)}); one image is `image_evidence`.")
+        if not panels:
+            return
+    if sum(1 for p in panels if p.get("focal")) > 1:
+        errors.append(f"{s_id} [D-105]: at most one image panel is `focal`.")
+    limit = IMAGE_CAPTION_MAX.get(deck_lang, IMAGE_CAPTION_MAX["en"])
+    unit = "syllables" if deck_lang == "vi" else "words"
+    cell_w = image_grid_cell_width_in(max(2, min(len(panels), 4)))
+    ratios: List[float] = []
+    for i, panel in enumerate(panels):
+        where = f"{s_id}.image_panels[{i}]"
+        for key in ("alt_text", "panel_title", "caption"):
+            if not str(panel.get(key, "")).strip():
+                errors.append(f"{where} [D-049 / D-105]: `{key}` is required.")
+        path = str(panel.get("path", "")).strip()
+        is_image = path.lower().endswith(IMAGE_EXTENSIONS)
+        if path and not is_image:
+            errors.append(f"{where} [D-105]: '{path}' is not a PNG or JPEG image.")
+        found = image_file(workspace, path)
+        if workspace is not None and path and found is None:
+            errors.append(f"{where} [D-105]: image '{path}' was not found in inputs/.")
+        size = image_size(found) if is_image else None
+        if size and size[1]:
+            ratios.append(size[0] / size[1])
+            dpi = size[0] / cell_w
+            if dpi < IMAGE_MIN_DPI:
+                warnings.append(f"{where} [D-105]: the image is {size[0]} px wide, {dpi:.0f} dpi at its placed width of {cell_w:.1f} in (< {IMAGE_MIN_DPI}).")
+        caption = str(panel.get("caption", "")).strip()
+        if len(caption.split()) > limit:
+            errors.append(f"{where} [D-105]: the caption must stay short (<= {limit} {unit}).")
+        match = IMAGE_NUMBER_RE.search(caption)
+        if match:
+            shown = match.group(0).strip()
+            ref = str(panel.get("source_cell_ref", "")).strip()
+            number = label_number(shown, deck_lang)
+            if not ref:
+                errors.append(f"{where} [G4.9 / D-105]: the caption shows '{shown}'; add `source_cell_ref`.")
+            elif resolver is not None and number is not None:
+                status, msg = resolver.check(ref, number[0], shown, None, None)
+                if status == "error":
+                    errors.append(f"{where} [G4.9]: {msg}.")
+                elif status == "unverifiable":
+                    warnings.append(f"{where} [G4.9]: {msg}.")
+    if len(ratios) >= 2 and max(ratios) / min(ratios) > 1.15:
+        warnings.append(f"{s_id} [D-105]: the images differ in shape by more than 15 %; crop them to one aspect ratio so the panels line up.")
+    spans = ((slide.get("word_jobs") or {}).get("takeaway_title") or {}).get("color_tie_spans")
+    if title and spans and not any(p.get("focal") for p in panels):
+        warnings.append(f"{s_id} [D-105]: the title has a Color Tie but no image panel is `focal`; mark the panel the title points to.")
+
+
+QUOTE_WORDS_MAX = {"en": (30, 20), "vi": (50, 33)}  # D-105 / D-108: one quote, each of two or three (words; Vietnamese syllables)
+QUOTE_CUT_RE = re.compile(r"\s*(?:…|\.\.\.)\s*")
+QUOTE_MARKS = str.maketrans({"“": '"', "”": '"', "„": '"', "‘": "'", "’": "'", "«": '"', "»": '"'})
+SPEAKER_NAME_RE = re.compile(r"^\s*[A-ZÀ-Ỹ][a-zà-ỹ'’-]+\s+[A-ZÀ-Ỹ][a-zà-ỹ'’-]+(?=\s*(?:,|$|\())")
+
+
+def quote_norm(text: str) -> str:
+    return re.sub(r"\s+", " ", str(text).translate(QUOTE_MARKS)).strip().strip('"').strip()
+
+
+def quote_source_text(workspace: Optional[Path], ref: str) -> Tuple[Optional[str], str]:
+    """D-108: the text a quote's `source_ref` points to (one CSV cell, or one Markdown line or heading section)."""
+    m = REF_RE.match(ref.strip())
+    if not m:
+        return None, f"malformed `source_ref` '{ref}' (expected 'file.csv!R2C4' or 'file.md!<line or heading>')"
+    if workspace is None:
+        return None, "no workspace; the quote was not checked against its source"
+    fname = re.sub(r"^(?:\./)?inputs[/\\]", "", m.group("file").strip())
+    loc = m.group("loc").strip()
+    fpath = workspace / "inputs" / fname
+    if not fpath.is_file():
+        return None, f"source file '{fname}' not found in inputs/"
+    suffix = fpath.suffix.lower()
+    if suffix == ".csv":
+        cell = CELL_RE.match(loc)
+        if not cell:
+            return None, f"a quote cites one CSV cell (RxCy), not '{loc}'"
+        with fpath.open(encoding="utf-8-sig", newline="") as fh:
+            rows = list(csv.reader(fh))
+        r, c = int(cell.group(1)), int(cell.group(2))
+        if r < 1 or r > len(rows) or c < 1 or c > len(rows[r - 1]):
+            return None, f"cell {loc} in '{fname}' is missing"
+        return rows[r - 1][c - 1], ""
+    if suffix in (".md", ".txt"):
+        lines = fpath.read_text(encoding="utf-8").splitlines()
+        wanted = loc.lstrip("#").strip().casefold()
+        heads = [(i, len(h.group(1)), h.group(2).strip().casefold()) for i, line in enumerate(lines) if (h := re.match(r"^(#{1,6})\s+(.+)$", line))]
+        hits = [(i, lvl) for i, lvl, title in heads if title == wanted]
+        if len(hits) == 1:
+            start, lvl = hits[0]
+            end = next((i for i, d, _ in heads if i > start and d <= lvl), len(lines))
+            return "\n".join(lines[start + 1:end]), ""
+        exact = [line for line in lines if line.strip() == loc]
+        if len(exact) == 1:
+            return exact[0], ""
+        return None, f"source location '{loc}' was not uniquely resolved in '{fname}'"
+    return None, f"'{suffix}' sources are not machine-checked; confirm the quote by eye"
+
+
+QUOTE_SOURCE_ERRORS = ("malformed", "source file", "a quote cites", "cell ", "source location")
+
+
+def quote_is_verbatim(text: str, source: str) -> bool:
+    """D-108: the fragments between ellipses appear in the source in order; only spacing, quote style and a fragment's first-letter case may differ."""
+    src = quote_norm(source)
+    pos = 0
+    for frag in (f.strip() for f in QUOTE_CUT_RE.split(quote_norm(text))):
+        if not frag:
+            continue
+        hits = [i for i in (src.find(c, pos) for c in {frag, frag[:1].swapcase() + frag[1:]}) if i >= 0]
+        if not hits:
+            return False
+        pos = min(hits) + len(frag)
+    return True
+
+
+def quote_evidence_checks(
+    slide: Dict[str, Any], s_id: str, layout_type: str, workspace: Optional[Path], deck_lang: str, title: str,
+    names_allowed: bool, resolver: Any, errors: List[str], warnings: List[str],
+) -> None:
+    """D-105 / D-108: a `quote_evidence` slide shows 1-3 short verbatim quotes, each traced to `inputs/`."""
+    quotes = slide.get("quotes") or []
+    if layout_type != "quote_evidence":
+        if quotes:
+            errors.append(f"{s_id} [D-105]: `quotes` belong only on `quote_evidence` slides (layout is '{layout_type}').")
+        return
+    for key in ("visual_spec", "table_spec", "diagram_spec", "image_spec", "image_panels"):
+        if slide.get(key):
+            errors.append(f"{s_id} [D-105]: a `quote_evidence` slide carries `quotes`, not `{key}`.")
+    if not 1 <= len(quotes) <= 3:
+        errors.append(f"{s_id} [D-075 §8 / D-105]: a quote slide shows 1-3 quotes (found {len(quotes)}); more is a text slide.")
+        if not quotes:
+            return
+    if sum(1 for q in quotes if q.get("focal")) > 1:
+        errors.append(f"{s_id} [D-108]: at most one quote is `focal`.")
+    spans = [sp for q in quotes for sp in q.get("color_tie_spans") or []]
+    if len(spans) > 1:
+        errors.append(f"{s_id} [D-108]: at most one Color Tie span across the quotes (found {len(spans)}).")
+    one, each = QUOTE_WORDS_MAX.get(deck_lang, QUOTE_WORDS_MAX["en"])
+    limit = one if len(quotes) == 1 else each
+    unit = "syllables" if deck_lang == "vi" else "words"
+    for i, q in enumerate(quotes):
+        where = f"{s_id}.quotes[{i}]"
+        for key in ("text", "speaker", "source_ref"):
+            if not str(q.get(key, "")).strip():
+                errors.append(f"{where} [D-105]: `{key}` is required.")
+        text = str(q.get("text", "")).strip()
+        if len(QUOTE_CUT_RE.sub(" ", text).split()) > limit:
+            errors.append(f"{where} [D-075 §8 / D-105]: the quote must stay short (<= {limit} {unit} when the slide has {len(quotes)}); cut it with an ellipsis.")
+        if len(text) > 1 and text[0] in "\"“'‘«" and text[-1] in "\"”'’»":
+            warnings.append(f"{where} [D-108]: drop the quotation marks around `text`; the renderer adds typographic ones.")
+        ref = str(q.get("source_ref", "")).strip()
+        if text and ref:
+            source, why = quote_source_text(workspace, ref)
+            if source is None:
+                (errors if why.startswith(QUOTE_SOURCE_ERRORS) else warnings).append(f"{where} [D-108]: {why}.")
+            elif not quote_is_verbatim(text, source):
+                errors.append(f"{where} [D-108]: the quote is not verbatim in '{ref}'; copy the words exactly and mark cuts with an ellipsis.")
+        for sp in q.get("color_tie_spans") or []:
+            if str(sp.get("substring", "")) not in text:
+                errors.append(f"{where} [G4.6]: Color Tie span '{sp.get('substring')}' is not an exact substring of the quote.")
+        speaker = str(q.get("speaker", "")).strip()
+        if speaker and not names_allowed and SPEAKER_NAME_RE.match(speaker):
+            warnings.append(f"{where} [D-105 / D-108]: speaker '{speaker}' looks like a personal name; describe the role and place, or set `quote_speaker_names: allowed` in the brief.")
+        label = str(q.get("group_label", "")).strip()
+        shown = [m.group(0).strip() for m in IMAGE_NUMBER_RE.finditer(label)]
+        if shown:
+            cref = str(q.get("count_ref", "")).strip()
+            if not cref:
+                errors.append(f"{where} [G4.9 / D-108]: the group label shows {', '.join(repr(s) for s in shown)}; add `count_ref`.")
+            elif resolver is not None:
+                # the count is one of the label's numbers (a label may also number the reason or give the total)
+                results = [resolver.check(cref, n[0], s, None, None) for s in shown if (n := label_number(s, deck_lang)) is not None]
+                if results and not any(st == "ok" for st, _ in results):
+                    unverifiable = next((m for st, m in results if st == "unverifiable"), None)
+                    if unverifiable:
+                        warnings.append(f"{where} [G4.9]: {unverifiable}.")
+                    else:
+                        errors.append(f"{where} [G4.9]: no number in the group label matches `count_ref`: {results[-1][1]}.")
+    tspans = ((slide.get("word_jobs") or {}).get("takeaway_title") or {}).get("color_tie_spans")
+    if title and tspans and len(quotes) > 1 and not any(q.get("focal") for q in quotes):
+        warnings.append(f"{s_id} [D-108]: the title has a Color Tie but no quote is `focal`; mark the quote the title points to.")
+
+
 def evidence_columns_checks(
     slide: Dict[str, Any], s_id: str, layout_type: str, panels: List[Dict[str, Any]], deck_lang: str, delivery_mode: str,
     errors: List[str], warnings: List[str],
@@ -2701,7 +2982,7 @@ def executive_summary_checks(
     closing = str(((main[-1].get("word_jobs") or {}).get("takeaway_title") or {}).get("text", "")) if main else ""
     if closing and main[-1] is not s and closing.strip().lower() == title.strip().lower():
         errors.append(f"{s_id} [D-075 / G4.1]: the summary title repeats the closing slide's title; the closing restates the action.")
-    for key in ("visual_spec", "table_spec", "diagram_spec"):
+    for key in ("visual_spec", "table_spec", "diagram_spec", "image_spec", "image_panels", "quotes"):
         if s.get(key):
             errors.append(f"{s_id} [D-075]: an executive summary carries no `{key}`; the evidence sits on the slides it cites.")
     for key in ("annotations", "implementation_steps"):
@@ -3426,7 +3707,7 @@ def key_slide_checks(spec: Dict[str, Any], deck_meta: Dict[str, Any], deck_lang:
             extras.append("recommendation_callout")
         if wj.get("recommendation_line"):
             extras.append("recommendation_line")
-        extras += [k for k in ("visual_spec", "table_spec", "diagram_spec") if slide.get(k)]
+        extras += [k for k in ("visual_spec", "table_spec", "diagram_spec", "image_spec", "image_panels", "quotes") if slide.get(k)]
         if extras:
             errors.append(f"{s_id} [D-063]: a section divider carries only its number, title and question; remove {', '.join(extras)}.")
 
@@ -3924,7 +4205,7 @@ def validate_slide_spec_dict(
 
         # Visual spec checks (chart slides)
         vis = slide.get("visual_spec")
-        if layout_type not in ("statement_or_transition", "data_table", "section_divider", "diagram", "executive_summary") and not vis:
+        if layout_type not in ("statement_or_transition", "data_table", "section_divider", "diagram", "executive_summary", "image_evidence", "image_grid", "quote_evidence") and not vis:
             errors.append(f"{s_id} [G4.2/G4.10]: Non-statement layout '{layout_type}' requires `visual_spec`.")
         if layout_type == "data_table":
             if vis:
@@ -3946,6 +4227,13 @@ def validate_slide_spec_dict(
                 diagram_checks(slide, s_id, is_main, delivery_mode, resolver, res, errors, warnings, deck_meta)
         elif slide.get("diagram_spec"):
             errors.append(f"{s_id} [D-069]: `diagram_spec` belongs only on `diagram` slides (layout is '{layout_type}').")
+
+        count_check(res, "image_evidence")
+        image_evidence_checks(slide, s_id, layout_type, workspace, errors, warnings)
+        count_check(res, "image_grid")
+        image_grid_checks(slide, s_id, layout_type, workspace, deck_lang, tt_text, resolver, errors, warnings)
+        count_check(res, "quote_evidence")
+        quote_evidence_checks(slide, s_id, layout_type, workspace, deck_lang, tt_text, str(brief.get("quote_speaker_names", "")).lower() == "allowed", resolver, errors, warnings)
 
         count_check(res, "evidence_columns")
         evidence_columns_checks(slide, s_id, layout_type, (vis or {}).get("panels") or [], deck_lang, delivery_mode, errors, warnings)
@@ -4216,7 +4504,7 @@ def validate_slide_spec_dict(
     if design and g4.get("status") in ("agent_review_complete", "passed"):
         count_check(res, "source_reread")
         reread = {r.get("slide_number") for r in g4.get("source_reread") or [] if isinstance(r, dict)}
-        chart_numbers = [s.get("slide_number") for s in main_slides if s.get("visual_spec") or s.get("table_spec") or s.get("diagram_spec")]
+        chart_numbers = [s.get("slide_number") for s in main_slides if s.get("visual_spec") or s.get("table_spec") or s.get("diagram_spec")]  # image slides cite no table
         missing = [n for n in chart_numbers if n not in reread]
         if missing:
             warnings.append(

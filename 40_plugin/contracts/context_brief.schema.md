@@ -55,6 +55,7 @@ source_inputs:
 # study_design: observational_cross_section   # experimental | quasi_experimental | observational_cross_section | observational_panel | descriptive
 # analysed_population: "<Who the estimates describe, e.g., Australian adults who rent or hold a mortgage, Jan 2024>"
 # audience_assesses_method: true   # D-046: the audience judges the method (assessor, examiner, reviewer); inferred from the decision-maker's role when absent
+# quote_speaker_names: allowed   # D-108: quote slides may name speakers; without it a speaker is described by role and place
 
 # G1.2 — Stakeholder-Specific Audience Map (PRIN-CTX-002)
 audience_map:

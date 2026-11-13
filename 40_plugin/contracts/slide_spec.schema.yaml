@@ -401,6 +401,9 @@ $defs:
               - "section_divider"           # D-063: section break on the dark key background: large `section_number`, title, one-line `section_question`
               - "executive_summary"         # D-075 / PAT-STR-004: first main-deck slide; numbered rows from `word_jobs.summary_points`, no chart or callout
               - "evidence_columns"          # D-075 / PAT-DSN-001: decision slide; one `recommendation_line`, then 2-3 columns of criterion heading, one-sentence finding and a small chart
+              - "image_evidence"            # D-105 / PAT-DSN-001: one content image (screenshot, photo of the thing discussed) in the chart's place; cards in the right third
+              - "image_grid"                # D-105 / PAT-DSN-001: 2-4 equal content images with a title and a caption each; 2-3 in a row with cards under them, 4 as a 2 x 2 grid with cards beside
+              - "quote_evidence"            # D-105 / D-108 / PAT-DSN-001: 1-3 verbatim quotes traced to inputs/; one with cards beside, 2-3 in columns with cards under them
           upper_left_z_anchor:
             type: boolean
             const: true
@@ -718,6 +721,28 @@ $defs:
       # ------------------------------------------------------------------------
       diagram_spec:
         $ref: "#/$defs/DiagramSpec"
+
+      # ------------------------------------------------------------------------
+      # C4. CONTENT IMAGE (D-105, PAT-DSN-001, ANTI-DSN-002) — required on image_evidence slides, forbidden elsewhere
+      # ------------------------------------------------------------------------
+      image_spec:
+        $ref: "#/$defs/ImageSpec"
+
+      # C5. IMAGE GRID (D-105) — required on image_grid slides, forbidden elsewhere
+      image_panels:
+        type: array
+        minItems: 2
+        maxItems: 4
+        items:
+          $ref: "#/$defs/ImagePanel"
+
+      # C6. QUOTES (D-105, D-108) — required on quote_evidence slides, forbidden elsewhere
+      quotes:
+        type: array
+        minItems: 1
+        maxItems: 3
+        items:
+          $ref: "#/$defs/QuoteItem"
 
       # ------------------------------------------------------------------------
       # D. DELIVERY MODE & PROGRESSIVE REVEAL PACING (PRIN-PRS-001, PAT-PRS-001, G4.11)
@@ -1379,6 +1404,50 @@ $defs:
                 unit:
                   type: string
                   description: "Required on every shaded column when `scale: shared`; shown beside the scale key."
+
+  ImageSpec:
+    type: object
+    description: "D-105: the one image an `image_evidence` slide discusses. Fitted without cropping, top-left in the chart area, inside a hairline frame; never a picture of a chart (ANTI-VIS-002) and never decoration (ANTI-DSN-002)."
+    required: [path, alt_text, referenced_in, panel_title]
+    additionalProperties: false
+    properties:
+      path: { type: string, description: "Image file inside `inputs/` (PNG or JPEG)." }
+      alt_text: { type: string, description: "What the image shows, for screen readers (D-049 G6)." }
+      referenced_in: { type: string, enum: ["slide_text", "speaker_notes"], description: "Where the slide discusses the image." }
+      panel_title: { type: string, description: "Short label above the image, like a chart's panel title." }
+      credit: { type: string, description: "Optional owner or photographer credit; it joins the source line." }
+
+  ImagePanel:
+    type: object
+    description: "D-105: one panel of an `image_grid` slide. Every panel is evidence the slide discusses; all panels share one size; at most one is focal and only its caption colour marks it."
+    required: [path, alt_text, panel_title, caption]
+    additionalProperties: false
+    properties:
+      path: { type: string, description: "Image file inside `inputs/` (PNG or JPEG)." }
+      alt_text: { type: string }
+      panel_title: { type: string, description: "Short name of what the panel shows." }
+      caption: { type: string, description: "A claim about this panel (<= 12 English words or <= 20 Vietnamese syllables); a number in it is traced like a data point." }
+      focal: { type: boolean, description: "The one panel the title points to (at most one)." }
+      source_cell_ref: { type: string, description: "Required when the caption shows a number (G4.9)." }
+
+  QuoteItem:
+    type: object
+    description: "D-105 / D-108: one verbatim quotation on a `quote_evidence` slide, traced to `inputs/` like a data point. The renderer adds typographic quotation marks; no decorative glyphs, no fill."
+    required: [text, speaker, source_ref]
+    additionalProperties: false
+    properties:
+      text: { type: string, description: "The words as said or written; cuts are marked with an ellipsis. <= 30 English words (50 Vietnamese syllables) for one quote, <= 20 (33) each for two or three. Without surrounding quotation marks." }
+      speaker: { type: string, description: "A role and place (e.g. 'Barista applicant, Leeds'); a personal name only when the brief sets `quote_speaker_names: allowed`." }
+      source_ref: { type: string, description: "One CSV cell (`file.csv!RxCy`) or one Markdown line or heading (`file.md!<line or heading>`) holding the quote verbatim." }
+      group_label: { type: string, description: "Optional heading above the quote naming the group it stands for, with its count (e.g. 'Waited for a trainer, 14 of 40')." }
+      count_ref: { type: string, description: "Required when `group_label` shows a number; resolved like `source_cell_ref` (G4.9)." }
+      focal: { type: boolean, description: "The one quote the title points to (at most one); marked by a 1.5 pt focal rule and a focal group label." }
+      color_tie_spans:
+        type: array
+        maxItems: 1
+        description: "At most one span across all quotes on the slide; an exact substring of `text`."
+        items:
+          $ref: "#/$defs/ColorTieSpan"
 
   DiagramSpec:
     type: object

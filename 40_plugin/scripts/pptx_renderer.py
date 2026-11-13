@@ -1529,6 +1529,19 @@ def set_axis_line_color(axis: Any, hex_color: str, hide_line: bool = False) -> N
 
 TABLE_BOX_ID = "__data_table__"
 DIAGRAM_BOX_ID = "__diagram__"
+IMAGE_BOX_ID = "__image__"  # D-105: the content image of an `image_evidence` slide
+IMAGE_GRID_GAP_IN = 0.30  # D-105: gap between the panels of an `image_grid` slide
+
+
+def image_cell_id(idx: int) -> str:
+    return f"__image_{idx}__"
+
+
+def quote_cell_id(idx: int) -> str:
+    return f"__quote_{idx}__"
+
+
+QUOTE_RULE_PT, QUOTE_FOCAL_RULE_PT = 0.75, 1.5  # D-108: hairline above each quote column; the focal column's rule is heavier
 NO_STYLE_NO_GRID = "{2D5ABB26-0587-4C30-8999-92F81FD0307C}"  # PowerPoint's built-in "No Style, No Grid" table style
 
 
@@ -2035,6 +2048,49 @@ def compute_panel_bboxes(
             panel_boxes[panels[0]["panel_id"]] = (canvas_left, canvas_top, chart_w, chart_h_one)
         if has_side_text:
             side_box = (canvas_left + chart_w + side_gap, canvas_top, side_w, canvas_height)
+
+    elif layout_type == "image_grid":
+        # D-105: 2-3 equal panels in a row with the cards in the bottom strip; 4 as a 2 x 2 grid with the cards beside
+        n = len(panels)
+        gap = IMAGE_GRID_GAP_IN
+        if n >= 4:
+            grid_w = canvas_width - side_w - side_gap if has_side_text else canvas_width
+            cell_w, cell_h = (grid_w - gap) / 2, (canvas_height - gap) / 2
+            for idx in range(n):
+                panel_boxes[image_cell_id(idx)] = (canvas_left + (idx % 2) * (cell_w + gap), canvas_top + (idx // 2) * (cell_h + gap), cell_w, cell_h)
+            if has_side_text:
+                side_box = (canvas_left + grid_w + side_gap, canvas_top, side_w, canvas_height)
+        else:
+            grid_h = canvas_height - strip_h - 0.15 if has_side_text else canvas_height
+            cell_w = (canvas_width - gap * (max(n, 1) - 1)) / max(n, 1)
+            for idx in range(n):
+                panel_boxes[image_cell_id(idx)] = (canvas_left + idx * (cell_w + gap), canvas_top, cell_w, grid_h)
+            if has_side_text:
+                side_box = (canvas_left, canvas_top + grid_h + 0.15, canvas_width, strip_h)
+
+    elif layout_type == "quote_evidence":
+        # D-105 / D-108: one quote in the chart's place with the cards in the right third; 2-3 in columns with the cards in the bottom strip
+        n = len(panels)
+        if n <= 1:
+            quote_w = canvas_width - side_w - side_gap if has_side_text else canvas_width
+            panel_boxes[quote_cell_id(0)] = (canvas_left, canvas_top, quote_w, chart_h_one)
+            if has_side_text:
+                side_box = (canvas_left + quote_w + side_gap, canvas_top, side_w, canvas_height)
+        else:
+            gap = IMAGE_GRID_GAP_IN
+            grid_h = canvas_height - strip_h - 0.15 if has_side_text else canvas_height
+            cell_w = (canvas_width - gap * (n - 1)) / n
+            for idx in range(n):
+                panel_boxes[quote_cell_id(idx)] = (canvas_left + idx * (cell_w + gap), canvas_top, cell_w, grid_h)
+            if has_side_text:
+                side_box = (canvas_left, canvas_top + grid_h + 0.15, canvas_width, strip_h)
+
+    elif layout_type == "image_evidence":
+        # D-105: the image takes the chart's place of a one-sided slide; the cards keep the right third
+        image_w = canvas_width - side_w - side_gap if has_side_text else canvas_width
+        panel_boxes[IMAGE_BOX_ID] = (canvas_left, canvas_top, image_w, chart_h_one)
+        if has_side_text:
+            side_box = (canvas_left + image_w + side_gap, canvas_top, side_w, canvas_height)
 
     elif layout_type == "one_sided_left_text":
         if has_side_text:
@@ -4177,6 +4233,209 @@ def draw_side_image(slide: Any, image: Dict[str, Any], x: float, y: float, w: fl
         c_nv_pr.set("descr", str(image.get("alt_text", "")))
 
 
+def source_line_with_credit(slide_spec: Dict[str, Any], source: str) -> str:
+    """D-105: an image credit joins the slide's source line."""
+    credit = str((slide_spec.get("image_spec") or {}).get("credit", "")).strip()
+    if not credit:
+        return source
+    if not source:
+        return credit
+    return f"{source} {credit}" if source.endswith(".") else f"{source}. {credit}"
+
+
+def fit_image_in_box(width_px: int, height_px: int, w: float, h: float) -> Tuple[float, float]:
+    """D-064 / D-105: the largest size with the image's aspect ratio that fits the box, never cropped."""
+    ratio = width_px / max(1, height_px)
+    return (w, w / ratio) if w / h < ratio else (h * ratio, h)
+
+
+def render_image_evidence(slide: Any, bbox: Tuple[float, float, float, float], slide_spec: Dict[str, Any], deck_meta: Dict[str, Any]) -> None:
+    """D-105: panel title, then the content image fitted without cropping at the top left of the area in a hairline frame."""
+    from PIL import Image as PILImage
+
+    image = slide_spec.get("image_spec") or {}
+    x, y, w, h = bbox
+    ts = type_scale(deck_meta)
+    deck_lang = deck_meta.get("deck_language", "en")
+    title = str(image.get("panel_title", "")).strip()
+    title_h = 0.0
+    if title:
+        title_h = max(0.34, wrapped_text_height_in(title, w - 0.10, ts["panel_title"], deck_lang) + 0.06)
+        tb = slide.shapes.add_textbox(Inches(x + 0.05), Inches(y), Inches(w - 0.10), Inches(title_h))
+        tb.name = "pai:panel_title"
+        tf = tb.text_frame
+        tf.word_wrap = True
+        tf.margin_left = Inches(0)
+        tf.margin_top = Inches(0.02)
+        p = tf.paragraphs[0]
+        p.text = protect_vi_compound_linebreaks(title, deck_lang)
+        p.line_spacing = paragraph_line_spacing(deck_lang)
+        p.font.name = deck_font(deck_meta)
+        p.font.size = Pt(ts["panel_title"])
+        p.font.bold = True
+        p.font.color.rgb = hex_to_rgb((deck_meta.get("theme_palette") or {}).get("text_primary_hex", "#1F2937"))
+    src = resolve_asset(str(image.get("path", "")))
+    if src is None:
+        warn(f"image_spec '{image.get('path')}' not found; the image area stays empty.")
+        return
+    with PILImage.open(src) as im:
+        pw, ph = fit_image_in_box(im.width, im.height, w, h - title_h - 0.05)
+    pic = slide.shapes.add_picture(str(src), Inches(x), Inches(y + title_h), Inches(pw), Inches(ph))
+    pic.name = "pai:image_evidence"
+    pic.line.color.rgb = hex_to_rgb(chrome_token(deck_meta, "hairline", "#C9CED6"))
+    pic.line.width = Pt(0.75)
+    c_nv_pr = pic._element.find(".//" + qn("p:cNvPr"))
+    if c_nv_pr is not None:
+        c_nv_pr.set("descr", str(image.get("alt_text", "")))
+
+
+def image_grid_model(slide_spec: Dict[str, Any], deck_meta: Dict[str, Any], boxes: List[Tuple[float, float, float, float]]) -> Dict[str, Any]:
+    """D-105: shared geometry of an image grid: title height, one image size per panel and one caption line for all."""
+    from PIL import Image as PILImage
+
+    ts = type_scale(deck_meta)
+    deck_lang = deck_meta.get("deck_language", "en")
+    panels = slide_spec.get("image_panels") or []
+    w = min(b[2] for b in boxes)
+    h = min(b[3] for b in boxes)
+    title_h = max(max(0.34, wrapped_text_height_in(str(p.get("panel_title", "")), w - 0.10, ts["panel_title"], deck_lang) + 0.06) for p in panels)
+    caption_h = max(wrapped_text_height_in(str(p.get("caption", "")), w - 0.10, ts["panel_title"], deck_lang) + 0.08 for p in panels)
+    image_h = max(0.5, h - title_h - caption_h - 0.10)
+    sizes: List[Optional[Tuple[float, float]]] = []
+    for p in panels:
+        src = resolve_asset(str(p.get("path", "")))
+        if src is None:
+            sizes.append(None)
+            continue
+        with PILImage.open(src) as im:
+            sizes.append(fit_image_in_box(im.width, im.height, w, image_h))
+    tallest = max((sz[1] for sz in sizes if sz), default=image_h)
+    return {"title_h": title_h, "caption_h": caption_h, "sizes": sizes, "caption_top": title_h + tallest + 0.08, "srcs": [resolve_asset(str(p.get("path", ""))) for p in panels]}
+
+
+def render_image_grid(slide: Any, panel_bboxes: Dict[str, Tuple[float, float, float, float]], slide_spec: Dict[str, Any], deck_meta: Dict[str, Any]) -> None:
+    """D-105: each panel has its title, its image fitted without cropping at the top left in a hairline frame, and a caption
+    on one shared line; the focal panel is marked only by its caption colour."""
+    panels = slide_spec.get("image_panels") or []
+    boxes = [panel_bboxes[image_cell_id(i)] for i in range(len(panels)) if image_cell_id(i) in panel_bboxes]
+    if not boxes:
+        return
+    ts = type_scale(deck_meta)
+    deck_lang = deck_meta.get("deck_language", "en")
+    palette = deck_meta.get("theme_palette") or {}
+    ink = palette.get("text_primary_hex", "#1F2937")
+    muted = palette.get("text_muted_hex", "#6B7280")
+    focal_text = readable_text_hex((palette.get("two_tier_accent") or {}).get("primary_focal_hex", "#D95F02"), palette.get("background_hex", "#FFFFFF"), 4.5)
+    model = image_grid_model(slide_spec, deck_meta, boxes)
+    for idx, (panel, (x, y, w, _h)) in enumerate(zip(panels, boxes)):
+        for text, top, height, colour, bold, name in (
+            (str(panel.get("panel_title", "")).strip(), y, model["title_h"], ink, True, "pai:panel_title"),
+            (str(panel.get("caption", "")).strip(), y + model["caption_top"], model["caption_h"], focal_text if panel.get("focal") else muted, bool(panel.get("focal")), "pai:image_caption"),
+        ):
+            if not text:
+                continue
+            tb = slide.shapes.add_textbox(Inches(x + 0.05 if name == "pai:panel_title" else x), Inches(top), Inches(w - 0.10), Inches(height))
+            tb.name = name
+            tf = tb.text_frame
+            tf.word_wrap = True
+            tf.margin_left = Inches(0)
+            tf.margin_top = Inches(0.02)
+            p = tf.paragraphs[0]
+            p.text = protect_vi_compound_linebreaks(text, deck_lang)
+            p.line_spacing = paragraph_line_spacing(deck_lang)
+            p.font.name = deck_font(deck_meta)
+            p.font.size = Pt(ts["panel_title"])
+            p.font.bold = bold
+            p.font.color.rgb = hex_to_rgb(colour)
+        src, size = model["srcs"][idx], model["sizes"][idx]
+        if src is None or size is None:
+            warn(f"image_panels[{idx}] '{panel.get('path')}' not found; the panel stays empty.")
+            continue
+        pic = slide.shapes.add_picture(str(src), Inches(x), Inches(y + model["title_h"]), Inches(size[0]), Inches(size[1]))
+        pic.name = "pai:image_evidence"
+        pic.line.color.rgb = hex_to_rgb(chrome_token(deck_meta, "hairline", "#C9CED6"))
+        pic.line.width = Pt(0.75)
+        c_nv_pr = pic._element.find(".//" + qn("p:cNvPr"))
+        if c_nv_pr is not None:
+            c_nv_pr.set("descr", str(panel.get("alt_text", "")))
+
+
+def quote_display_text(text: str) -> str:
+    """D-108: the quote inside typographic quotation marks (the spec holds the bare words)."""
+    body = str(text).strip().strip('"“”').strip()
+    return f"“{body}”"
+
+
+def quote_model(slide_spec: Dict[str, Any], deck_meta: Dict[str, Any], boxes: List[Tuple[float, float, float, float]]) -> Dict[str, Any]:
+    """D-108: shared geometry of the quote columns: one group-label height, one quote height, so speakers line up."""
+    ts = type_scale(deck_meta)
+    deck_lang = deck_meta.get("deck_language", "en")
+    quotes = slide_spec.get("quotes") or []
+    w = min(b[2] for b in boxes) - 0.10
+    has_label = any(str(q.get("group_label", "")).strip() for q in quotes)
+    label_h = max((wrapped_text_height_in(str(q.get("group_label", "")), w, ts["panel_title"], deck_lang) + 0.04 for q in quotes), default=0.0) if has_label else 0.0
+    rule = len(quotes) > 1 or has_label
+    quote_h = max(wrapped_text_height_in(quote_display_text(q.get("text", "")), w, ts["panel_headline"], deck_lang) + 0.08 for q in quotes)
+    speaker_h = max(wrapped_text_height_in(str(q.get("speaker", "")), w, ts["data_label"], deck_lang) + 0.06 for q in quotes)
+    rule_top = label_h + (0.06 if has_label else 0.0)
+    quote_top = rule_top + (0.18 if rule else 0.0)
+    return {"label_h": label_h, "rule": rule, "rule_top": rule_top, "quote_top": quote_top, "quote_h": quote_h,
+            "speaker_top": quote_top + quote_h + 0.06, "speaker_h": speaker_h}
+
+
+def render_quotes(slide: Any, panel_bboxes: Dict[str, Tuple[float, float, float, float]], slide_spec: Dict[str, Any], deck_meta: Dict[str, Any]) -> None:
+    """D-105 / D-108: each column has its optional group label, a rule (focal: 1.5 pt in the focal colour), the quote at
+    the headline role inside typographic quotation marks with at most one Color Tie span, and the speaker, muted, under it.
+    No decorative quote glyphs, no fill."""
+    quotes = slide_spec.get("quotes") or []
+    boxes = [panel_bboxes[quote_cell_id(i)] for i in range(len(quotes)) if quote_cell_id(i) in panel_bboxes]
+    if not boxes:
+        return
+    ts = type_scale(deck_meta)
+    deck_lang = deck_meta.get("deck_language", "en")
+    palette = deck_meta.get("theme_palette") or {}
+    ink = palette.get("text_primary_hex", "#1F2937")
+    muted = palette.get("text_muted_hex", "#6B7280")
+    focal_hex = (palette.get("two_tier_accent") or {}).get("primary_focal_hex", "#D95F02")
+    focal_text = readable_text_hex(focal_hex, palette.get("background_hex", "#FFFFFF"), 4.5)
+    hairline = chrome_token(deck_meta, "hairline", "#C9CED6")
+    model = quote_model(slide_spec, deck_meta, boxes)
+
+    def textbox(name: str, x: float, y: float, w: float, h: float) -> Any:
+        tb = slide.shapes.add_textbox(Inches(x + 0.05), Inches(y), Inches(w - 0.10), Inches(h))
+        tb.name = name
+        tf = tb.text_frame
+        tf.word_wrap = True
+        tf.margin_left = tf.margin_right = tf.margin_bottom = Inches(0)
+        tf.margin_top = Inches(0.02)
+        return tf
+
+    for q, (x, y, w, _h) in zip(quotes, boxes):
+        focal = bool(q.get("focal"))
+        label = str(q.get("group_label", "")).strip()
+        if label:
+            tf = textbox("pai:quote_group", x, y, w, model["label_h"])
+            set_plain_paragraph(tf.paragraphs[0], label, deck_font(deck_meta), ts["panel_title"], focal_text if focal else ink, True, deck_lang)
+        if model["rule"]:
+            ry = y + model["rule_top"]
+            rule = slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(x), Inches(ry), Inches(x + w), Inches(ry))
+            rule.name = "pai:quote_rule"
+            rule.line.color.rgb = hex_to_rgb(focal_hex if focal else hairline)
+            rule.line.width = Pt(QUOTE_FOCAL_RULE_PT if focal else QUOTE_RULE_PT)
+            remove_connector_style(rule)
+            mark_decorative(rule)
+        tf = textbox("pai:quote_text", x, y + model["quote_top"], w, model["quote_h"] + model["speaker_h"] + 0.06)
+        spans = [{**sp, "color_hex": readable_text_hex(sp.get("color_hex") or focal_hex, palette.get("background_hex", "#FFFFFF"), 4.5)} for sp in q.get("color_tie_spans") or []]
+        populate_paragraph_with_color_ties(
+            tf.paragraphs[0], quote_display_text(q.get("text", "")), spans, ink, font_name=title_font(deck_meta),
+            font_size_pt=ts["panel_headline"], default_bold=False, deck_language=deck_lang,
+        )
+        tf.paragraphs[0].line_spacing = paragraph_line_spacing(deck_lang)
+        speaker = tf.add_paragraph()  # the speaker follows the quote in the same box, so it sits right under the last line
+        set_plain_paragraph(speaker, str(q.get("speaker", "")).strip(), deck_font(deck_meta), ts["data_label"], muted, False, deck_lang)
+        speaker.space_before = Pt(8)
+
+
 MIXED_WEIGHT_SUFFIX = "~mixed_weight"
 DECORATIVE_EXT_URI = "{C183D7F6-B498-43B3-948B-1728B52AA6E4}"
 
@@ -4252,7 +4511,7 @@ def render_single_slide_state(
     tt_obj = word_jobs.get("takeaway_title") or {}
     tt_text = str(tt_obj.get("text", "")).strip()
     chart_title = str(word_jobs.get("chart_title", "")).strip()
-    source_footnote = str(word_jobs.get("source_footnote", "")).strip()
+    source_footnote = source_line_with_credit(slide_spec, str(word_jobs.get("source_footnote", "")).strip())
     reading_note = str(word_jobs.get("reading_note", "")).strip()
     note_h = ts["source_footnote"] * 1.45 / 72.0 if reading_note else 0.0
 
@@ -4349,7 +4608,7 @@ def render_single_slide_state(
     has_side_text = bool((side_jobs.get("annotations") and show_ann) or ((side_jobs.get("recommendation_callout") or {}).get("text") and show_rec))
     panel_bboxes, side_bbox = compute_panel_bboxes(
         layout_type,
-        all_panels,
+        (slide_spec.get("image_panels") or []) if layout_type == "image_grid" else (slide_spec.get("quotes") or []) if layout_type == "quote_evidence" else all_panels,
         has_side_text=has_side_text,
         canvas_top=canvas_top,
         canvas_height=canvas_height,
@@ -4377,6 +4636,18 @@ def render_single_slide_state(
         )
     elif layout_type == "statement_or_transition" and side_bbox is not None:
         render_statement_slide_body(slide, side_bbox, slide_spec, deck_meta, spotlight=spotlight)
+    elif layout_type == "quote_evidence":
+        render_quotes(slide, panel_bboxes, slide_spec, deck_meta)
+        if side_bbox is not None and (show_ann or show_rec):
+            render_side_annotations_and_callout(slide, side_bbox, slide_spec, deck_meta, show_annotations=show_ann, show_callout=show_rec)
+    elif layout_type == "image_grid":
+        render_image_grid(slide, panel_bboxes, slide_spec, deck_meta)
+        if side_bbox is not None and (show_ann or show_rec):
+            render_side_annotations_and_callout(slide, side_bbox, slide_spec, deck_meta, show_annotations=show_ann, show_callout=show_rec)
+    elif layout_type == "image_evidence":
+        render_image_evidence(slide, panel_bboxes[IMAGE_BOX_ID], slide_spec, deck_meta)
+        if side_bbox is not None and (show_ann or show_rec):
+            render_side_annotations_and_callout(slide, side_bbox, slide_spec, deck_meta, show_annotations=show_ann, show_callout=show_rec)
     elif layout_type == "diagram":
         render_diagram(slide, panel_bboxes[DIAGRAM_BOX_ID], slide_spec, deck_meta, (reveal_step or {}).get("visible_item_ids") or None)
         if side_bbox is not None and (show_ann or show_rec):

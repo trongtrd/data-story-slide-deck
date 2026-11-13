@@ -31,7 +31,7 @@ import yaml
 from PIL import Image, ImageDraw, ImageFont
 
 from pptx_renderer import SIDE_CARD_GAP_IN, side_card_width_in, slide_finish, title_break_index
-from pptx_renderer import SIDE_COLUMN_GAP_IN, side_column_model, side_totals_model, side_total_text, STRIP_BAND_NAME, STRIP_CONTEXT_PT, STRIP_FOCAL_PT, STRIP_ROW_FILL, STRIP_WORDS, strip_label_text, strip_model, CONNECTOR_HEX, CONNECTOR_PT, WATERFALL_BAR_GAP, WATERFALL_INSIDE_SHARE, inside_label_hex, scatter_label_indices, scatter_section_is_focal, waterfall_fills, waterfall_model, DIVIDER_NUMBER_SCALE, DIVIDER_TITLE_SCALE, GRIDLINE_HEX, GRIDLINE_PT, SEPARATOR_HEX, SEPARATOR_PT, deck_font, key_slide_ids, key_slide_palette, resolve_asset, spotlight_palette, spotlight_slide_ids, ASSET_ROOTS, estimate_text_width_in, load_spec_from_path, title_font, nice_axis_bounds, protect_vi_compound_linebreaks, resolve_point_role_colours, series_values_by, slide_footer_text, evidence_ref_label, has_title_slide, title_slide_lines, stack_axis_bounds, stack_emission, stack_legend_specs, stack_spans, table_model, type_scale, design_system, callout_fill_hex, chrome_token, divider_scales, moment_tokens
+from pptx_renderer import SIDE_COLUMN_GAP_IN, fit_image_in_box, source_line_with_credit, IMAGE_GRID_GAP_IN, QUOTE_RULE_PT, QUOTE_FOCAL_RULE_PT, quote_display_text, side_column_model, side_totals_model, side_total_text, STRIP_BAND_NAME, STRIP_CONTEXT_PT, STRIP_FOCAL_PT, STRIP_ROW_FILL, STRIP_WORDS, strip_label_text, strip_model, CONNECTOR_HEX, CONNECTOR_PT, WATERFALL_BAR_GAP, WATERFALL_INSIDE_SHARE, inside_label_hex, scatter_label_indices, scatter_section_is_focal, waterfall_fills, waterfall_model, DIVIDER_NUMBER_SCALE, DIVIDER_TITLE_SCALE, GRIDLINE_HEX, GRIDLINE_PT, SEPARATOR_HEX, SEPARATOR_PT, deck_font, key_slide_ids, key_slide_palette, resolve_asset, spotlight_palette, spotlight_slide_ids, ASSET_ROOTS, estimate_text_width_in, load_spec_from_path, title_font, nice_axis_bounds, protect_vi_compound_linebreaks, resolve_point_role_colours, series_values_by, slide_footer_text, evidence_ref_label, has_title_slide, title_slide_lines, stack_axis_bounds, stack_emission, stack_legend_specs, stack_spans, table_model, type_scale, design_system, callout_fill_hex, chrome_token, divider_scales, moment_tokens
 
 SLIDE_WIDTH_PT = 960.0  # a 13.33 in PPTX slide is 960 pt wide; HTML type is sized as a share of the slide width
 CHART_ZONE_HEIGHT_IN = 5.15  # usual chart zone height in the .pptx (`compute_panel_bboxes` default), for finish `chart_height_in`
@@ -1530,6 +1530,57 @@ def html_statement_grid(word_jobs: Dict[str, Any], rec_obj: Dict[str, Any], rec_
     return f'<div class="statement-grid{" tiles" if tiles else ""}" style="grid-template-columns: repeat({cols}, 1fr)">{"".join(parts)}</div>'
 
 
+def html_image_evidence(slide: Dict[str, Any], deck_lang: str) -> str:
+    """D-105: panel title and the content image, fitted without cropping at the top left, in a hairline frame."""
+    import base64
+    import mimetypes
+
+    image = slide.get("image_spec") or {}
+    title = html.escape(protect_vi_compound_linebreaks(str(image.get("panel_title", "")), deck_lang))
+    src = resolve_asset(str(image.get("path", "")))
+    img_html = ""
+    if src is not None:
+        mime = mimetypes.guess_type(src.name)[0] or "image/png"
+        data = base64.b64encode(src.read_bytes()).decode("ascii")
+        img_html = f'<img class="evidence-image" src="data:{mime};base64,{data}" alt="{html.escape(str(image.get("alt_text", "")))}">'
+    return f'<div class="chart-panel image-panel"><div class="panel-title">{title}</div><div class="image-zone">{img_html}</div></div>'
+
+
+def html_image_cell(panel: Dict[str, Any], deck_lang: str) -> str:
+    """D-105: one panel of an image grid: title, image fitted at the top left in a hairline frame, caption."""
+    import base64
+    import mimetypes
+
+    title = html.escape(protect_vi_compound_linebreaks(str(panel.get("panel_title", "")), deck_lang))
+    caption = html.escape(protect_vi_compound_linebreaks(str(panel.get("caption", "")), deck_lang))
+    src = resolve_asset(str(panel.get("path", "")))
+    img_html = ""
+    if src is not None:
+        mime = mimetypes.guess_type(src.name)[0] or "image/png"
+        data = base64.b64encode(src.read_bytes()).decode("ascii")
+        img_html = f'<img class="evidence-image" src="data:{mime};base64,{data}" alt="{html.escape(str(panel.get("alt_text", "")))}">'
+    focal = " focal" if panel.get("focal") else ""
+    return (
+        f'<div class="chart-panel image-panel"><div class="panel-title">{title}</div>'
+        f'<div class="image-zone">{img_html}</div><div class="image-caption{focal}">{caption}</div></div>'
+    )
+
+
+def html_quote_cell(quote: Dict[str, Any], deck_lang: str, ruled: bool, focal_hex: str) -> str:
+    """D-108: one quote column: optional group label, rule, the quote in typographic marks (one Color Tie span at most), the speaker."""
+    focal = " focal" if quote.get("focal") else ""
+    label = str(quote.get("group_label", "")).strip()
+    label_html = f'<div class="quote-group{focal}">{html.escape(protect_vi_compound_linebreaks(label, deck_lang))}</div>' if label else ""
+    rule_html = f'<div class="quote-rule{focal}"></div>' if ruled else ""
+    spans = [{**sp, "color_hex": sp.get("color_hex") or focal_hex} for sp in quote.get("color_tie_spans") or []]
+    text_html = apply_color_tie_html(quote_display_text(quote.get("text", "")), spans, deck_lang)
+    speaker = html.escape(protect_vi_compound_linebreaks(str(quote.get("speaker", "")), deck_lang))
+    return (
+        f'<div class="quote-panel">{label_html}{rule_html}'
+        f'<blockquote class="quote-text">{text_html}</blockquote><div class="quote-speaker">{speaker}</div></div>'
+    )
+
+
 def compile_html(spec_dict: Dict[str, Any], output_path: Path) -> Path:
     """Compile `slide_spec.yaml` into a self-contained interactive `.html` presentation."""
     digest_spec = spec_dict
@@ -1574,7 +1625,7 @@ def compile_html(spec_dict: Dict[str, Any], output_path: Path) -> Path:
         finish = slide_finish(slide)  # D-091
         tt_html = insert_br_html(tt_html, title_break_index(str(tt_obj.get("text", "")), finish.get("title_break_after")))
         chart_title = html.escape(protect_vi_compound_linebreaks(str(word_jobs.get("chart_title", "")), deck_lang))
-        source_fn = html.escape(protect_vi_compound_linebreaks(str(word_jobs.get("source_footnote", "")), deck_lang))
+        source_fn = html.escape(protect_vi_compound_linebreaks(source_line_with_credit(slide, str(word_jobs.get("source_footnote", "")).strip()), deck_lang))
         reading_note_raw = str(word_jobs.get("reading_note", "")).strip()
         reading_note_html = (
             '<div class="reading-note">'
@@ -1588,7 +1639,7 @@ def compile_html(spec_dict: Dict[str, Any], output_path: Path) -> Path:
         panels = vis_spec.get("panels") or []
 
         # Annotations & Recommendation Callout HTML (Jobs 5 & 6)
-        on_chart_notes = note_targets(slide, deck_lang) if layout_type not in ("diagram", "data_table", "statement_or_transition") else {}
+        on_chart_notes = note_targets(slide, deck_lang) if layout_type not in ("diagram", "data_table", "statement_or_transition", "image_evidence", "image_grid", "quote_evidence") else {}
 
         def annotation_cards(include: Any = ()) -> List[str]:
             """Cards for the annotations not drawn on a chart (D-074), plus any note the chart could not place."""
@@ -1648,6 +1699,32 @@ def compile_html(spec_dict: Dict[str, Any], output_path: Path) -> Path:
         elif layout_type == "diagram":
             side_container = f'<div class="side-zone">{"".join(side_cards_html)}</div>' if side_cards_html else ""
             body_html = f'<div class="slide-body layout-diagram"><div class="diagram-zone">{render_html_diagram(slide, deck_meta)}</div>{side_container}</div>'
+        elif layout_type == "image_grid":  # D-105: 2-3 panels in a row with cards under them, 4 as a 2 x 2 grid with cards beside
+            items = slide.get("image_panels") or []
+            side_container = f'<div class="side-zone">{"".join(side_cards_html)}</div>' if side_cards_html else ""
+            base = "layout-one_sided_right_text" if len(items) >= 4 else "layout-small_multiples_grid"
+            cells = "".join(html_image_cell(item, deck_lang) for item in items)
+            body_html = (
+                f'<div class="slide-body {base} layout-image_grid">'
+                f'<div class="panels-zone panels-count-{len(items)} image-grid">{cells}</div>{side_container}</div>'
+            )
+        elif layout_type == "quote_evidence":  # D-105 / D-108: one quote with cards beside, 2-3 in columns with cards under them
+            items = slide.get("quotes") or []
+            side_container = f'<div class="side-zone">{"".join(side_cards_html)}</div>' if side_cards_html else ""
+            base = "layout-one_sided_right_text" if len(items) <= 1 else "layout-small_multiples_grid"
+            ruled = len(items) > 1 or any(str(q.get("group_label", "")).strip() for q in items)
+            focal_hex = readable_text_hex(accent_hex, bg_hex, 4.5)
+            cells = "".join(html_quote_cell(q, deck_lang, ruled, focal_hex) for q in items)
+            body_html = (
+                f'<div class="slide-body {base} layout-quote_evidence">'
+                f'<div class="panels-zone panels-count-{max(1, len(items))} quote-grid">{cells}</div>{side_container}</div>'
+            )
+        elif layout_type == "image_evidence":  # D-105: the image in the chart's place, cards in the right third
+            side_container = f'<div class="side-zone">{"".join(side_cards_html)}</div>' if side_cards_html else ""
+            body_html = (
+                f'<div class="slide-body layout-one_sided_right_text layout-image_evidence">'
+                f'<div class="panels-zone panels-count-1">{html_image_evidence(slide, deck_lang)}</div>{side_container}</div>'
+            )
         elif layout_type == "data_table":
             side_container = f'<div class="side-zone">{"".join(side_cards_html)}</div>' if side_cards_html else ""
             body_html = f'<div class="slide-body layout-data_table"><div class="table-zone">{render_html_table(slide, deck_meta)}</div>{side_container}</div>'
@@ -1876,6 +1953,20 @@ def compile_html(spec_dict: Dict[str, Any], output_path: Path) -> Path:
     .diagram-zone {{ min-height: 0; overflow: hidden; }}
     .diagram-svg {{ width: 100%; height: 100%; display: block; }}
     .layout-data_table {{ grid-template-rows: 1fr auto; }}
+    .image-panel {{ display: flex; flex-direction: column; min-height: 0; }}
+    .image-zone {{ flex: 1 1 auto; min-height: 0; display: flex; align-items: flex-start; justify-content: flex-start; }}
+    .image-grid {{ column-gap: {IMAGE_GRID_GAP_IN * 72:.0f}pt; }}
+    .image-caption {{ margin-top: 6px; font-size: calc(var(--pt) * {ts["panel_title"]:g}); line-height: 1.25; color: var(--text-muted); }}
+    .quote-grid {{ column-gap: {IMAGE_GRID_GAP_IN * 72:.0f}pt; align-items: start; }}
+    .quote-panel {{ display: flex; flex-direction: column; min-height: 0; }}
+    .quote-group {{ font-size: calc(var(--pt) * {ts["panel_title"]:g}); font-weight: 700; line-height: 1.25; color: var(--text-primary); }}
+    .quote-group.focal {{ color: {readable_text_hex(accent_hex, bg_hex, 4.5)}; }}
+    .quote-rule {{ margin: 6px 0 12px; border-top: {QUOTE_RULE_PT}pt solid {chrome_token(deck_meta, "hairline", "#C9CED6")}; }}
+    .quote-rule.focal {{ border-top: {QUOTE_FOCAL_RULE_PT}pt solid {accent_hex}; }}
+    .quote-text {{ margin: 0; font-family: {css_font_stack(title_font(deck_meta))}; font-size: calc(var(--pt) * {ts["panel_headline"]:g}); line-height: 1.3; color: var(--text-primary); }}
+    .quote-speaker {{ margin-top: 8px; font-size: calc(var(--pt) * {ts["data_label"]:g}); line-height: 1.3; color: var(--text-muted); }}
+    .image-caption.focal {{ font-weight: 700; color: {readable_text_hex(accent_hex, bg_hex, 4.5)}; }}
+    .evidence-image {{ max-width: 100%; max-height: 100%; object-fit: contain; border: 0.75pt solid {chrome_token(deck_meta, "hairline", "#C9CED6")}; }}
     .layout-data_table .side-zone {{ flex-direction: row; }}
     .layout-data_table .side-zone > div {{ flex: 1 1 0; min-width: 0; }}
     .table-zone {{ min-height: 0; overflow: hidden; }}
@@ -3147,9 +3238,95 @@ def draw_png_table(draw: ImageDraw.ImageDraw, slide: Dict[str, Any], deck_meta: 
             break
 
 
+def paste_png_image_evidence(img: Any, draw: Any, slide: Dict[str, Any], box: Tuple[int, int, int, int], deck_meta: Dict[str, Any], ink: str) -> None:
+    """D-105 preview: panel title, then the image fitted without cropping at the top left, in a hairline frame."""
+    image = slide.get("image_spec") or {}
+    x, y, w, h = box
+    deck_lang = deck_meta.get("deck_language", "en")
+    title = protect_vi_compound_linebreaks(str(image.get("panel_title", "")).strip(), deck_lang)
+    title_px = 0
+    if title:
+        draw.text((x + 7, y), title, fill=ink, font=load_ttf_font(21, bold=True))
+        title_px = 49
+    src = resolve_asset(str(image.get("path", "")))
+    if src is None:
+        return
+    with Image.open(src) as im:
+        pw, ph = fit_image_in_box(im.width, im.height, w, h - title_px - 7)
+        pic = im.convert("RGB").resize((max(1, round(pw)), max(1, round(ph))))
+    top = y + title_px
+    img.paste(pic, (x, top))
+    draw.rectangle([x, top, x + pic.width - 1, top + pic.height - 1], outline=chrome_token(deck_meta, "hairline", "#C9CED6"), width=1)
+
+
+def paste_png_image_grid(img: Any, draw: Any, slide: Dict[str, Any], deck_meta: Dict[str, Any], ink: str, muted: str) -> None:
+    """D-105 preview: the image grid with titles and captions; the cards are not drawn in the preview."""
+    items = slide.get("image_panels") or []
+    n = len(items)
+    if not n:
+        return
+    gap = round(IMAGE_GRID_GAP_IN * 144)
+    if n >= 4:
+        grid_w = 1140
+        cell_w, cell_h = (grid_w - gap) // 2, (740 - gap) // 2
+        boxes = [(86 + (i % 2) * (cell_w + gap), 200 + (i // 2) * (cell_h + gap), cell_w, cell_h) for i in range(n)]
+    else:
+        cell_w = (1748 - gap * (n - 1)) // n
+        boxes = [(86 + i * (cell_w + gap), 200, cell_w, 600) for i in range(n)]
+    palette = deck_meta.get("theme_palette") or {}
+    focal_hex = readable_text_hex((palette.get("two_tier_accent") or {}).get("primary_focal_hex", "#D95F02"), "#FFFFFF", 4.5)
+    deck_lang = deck_meta.get("deck_language", "en")
+    heights = []
+    for item, (x, y, w, h) in zip(items, boxes):
+        paste_png_image_evidence(img, draw, {"image_spec": {"path": item.get("path"), "panel_title": item.get("panel_title")}}, (x, y, w, h - 50), deck_meta, ink)
+        src = resolve_asset(str(item.get("path", "")))
+        if src is not None:
+            with Image.open(src) as im:
+                heights.append(fit_image_in_box(im.width, im.height, w, h - 50 - 49 - 7)[1])
+    cap_off = 49 + (max(heights) if heights else 0) + 10
+    for item, (x, y, w, h) in zip(items, boxes):
+        focal = bool(item.get("focal"))
+        draw.text((x, y + cap_off), protect_vi_compound_linebreaks(str(item.get("caption", "")), deck_lang), fill=focal_hex if focal else muted, font=load_ttf_font(21, bold=focal))
+
+
+def paste_png_quotes(draw: Any, slide: Dict[str, Any], boxes: List[Tuple[int, int, int, int]], deck_meta: Dict[str, Any], ink: str, muted: str) -> None:
+    """D-108 preview: quote columns with group label, rule, quote and speaker; cards of a multi-quote slide are not drawn."""
+    quotes = slide.get("quotes") or []
+    palette = deck_meta.get("theme_palette") or {}
+    focal_hex = (palette.get("two_tier_accent") or {}).get("primary_focal_hex", "#D95F02")
+    focal_text = readable_text_hex(focal_hex, "#FFFFFF", 4.5)
+    hairline = chrome_token(deck_meta, "hairline", "#C9CED6")
+    deck_lang = deck_meta.get("deck_language", "en")
+    ruled = len(quotes) > 1 or any(str(q.get("group_label", "")).strip() for q in quotes)
+    labelled = any(str(q.get("group_label", "")).strip() for q in quotes)
+    f_q, f_qb = load_ttf_font(32), load_ttf_font(32, bold=True)
+    tops = []
+    for q, (x, y, w, _h) in zip(quotes, boxes):
+        focal = bool(q.get("focal"))
+        yy = y
+        if labelled:
+            label = str(q.get("group_label", "")).strip()
+            if label:
+                draw.text((x, yy), protect_vi_compound_linebreaks(label, deck_lang), fill=focal_text if focal else ink, font=load_ttf_font(22, bold=True))
+            yy += 40
+        if ruled:
+            draw.line([(x, yy), (x + w, yy)], fill=focal_hex if focal else hairline, width=3 if focal else 1)
+            yy += 26
+        tops.append(yy)
+    ends = []
+    for q, (x, _y, w, _h), yy in zip(quotes, boxes, tops):
+        spans = [{**sp, "color_hex": readable_text_hex(sp.get("color_hex") or focal_hex, "#FFFFFF", 4.5)} for sp in q.get("color_tie_spans") or []]
+        ends.append(draw_colored_paragraph_pil(draw, x=x, y=yy, max_w=w, text=quote_display_text(q.get("text", "")), spans=spans,
+                                               default_hex=ink, font_reg=f_q, font_bold=f_qb, line_height=44, deck_lang=deck_lang))
+    for q, (x, _y, _w, _h), end in zip(quotes, boxes, ends):
+        draw.text((x, end + 14), protect_vi_compound_linebreaks(str(q.get("speaker", "")), deck_lang), fill=muted, font=load_ttf_font(20))
+
+
 def export_slide_pngs(spec_dict: Dict[str, Any], png_dir: Path) -> List[Path]:
     """Export 1920x1080 PNG images for every slide in `slide_spec.yaml` to `png_dir` (`renders/slide_*.png`)."""
     png_dir.mkdir(parents=True, exist_ok=True)
+    if not ASSET_ROOTS:  # D-105: image paths resolve against the run folder that holds `renders/`
+        ASSET_ROOTS[:] = [png_dir.resolve().parent]
     digest_spec = spec_dict
     spec_dict = resolve_point_role_colours(spec_dict)
     deck_meta = spec_dict.get("deck_meta") or {}
@@ -3195,7 +3372,7 @@ def export_slide_pngs(spec_dict: Dict[str, Any], png_dir: Path) -> List[Path]:
         title_spans = [{**sp, "color_hex": dark["focal"]} for sp in tt_obj.get("color_tie_spans") or []] if is_key else tt_obj.get("color_tie_spans") or []
         tt_text = str(tt_obj.get("text", "")).strip()
         chart_title = protect_vi_compound_linebreaks(str(word_jobs.get("chart_title", "")).strip(), deck_lang)
-        source_fn = protect_vi_compound_linebreaks(str(word_jobs.get("source_footnote", "")).strip(), deck_lang)
+        source_fn = protect_vi_compound_linebreaks(source_line_with_credit(slide, str(word_jobs.get("source_footnote", "")).strip()), deck_lang)
         reading_note_pil = str(word_jobs.get("reading_note", "")).strip()
 
         layout_type = (slide.get("layout_spec") or {}).get("layout_type", "one_sided_right_text")
@@ -3304,14 +3481,21 @@ def export_slide_pngs(spec_dict: Dict[str, Any], png_dir: Path) -> List[Path]:
                     line_height=28,
                     deck_lang=deck_lang,
                 )
+        elif layout_type == "image_grid":
+            paste_png_image_grid(img, draw, slide, deck_meta, text_primary, text_muted)
+        elif layout_type == "quote_evidence" and len(slide.get("quotes") or []) > 1:
+            n_q = len(slide.get("quotes") or [])
+            gap_q = round(IMAGE_GRID_GAP_IN * 144)
+            w_q = (1748 - gap_q * (n_q - 1)) // n_q
+            paste_png_quotes(draw, slide, [(86 + i * (w_q + gap_q), 200, w_q, 600) for i in range(n_q)], deck_meta, text_primary, text_muted)
         elif layout_type == "diagram":
             draw_png_diagram(draw, slide, deck_meta)
         elif layout_type == "data_table":
             draw_png_table(draw, slide, deck_meta, (86, 205, 1748, 730))
         else:
-            if len(panels) == 1:
+            if len(panels) == 1 or layout_type in ("image_evidence", "quote_evidence"):
                 p_w = 1140 if layout_type != "two_sided_paired_views" else 840
-                one_sided = layout_type in ("one_sided_right_text", "one_sided_left_text")
+                one_sided = layout_type in ("one_sided_right_text", "one_sided_left_text", "image_evidence", "quote_evidence")
                 if one_sided and finish.get("side_card_cols") in (3, 4):  # 144 px per inch
                     p_w = 1748 - round((side_card_width_in(int(finish["side_card_cols"])) + SIDE_CARD_GAP_IN) * 144)
                 chart_px_h = 740
@@ -3325,7 +3509,12 @@ def export_slide_pngs(spec_dict: Dict[str, Any], png_dir: Path) -> List[Path]:
                     cx_chart = 86
                     sx = 86 + p_w + 44
                     sw = 1834 - sx
-                render_png_chart_panel(draw, panels[0], (cx_chart, 200, p_w, chart_px_h), slide, deck_meta)
+                if layout_type == "image_evidence":
+                    paste_png_image_evidence(img, draw, slide, (cx_chart, 200, p_w, chart_px_h), deck_meta, text_primary)
+                elif layout_type == "quote_evidence":
+                    paste_png_quotes(draw, slide, [(cx_chart, 200, p_w, chart_px_h)], deck_meta, text_primary, text_muted)
+                else:
+                    render_png_chart_panel(draw, panels[0], (cx_chart, 200, p_w, chart_px_h), slide, deck_meta)
                 sy = 200
                 for ann in word_jobs.get("annotations") or []:
                     draw.rounded_rectangle([sx, sy, sx + sw, sy + 185], radius=12, fill=panel_bg, outline="#D1D5DB", width=1)
