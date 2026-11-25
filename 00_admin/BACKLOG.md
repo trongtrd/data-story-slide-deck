@@ -91,6 +91,12 @@ Living list of pending tasks, upcoming batches, and parked ideas.
   - [ ] **Geometry phase 2 (optional):** labels inside native charts through the chart object model; macOS PowerPoint bounds.
   - [ ] **Ablation idea (`SRC-SEC-029`):** run one benchmark with and without the gates and count insight titles and machine findings, as README evidence.
   - [ ] **Phone check on a real device (optional):** the live README was checked only in an emulated column; look once on a phone before `v0.1.0` final.
+  - [x] **Platform checks, part 1 (`D-115`, 2026-11-25):** public CI green after the `D-109`-`D-114` push; Codex discovery verified; Claude Code clean profile: GitHub add fails with `EPERM` on Windows, local-clone add works (README updated).
+  - [ ] **Claude Code `EPERM` on Windows:** diagnose (a smaller repository? a file Claude Code keeps open during validation?) or report it to the Claude Code project; retest after a Claude Code update.
+  - [ ] **Headless Edge 158 returns nothing** (even for a one-line page, fresh profile, no policy): make `html_qa.py` fall back to the next browser when a browser returns an empty DOM, or document Chrome.
+  - [x] **README lessons (`D-116`, 2026-11-25):** try-it block (`install.py --deps-only` + `smoke --keep`, tested on a fresh clone), "Why this exists" table, agent install table, English and Vietnamese prompts, FAQ, card counts fixed, short `README.vi.md`.
+  - [ ] **Social preview (`D-116`, owner):** upload `05_TEMP/data-story-slide-deck_social-preview.png` (1280×640, outside the repository) in the repository settings.
+  - [ ] **Demo GIF after `v0.1.0` (`D-116`):** screen-record a real agent session through G1-G4 on a benchmark, cut to 20-30 s, place it under the README title; no recreated terminal.
   - [ ] **0.1.0 final:** after the platform checks below, update the pre-release note in the root README and the "Status and limitations" table in `40_plugin/README.md` together (`D-102`), bump nothing else unless a check fails, tag `v0.1.0` and publish a full release (owner authorization).
 
 Detailed existing implementation gaps remain listed below; this sequence does not mark them resolved.

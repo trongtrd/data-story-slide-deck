@@ -58,7 +58,7 @@ python <plugin-root>/scripts/deckctl.py smoke
 - `skills/`: the seven skills.
 - `scripts/`: renderers, validator, and the `deckctl.py` CLI.
 - `contracts/`: artifact schemas and the workflow specification.
-- `knowledge/`: 82 knowledge cards the skills apply.
+- `knowledge/`: 87 knowledge cards the skills apply.
 - `examples/quickstart/`: an original sample deck.
 
 Contracts and knowledge are synced copies of the repository's `30_design/` and `20_knowledge/`. Edit those sources, not the copies.
@@ -80,8 +80,8 @@ This is a pre-release (`v0.1.0-rc1`). What has and has not been tested:
 | Evaluation suite and clean install | Verified | CI on Ubuntu, Windows and macOS (Python 3.12) |
 | PowerPoint 16 on Windows 11 | Verified | Six decks opened, edited, saved, reopened and exported; 37 of 37 native charts intact |
 | Agent runs | Partly | Three decks built end to end from a real survey report (two on Antigravity, one on ZCode); rubric scores of 9, 11 and 15 out of 20. See [`50_evals/README.md`](../50_evals/README.md). |
-| `claude plugin install` on a clean profile | Not yet tested | The Claude Code commands in the install section have not been run on a clean profile. |
-| Codex skill discovery | Not yet confirmed | Codex has not yet been confirmed to discover the skills. |
+| `claude plugin install` on a clean profile | Partly | Windows 11, Claude Code 2.1.280, fresh profile (2026-11-25): `marketplace add trongtrd/data-story-slide-deck` stops with `EPERM` while renaming its cache folder (four tries; another repository adds fine). Adding a local clone instead, then `install`, works: plugin 0.1.0 enabled with all seven skills. macOS and Linux not yet tried. |
+| Codex skill discovery | Verified | Windows 11, Codex CLI 0.162.1, fresh `CODEX_HOME` (2026-11-25): `codex plugin marketplace add trongtrd/data-story-slide-deck` and `codex plugin add data-story-slide-deck@data-story-slide-deck` install plugin 0.1.0, and all seven skills appear in the prompt Codex shows the model. |
 | PowerPoint on macOS, including QA rendering through it | Not yet tested | The automation that exports QA images from PowerPoint on a Mac is untested. |
 | Projection on a real projector | Not yet tested | No deck has been shown on a real projector. |
 | Excel's chart-data window | Not yet tested | Editing chart data in Excel's own window has not been tested. |

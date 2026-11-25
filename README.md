@@ -11,9 +11,9 @@
 Seven agent skills with installers for Claude Code, Codex, Antigravity and ZCode. They follow the *storytelling with data* (SWD) approach and stop at four checkpoints where you approve the work. The output is a PowerPoint file with **native, editable charts**, plus an HTML version. Every number on a chart is checked against your input files.
 
 > [!NOTE]
-> **Pre-release (`v0.1.0-rc1`).** Not yet tested: the Claude Code install on a clean profile, Codex skill discovery, PowerPoint on macOS, projection on a real projector, and Excel's chart-data window. What has been tested is listed in [Status and limitations](./40_plugin/README.md#status-and-limitations).
+> **Pre-release (`v0.1.0-rc1`).** On Windows, adding the Claude Code marketplace straight from GitHub currently fails (use a local clone, below). Not yet tested: the Claude Code install on macOS and Linux, PowerPoint on macOS, projection on a real projector, and Excel's chart-data window. What has been tested is listed in [Status and limitations](./40_plugin/README.md#status-and-limitations).
 
-[Quickstart](#quickstart) · [Gallery](#gallery) · [How it works](#how-it-works) · [Is this for you?](#is-this-for-you) · [Evaluation](#evaluation)
+[Quickstart](#quickstart) · [Why this exists](#why-this-exists) · [Gallery](#gallery) · [How it works](#how-it-works) · [Is this for you?](#is-this-for-you) · [FAQ](#faq) · [Tiếng Việt](./README.vi.md)
 
 ---
 
@@ -21,41 +21,50 @@ Seven agent skills with installers for Claude Code, Codex, Antigravity and ZCode
 
 You need Python 3.10 or later. Microsoft PowerPoint or LibreOffice is optional; it turns the `.pptx` into QA images. Full details and options are in [`40_plugin/README.md`](./40_plugin/README.md).
 
-**Claude Code** (the install path has not yet been tested on a clean profile; see the note above)
-
-```bash
-claude plugin marketplace add trongtrd/data-story-slide-deck
-claude plugin install data-story-slide-deck@data-story-slide-deck
-```
-
-On first use, the skills tell you if the Python environment is missing and how to create it.
-
-**Codex, Antigravity, ZCode** (from a clone of this repository)
+### Try it without an agent (about a minute)
 
 ```bash
 git clone https://github.com/trongtrd/data-story-slide-deck.git
 cd data-story-slide-deck
-python 40_plugin/install.py                      # Codex and Antigravity, user scope
-python 40_plugin/install.py --target zcode       # ZCode
+python 40_plugin/install.py --deps-only                  # private Python environment in ~/.data-story-slide-deck
+python 40_plugin/scripts/deckctl.py smoke --keep ./demo  # builds the bundled two-slide example
 ```
 
-The installer creates a private environment in `~/.data-story-slide-deck`, copies the skills where each agent looks for them, and runs a smoke build. `--uninstall` removes only what it created.
+You get `demo/output/presentation.pptx` (open it and click a chart: the data is editable) and an HTML version. With PowerPoint or LibreOffice installed, `demo/renders/` also holds QA images of the real `.pptx`. The example is synthetic and skips the approval checkpoints; your own decks go through them.
 
-**Then** put your report and data in one folder and ask your agent:
+### Use it with your agent
 
-```text
-Use the deck-orchestrator skill on the folder ./my-report. My report and data are in it.
-```
+| Agent | Install |
+|---|---|
+| **Claude Code** | `claude plugin marketplace add trongtrd/data-story-slide-deck`, then `claude plugin install data-story-slide-deck@data-story-slide-deck`. On Windows the first command currently stops with `EPERM`; from a clone, run `claude plugin marketplace add ./data-story-slide-deck` instead. |
+| **Codex** | `codex plugin marketplace add trongtrd/data-story-slide-deck`, then `codex plugin add data-story-slide-deck@data-story-slide-deck`; or `python 40_plugin/install.py` from a clone. |
+| **Antigravity** | `python 40_plugin/install.py` from a clone. |
+| **ZCode** | `python 40_plugin/install.py --target zcode` from a clone. |
+
+The installer creates a private environment in `~/.data-story-slide-deck`, copies the skills where each agent looks for them, and runs a smoke build; `--uninstall` removes only what it created. With the plugin routes, the skills tell you on first use if the Python environment is missing and how to create it.
+
+Then put your report and data in one folder and ask in plain language:
+
+> Use the deck-orchestrator skill on ./q3-staffing. The staffing report and the headcount spreadsheet are in it. The deck is for the operations committee, which must approve a hiring budget.
+
+> Dùng skill deck-orchestrator cho thư mục ./khao-sat-hop-tac-xa. Báo cáo khảo sát và file số liệu nằm trong đó. Bộ slide trình ban giám đốc để quyết định có mở rộng chương trình hay không.
 
 ---
 
-## What you get
+## Why this exists
 
-- **A `.pptx` deck** whose charts are native PowerPoint charts: you can restyle them and edit their data.
-- **An `.html` version** of the same deck. It is secondary: PPTX is the main output.
-- **Approval records.** `context_brief.md` (G1) and `storyline.md` with its visual plan (G2, G3) are stamped with your approval; `slide_spec.yaml` is the build spec the deck is compiled from, and G4 adds a review report.
-- **Checked numbers.** Each plotted value points to a cell or a line in your inputs, and the validator compares them before anything is built.
-- **QA images** of the finished slides, rendered from the real `.pptx`, so you and the reviewer skill look at the same thing.
+Ask an agent for a deck and you usually get bullet text on a template, a picture of a chart you cannot edit, or numbers that drift away from the source. This suite takes a different route.
+
+| | |
+|---|---|
+| **Charts you can still edit** | Native PowerPoint charts with their data inside: restyle them, change a value and the bars move. In PowerPoint 16 on Windows, 37 of 37 charts survived open, edit, save and reopen. |
+| **Numbers that trace to your files** | Every plotted value points to a cell or a line in your inputs, and the validator compares them before anything is built. |
+| **You approve before slides exist** | Four checkpoints: context, storyline, visual plan, then build and review. A later stage refuses to run on an unapproved or changed earlier file. |
+| **A story, not a data dump** | The *storytelling with data* approach: one takeaway title per slide, titles that read as the story on their own, grey context with one focal colour. |
+| **Checks that are code, not opinion** | `validate` and `qa` print their verdict. With PowerPoint on Windows, every text frame is measured for clipped and overlapping text. |
+| **What the checks do not catch** | Whether the story is right for your audience, labels inside charts, images, and anything on PowerPoint for Mac. You review the deck at G4. |
+
+You get `output/presentation.pptx`, an HTML version, the approval records (`context_brief.md`, `storyline.md`, `slide_spec.yaml`, `review_report_g4.md`) and QA images rendered from the real `.pptx`.
 
 ---
 
@@ -130,6 +139,40 @@ Six benchmark decks, in English and Vietnamese, are scored on a 100-point rubric
 
 ---
 
+## FAQ
+
+<details>
+<summary><b>Does the deck open in Keynote or Google Slides?</b></summary>
+
+The charts are standard PowerPoint charts. Tests so far use PowerPoint 16 on Windows and LibreOffice; Keynote and Google Slides are not tested.
+</details>
+
+<details>
+<summary><b>Do I need an API key or an internet connection?</b></summary>
+
+No. The skills run inside the agent you already use, and the Python scripts run locally.
+</details>
+
+<details>
+<summary><b>Can I use my brand colours and fonts?</b></summary>
+
+Brand colours, yes: say so at G1 and the agent maps one of them to the focal colour and checks its contrast. A brand font works if it is installed on every computer that opens the deck. A brand `.potx` template is not supported.
+</details>
+
+<details>
+<summary><b>Why does the agent ask me so many questions?</b></summary>
+
+It never invents who the audience is or what they must decide. It asks at most four questions per round, each with a recommended answer, so you can accept the recommendations and move on.
+</details>
+
+<details>
+<summary><b>Can I skip a checkpoint?</b></summary>
+
+No. A later stage refuses to run until the earlier file is approved, and the deck is finished only when you accept it at G4.
+</details>
+
+---
+
 ## Repository structure
 
 ```text
@@ -137,7 +180,7 @@ data-story-slide-deck/
 ├── README.md, AGENTS.md    # for people / for AI agents
 ├── 00_admin/               # status, roadmap, backlog, decisions, conventions
 ├── 10_sources/SOURCES.md   # sources studied (notes stay private)
-├── 20_knowledge/           # 82 knowledge cards the skills apply
+├── 20_knowledge/           # 87 knowledge cards the skills apply
 ├── 30_design/              # workflow and artifact schemas
 ├── 40_plugin/              # the product: skills, scripts, installer
 └── 50_evals/               # benchmarks, rubric, and test scripts

@@ -1056,3 +1056,23 @@ This is an **append-only** log of all project, knowledge-base, and product archi
   5. **Showcase:** re-rendered with PowerPoint: 190 text frames measured, 0 errors; its self-attested flags fall from 24 to 23.
   6. **Skills:** `deck-builder` Step 5 and `deck-reviewer` Step 1 and `G4.10` name the checks; a "how agents cheat a gate" block opens `deck-orchestrator` and `deck-reviewer`. Schema description of the flag updated.
 - **Boundary:** labels inside native charts, images and split Vietnamese compounds stay visual checks; LibreOffice benchmarks keep the flag self-attested. macOS PowerPoint is not measured.
+
+### D-115 — Platform Checks: Public CI, Claude Code Clean Profile, Codex Discovery (2026-11-25)
+- **Status:** Accepted
+- **Context & Trade-off:** The owner authorized publishing `D-109` to `D-114` and asked for the platform checks toward `v0.1.0`. Public commit `85b6527` was pushed (409 files, audit 0 findings, noreply author); CI run 45564574443 passed on Ubuntu, Windows and macOS, including the plugin-manifest job. The showcase PNGs re-rendered for `D-114` were compared with the previous set: about 0.25 % of pixels differ, visually identical (anti-aliasing).
+- **Decision:** record the results in `40_plugin/README.md` ("Status and limitations") and the root pre-release note together (`D-102`):
+  1. **Claude Code, clean profile (Windows 11, Claude Code 2.1.280, throwaway `CLAUDE_CONFIG_DIR`):** `claude plugin marketplace add trongtrd/data-story-slide-deck` fails with `EPERM` while renaming the marketplace cache folder, four times in fresh profiles; a control repository (`likaku/Mck-ppt-design-skill`) adds fine, and a manual clone-and-rename of our repository succeeds at once, so the lock is held inside Claude Code's add step. Adding a local clone (`claude plugin marketplace add ./data-story-slide-deck`) and then `install` works: plugin 0.1.0 enabled, seven skills. The root Quickstart now gives this workaround. Status: Partly.
+  2. **Codex (Windows 11, Codex CLI 0.162.1, throwaway `CODEX_HOME`):** marketplace add from GitHub, `codex plugin add`, plugin 0.1.0 enabled, and all seven skills in the model-visible prompt (`codex debug prompt-input`). Status: Verified.
+  3. **Still open:** Claude Code install on macOS and Linux, PowerPoint on macOS, a real projector, Excel's chart-data window (owner hardware or hands).
+- **Boundary:** the README changes need their own push authorization. The `EPERM` cause inside Claude Code is not diagnosed; a report to the Claude Code project is a backlog option.
+
+### D-116 — README Lessons From SRC-SEC-029: Try Without an Agent, Why Table, Vietnamese README (2026-11-25)
+- **Status:** Accepted
+- **Context & Trade-off:** The owner asked what the README of `likaku/Mck-ppt-design-skill` does well. It opens with a value line and visual proof, lets a visitor get a real file in about a minute without an agent, frames each feature as the visitor's problem and its checkable answer (including what the gate does not catch), gives concrete prompts in two languages, keeps reference material in collapsed blocks, and has a native-language README. Its own maintainer notes also show the cost of inconsistent counts; ours says 82 knowledge cards in two READMEs while 87 are accepted. The owner accepted all recommendations in one round.
+- **Decision:**
+  1. **Root README:** a "Try it without an agent" block (`deckctl.py smoke --keep`), a "Why this exists" table replacing "What you get", an agent-to-install table, two concrete sample prompts (English and Vietnamese), and an FAQ in a `<details>` block. The pre-release note stays open (`D-102`).
+  2. **`README.vi.md`:** a short Vietnamese README (value line, try-it, install, the four gates, a Vietnamese prompt) that links to the English README for everything else. This is an owner-approved exception to the English-only rule for repository files (`D-006`); the English README stays the reference.
+  3. **Counts:** fix the card count in both READMEs; a count shown to visitors is checked whenever it changes.
+  4. **Demo GIF:** after `v0.1.0`, from a screen recording of a real agent session; no recreated terminal.
+  5. **Social preview:** an image made from a real showcase slide, kept outside the repository; the owner uploads it in the repository settings.
+- **Boundary:** no stars badge, star history or launch plan in the README; no new top-level folder. Pushing the README changes needs the owner's authorization.
