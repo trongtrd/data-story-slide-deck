@@ -1,6 +1,6 @@
 # Data Story Slide Deck Evaluation Report
 
-> **Generated At:** `2026-11-13T15:13:05Z`
+> **Generated At:** `2026-11-25T06:46:05Z`
 > **Rubric:** [`50_evals/rubrics/swd_deck_audit_rubric.md`](../rubrics/swd_deck_audit_rubric.md)
 > **Overall Suite Status:** **`PASS`** — 6/6 benchmark runs pass
 > **Mean Benchmark Score:** `100.0 / 100.0`
@@ -11,10 +11,11 @@ Only machine-verified checks score. Self-attested flags (booleans the authoring 
 
 ## 1. Detector Sensitivity (Negative Tests)
 
-Defects injected into copies of `bench_en_software_1plus4` (control run passes: `True`): **75/75 caught**.
+Defects injected into copies of `bench_en_software_1plus4` (control run passes: `True`): **76/76 caught**.
 
 | Injected defect | Caught | Expected issue text | Score after injection |
 |---|:-:|---|:-:|
+| `clipped_text_measured_by_powerpoint` | yes | `[G4.10 / D-113]` | `97.5` |
 | `value_changed_without_source` | yes | `does not match source` | `86.5` |
 | `missing_source_file` | yes | `not found` | `86.5` |
 | `label_disagrees_with_value` | yes | `formatted_label` | `86.5` |
@@ -96,16 +97,16 @@ Defects injected into copies of `bench_en_software_1plus4` (control run passes: 
 ## 2. Skill Suite Static Lint
 
 - Static lint only. No skill was executed on Antigravity, Claude Code, or Codex by this suite.
-- Accepted Knowledge Cards bound across the suite: `82 / 82`
+- Accepted Knowledge Cards bound across the suite: `87 / 87`
 
 | Skill | Lint | Bound cards | Errors |
 |---|:-:|:-:|---|
-| `deck-orchestrator` | PASS | `11` | None |
-| `deck-context-griller` | PASS | `19` | None |
+| `deck-orchestrator` | PASS | `12` | None |
+| `deck-context-griller` | PASS | `20` | None |
 | `deck-storyline-builder` | PASS | `23` | None |
-| `deck-visual-planner` | PASS | `40` | None |
-| `deck-builder` | PASS | `43` | None |
-| `deck-reviewer` | PASS | `43` | None |
+| `deck-visual-planner` | PASS | `43` | None |
+| `deck-builder` | PASS | `45` | None |
+| `deck-reviewer` | PASS | `47` | None |
 | `deck-finisher` | PASS | `5` | None |
 
 ---
@@ -119,7 +120,7 @@ Defects injected into copies of `bench_en_software_1plus4` (control run passes: 
 | `bench_en_software_1plus4` | `en` | 4 | 9 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 675 | 24 | PASS |
 | `bench_vi_bep_giao_do_an` | `vi` | 5 | 5 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 465 | 24 | PASS |
 | `bench_vi_briefing_no_ask` | `vi` | 5 | 4 | `pptx_libreoffice` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 364 | 24 | PASS |
-| `showcase_en_coffee_editorial` | `en` | 4 | 9 | `pptx_powerpoint` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 1406 | 24 | PASS |
+| `showcase_en_coffee_editorial` | `en` | 4 | 9 | `pptx_powerpoint` | 15.0 | 20.0 | 25.0 | 25.0 | 15.0 | **100.0** | 1596 | 23 | PASS |
 
 ---
 
@@ -147,5 +148,5 @@ Defects injected into copies of `bench_en_software_1plus4` (control run passes: 
 
 ### `showcase_en_coffee_editorial` — 100.0 / 100 (PASS)
 - **Issues:** none.
-- **Self-attested (not machine-verified):** `context_brief: brand_profile.palette.colorblind_safe_verified`, `context_brief: g1_gate_audit.G1_1_explanatory_mode`, `context_brief: g1_gate_audit.G1_2_stakeholder_decomposition`, `context_brief: g1_gate_audit.G1_3_unbundled_primary_action`, `context_brief: g1_gate_audit.G1_4_dual_sided_stakes`, `context_brief: g1_gate_audit.G1_5_single_sentence_big_idea`, `context_brief: g1_gate_audit.G1_6_delivery_and_language_meta`, `context_brief: strategic_stakes.zero_generic_buzzwords_verified`, `slide_spec: slides[].claim_evidence_contract.numeric_source_traceability_verified`, `slide_spec: slides[].claim_evidence_contract.rendered_png_qa.compound_word_linebreak_safe`, `slide_spec: slides[].claim_evidence_contract.rendered_png_qa.zero_text_overlap_or_clipping`, `slide_spec: slides[].claim_evidence_contract.strict_claim_match_verified`, `slide_spec: slides[].layout_spec.grid_alignment_verified`, `slide_spec: slides[].progressive_reveal.standalone_self_sufficient_verified`, `slide_spec: slides[].word_jobs.no_triple_headline_repetition_verified`, `slide_spec: slides[].word_jobs.takeaway_title.active_verb_verified`, `slide_spec: slides[].word_jobs.takeaway_title.sentence_case_verified`, `storyline: g2_gate_audit.G2_1_analyst_process_pruning`, `storyline: g2_gate_audit.G2_2_complete_narrative_arc`, `storyline: g2_gate_audit.G2_3_evidence_before_indictment`, `storyline: g2_gate_audit.G2_4_horizontal_logic_verified`, `storyline: g2_gate_audit.G2_5_actionable_insight_over_narration`, `storyline: g2_gate_audit.G2_6_two_pass_compression_and_lang`, `storyline: narrative_architecture.evidence_before_indictment_verified`
+- **Self-attested (not machine-verified):** `context_brief: brand_profile.palette.colorblind_safe_verified`, `context_brief: g1_gate_audit.G1_1_explanatory_mode`, `context_brief: g1_gate_audit.G1_2_stakeholder_decomposition`, `context_brief: g1_gate_audit.G1_3_unbundled_primary_action`, `context_brief: g1_gate_audit.G1_4_dual_sided_stakes`, `context_brief: g1_gate_audit.G1_5_single_sentence_big_idea`, `context_brief: g1_gate_audit.G1_6_delivery_and_language_meta`, `context_brief: strategic_stakes.zero_generic_buzzwords_verified`, `slide_spec: slides[].claim_evidence_contract.numeric_source_traceability_verified`, `slide_spec: slides[].claim_evidence_contract.rendered_png_qa.compound_word_linebreak_safe`, `slide_spec: slides[].claim_evidence_contract.strict_claim_match_verified`, `slide_spec: slides[].layout_spec.grid_alignment_verified`, `slide_spec: slides[].progressive_reveal.standalone_self_sufficient_verified`, `slide_spec: slides[].word_jobs.no_triple_headline_repetition_verified`, `slide_spec: slides[].word_jobs.takeaway_title.active_verb_verified`, `slide_spec: slides[].word_jobs.takeaway_title.sentence_case_verified`, `storyline: g2_gate_audit.G2_1_analyst_process_pruning`, `storyline: g2_gate_audit.G2_2_complete_narrative_arc`, `storyline: g2_gate_audit.G2_3_evidence_before_indictment`, `storyline: g2_gate_audit.G2_4_horizontal_logic_verified`, `storyline: g2_gate_audit.G2_5_actionable_insight_over_narration`, `storyline: g2_gate_audit.G2_6_two_pass_compression_and_lang`, `storyline: narrative_architecture.evidence_before_indictment_verified`
 

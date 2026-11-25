@@ -4,9 +4,9 @@ title: Assign Every Text Element to One of the Seven Functional Word Jobs
 type: principle
 stage: TTL
 origin: swd-core
-sources: [SRC-SWD-000, SRC-SWD-010]
+sources: [SRC-SWD-000, SRC-SWD-010, SRC-SEC-028]
 status: accepted
-revised: "2026-10-31 (D-058, D-059 card purpose; reading guidance in speaker notes)"
+revised: "2026-11-25 (D-111: chart title names the comparison)"
 ---
 
 # `PRIN-TTL-003` — Assign Every Text Element to One of the Seven Functional Word Jobs
@@ -20,7 +20,7 @@ Numbers do not speak for themselves. When presenters either strip all text for v
 ## 3. Agent Application
 - When generating `slide_spec.yaml` (`deck-builder`) and auditing slides (`deck-reviewer`), classify every text element into one of the 7 canonical jobs:
   1. `takeaway_title`: States the slide's primary conclusion or recommended action.
-  2. `chart_title`: Identifies the plotted metric, dimension, and timeframe.
+  2. `chart_title`: Identifies the plotted metric, dimension, and timeframe. When the comparison is not obvious, the chart title also names what the data are compared against (plan, last year, the network median); why that comparison was chosen goes in the speaker notes (`SRC-SEC-028`, `D-111`).
   3. `axis_title`: Labels horizontal and vertical scales and units explicitly (even if seemingly obvious).
   4. `direct_label`: Labels data series or bar values directly in place instead of using a detached legend.
   5. `annotation`: Explains *why* an anomaly/spike occurred or highlights a critical threshold right on the canvas.

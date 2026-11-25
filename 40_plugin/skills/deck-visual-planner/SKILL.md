@@ -60,6 +60,8 @@ For each slide in the approved storyboard pick 2–3 options:
 1. For each option state what it **Shows** (makes easy to see) and **Obscures** (hides or complicates). For a delta-only chart, warn when hiding the baselines weakens the argument (4.9 → 4.0 vs 4.0 → 3.1).
 2. When consecutive slides analyse the same cohort structure, reuse the same layout and panel order so the audience learns it once.
 3. **Scale (`PAT-DSN-003`):** for small multiples and `1_plus_4_grid` check the data range in `inputs/*`: comparable magnitudes → `shared_y_axis: true`; largest > 4× smallest → `shared_y_axis: false` with `non_uniform_axis_label_mode: min_max_only` and `require_direct_endpoint_labels: true`.
+4. **Expected signal (`PAT-VIS-014`):** for the selected option of every data slide, write one sentence in the Selected Option cell saying what a viewer will see if the title is true (the focal mark, where it sits against the context or a reference, the size of the gap the title states). Prefer the option that shows it at a glance; the reviewer checks the render against this sentence, so never write it after the build.
+5. **Grouping and panel order (`PAT-VIS-015`, `PAT-DSN-008`):** for clustered bars and multi-panel options, name the compared variable (neighbours in each cluster or panel row) and the grouping variable. List panels in reading order with a role each (premise, breakdown or cause, consequence); small multiples follow the order the title ranks or the category's own order, never source-column or unexplained alphabetical order.
 
 Before G3, compare Sections 1–4 with the G2-approved version: narrative or title changes need G2 re-approval. The G3 stamp covers the whole current storyline, so show any changes before asking.
 

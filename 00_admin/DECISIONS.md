@@ -999,3 +999,60 @@ This is an **append-only** log of all project, knowledge-base, and product archi
   5. **Build:** schema `quotes` (`QuoteItem`) and the brief's optional `quote_speaker_names`; `quote_evidence_checks` in `validate_spec.py` (a label passes when any of its numbers matches `count_ref`); PowerPoint, HTML and Pillow renderers put the speaker right under each quote; tests `QuoteEvidence`; `PAT-DSN-001`, `deck-visual-planner`, `deck-builder`.
   6. **Benchmark:** showcase appendix slide 17 from two fictional inputs made for the benchmark (`inputs/withdrawal_reasons.csv`, `inputs/withdrawal_comments.csv`); content digest updated.
 - **Boundary:** suite 100/100 ×6, lint 82/82, negative 75/75, regression 221/221, sync 0 drift, audit 0 findings. This closes `D-105`.
+
+### D-109 — Accept PRIN-AI-004; Live README Check; Three Untracked Files (2026-11-25)
+- **Status:** Accepted
+- **Context & Trade-off:** The live README was checked on GitHub in light mode, dark mode and an emulated phone width (the README column forced to 358 px, since the browser window could not be resized). Images, badges, anchors and relative links all resolve; Mermaid follows the colour mode. On a phone the diagram shrinks to about 5 px text and GitHub's zoom and pan controls cover the G4 and Deck nodes; the gate table below it carries the same content. The owner then answered one round of four questions with the recommended answers.
+- **Decision:**
+  1. **`PRIN-AI-004` accepted** (83 accepted cards) and bound to `deck-context-griller`: Step 1 lists every quantity that two inputs give with different values, with both sources, periods and a likely cause; Step 2 asks which value the deck shows, with a recommendation; the grilling log records both values and the owner's choice.
+  2. **README unchanged:** the Mermaid diagram stays horizontal; the gate table is its text fallback on a phone.
+  3. **Untracked files:** `20_knowledge/A jittered strip plot or 1D scatter.md` deleted (its content became `PAT-VIS-013`, `D-085`, `D-086`); the two vendor checklist PDFs (`D-077`) moved out of the repository to the parent `05_TEMP` folder.
+- **Boundary:** no schema or validator change; the check that the slide shows the chosen value stays with the reviewer's `G4.9` trace. Publishing this to the public repository needs the owner's authorization.
+
+### D-110 — Figure-and-Text Pairing: SRC-SEC-028 and Four Proposed Cards (2026-11-25)
+- **Status:** Accepted
+- **Context & Trade-off:** The owner asked what Sophie Wang's post on writing a research paper teaches about pairing figures and text, and which ideas are new for the suite. Compared with the 83 accepted cards, most of its advice is covered (one idea per plot, constant colours, emphasis budget, colour scales, executive summary, native charts). Four ideas are new, and one differs from SWD: the post gives prose the job of explaining why, while on a slide the takeaway title must state the finding (`CONF-020`). The owner accepted the four recommendations in one round.
+- **Decision:**
+  1. **Source:** register `SRC-SEC-028` (secondary, no licence notice, ideas only); the note stays private.
+  2. **Proposed cards:** `PAT-VIS-014` (write the expected visual signal at G3, check the render against it at G4), `PAT-DSN-007` (cover the title: the emphasis alone must point at the evidence), `PAT-VIS-015` (put the compared items next to each other), `PAT-DSN-008` (order panels in the order of the argument).
+  3. **`PRIN-TTL-003`:** a proposed addition to the `chart_title` job, applied only after the owner approves the wording: "When the comparison is not obvious, the chart title also names what the data are compared against (plan, last year, the network median); why that comparison was chosen goes in the speaker notes."
+  4. **Build order:** cards first; an `expected_signal` field in the G3 plan, a G4 check and a validator warning for clustered series that do not match the title's comparison are decided only after the cards are accepted.
+- **Boundary:** the cards stay `proposed` and unbound in `40_plugin/skills/` until the owner accepts them in a batch review.
+
+### D-111 — Accept the Four Figure-and-Text Cards and the PRIN-TTL-003 Wording (2026-11-25)
+- **Status:** Accepted
+- **Context & Trade-off:** The owner reviewed the four `proposed` cards of `D-110` and the proposed `chart_title` wording, and replied "Accept cả bốn" to a question that offered accepting the four cards together with the wording.
+- **Decision:**
+  1. **Accepted:** `PAT-VIS-014`, `PAT-DSN-007`, `PAT-VIS-015`, `PAT-DSN-008` (87 accepted cards).
+  2. **`PRIN-TTL-003` revised:** when the comparison is not obvious, the chart title names what the data are compared against; why that comparison was chosen goes in the speaker notes.
+  3. **Bindings:** `deck-visual-planner` writes an expected signal for each data slide, names the compared and grouping variables of clustered and multi-panel options, and lists panels in reading order with a role; `deck-reviewer` checks the render against the expected signal and the emphasis with the text covered (`G4.8`, `G4.6`) and the panel order; `deck-builder` keeps the G3 grouping and panel order.
+  4. **Glossary:** `Expected Signal`, `Cover-the-Title Test`.
+- **Boundary:** skill text only. An `expected_signal` field in `storyline.md` with a presence check, and a validator warning for clustered series that do not match the title's comparison, are backlog items that need their own ruling.
+
+### D-112 — SRC-SEC-029 Registered; Machine Geometry Checks Proposed (2026-11-25)
+- **Status:** Accepted
+- **Context & Trade-off:** The owner asked whether `likaku/Mck-ppt-design-skill` helps the suite and chose to pursue machine geometry checks. Most of the repository is covered or conflicts with settled choices; its central lesson, that an agent must not certify its own gate, points at the self-attested `rendered_png_qa.zero_text_overlap_or_clipping` flag. Two measuring methods were tried on the benchmark decks: a width estimate from the `.pptx` gave 53 findings on approved decks, all false; text bounds read from PowerPoint gave none and caught 3/3 defects planted in a broken copy.
+- **Decision:** Register `SRC-SEC-029` (secondary, Apache-2.0, ideas only, note private). Write the proposal `50_evals/reports/2026-11-25_p7-machine-geometry-checks-proposal.md`: checks TB1-TB5 from PowerPoint text bounds, the flag derived by the validator on PowerPoint renders, no estimator fallback, and a short block in two skills naming how agents cheat a gate.
+- **Boundary:** nothing is built until the owner rules on the proposal; then the usual order (renderer export, checks, tests, re-render, suite, skill text).
+
+### D-113 — Machine Geometry Checks: Rulings (2026-11-25)
+- **Status:** Accepted
+- **Context & Trade-off:** The owner ruled on the four questions of the `D-112` proposal, each with the recommended answer.
+- **Decision:**
+  1. **Measure with PowerPoint only:** TB1-TB5 (clipped text, text over text, off slide, wider than the box, title lines) from text bounds read in the Windows PowerPoint render step; no estimator fallback. With LibreOffice or no renderer the flag stays self-attested and the report says so.
+  2. **Derived flag:** on PowerPoint renders the validator sets `rendered_png_qa.zero_text_overlap_or_clipping` from TB1-TB3 when the bounds file matches the current `.pptx`; the agent does not set it, and the eval suite counts it as machine-checked.
+  3. **Vietnamese line breaks:** the same pass lists every line break of a `vi` deck as "last syllable | first syllable" for the reviewer; `compound_word_linebreak_safe` stays self-attested.
+  4. **Gate-cheating block:** a short list at the top of `deck-orchestrator` and `deck-reviewer` of the ways an agent passes a gate without earning it.
+- **Boundary:** the benchmarks other than the Editorial showcase are rendered with LibreOffice so CI compares like with like, so only the showcase run exercises the derived flag in the suite; regression tests cover TB1-TB5 with broken copies. Build order as in the proposal §6.
+
+### D-114 — Build of D-113: Text Geometry Measured by PowerPoint (2026-11-25)
+- **Status:** Accepted
+- **Context & Trade-off:** Build of the `D-113` rulings in the order of the proposal §6. One point is implemented differently from the wording of `D-113` item 2: the validator does not write the flag into `slide_spec.yaml` (that would change the spec and its digest after the build); it compares the flag with PowerPoint's measurement instead, fails any slide with measured clipping or overlap whatever the flag says, and counts the flag as machine-checked. The effect the owner chose holds: the flag can no longer claim what the measurement denies.
+- **Decision:**
+  1. **Renderer:** the Windows PowerPoint step of `render_qa_pngs.py` also reads, for every text frame, the ink box after wrapping and the text of each line, and writes `renders/text_bounds.json` (slide numbers as in the spec, values rounded to 0.1 pt, the hash of the measured `.pptx`), hashed in `render_manifest.json`. A render by any other means removes a stale bounds file.
+  2. **Checks:** `text_bounds_qa.py` (TB1 clipped, TB2 text over text, TB3 off slide, TB4 wider than the frame as a warning, TB5 title lines; the `vi` line-break list), run by `deckctl.py qa` after the render.
+  3. **Validator:** at `agent_review_complete`, trusted bounds (PowerPoint source, matching `.pptx` and manifest hashes) fail every slide with a TB1-TB3 error (`[G4.10 / D-113]`) and drop `rendered_png_qa.zero_text_overlap_or_clipping` from the self-attested list.
+  4. **Tests:** 13 regression tests (`TextBounds`, one of them a real PowerPoint measurement of a narrowed title, skipped without PowerPoint); negative test `clipped_text_measured_by_powerpoint` (76 in the battery).
+  5. **Showcase:** re-rendered with PowerPoint: 190 text frames measured, 0 errors; its self-attested flags fall from 24 to 23.
+  6. **Skills:** `deck-builder` Step 5 and `deck-reviewer` Step 1 and `G4.10` name the checks; a "how agents cheat a gate" block opens `deck-orchestrator` and `deck-reviewer`. Schema description of the flag updated.
+- **Boundary:** labels inside native charts, images and split Vietnamese compounds stay visual checks; LibreOffice benchmarks keep the flag self-attested. macOS PowerPoint is not measured.

@@ -9,6 +9,8 @@ description: Entry point and workflow controller for Data Story Slide Deck, whic
 
 Keep the human in charge (`PRIN-AI-001`): never fabricate conviction for the presenter; challenge weak assumptions with Frontier Questions before advancing (`PRIN-AI-002`); ground every fact in `inputs/*` and separate facts from inferences (`PRIN-AI-003`). **Hard blocks:** no one-shot generation from raw files past G1–G4 (`ANTI-AI-001`); no scope inflation — each stage narrows toward the one action or conclusion and the Big Idea (`ANTI-AI-002`). Give each stage only the cards it needs (`PAT-AI-001`); cards live in `${CLAUDE_PLUGIN_ROOT}/knowledge/`. Reference walkthrough: `EX-001` (*Nurse Staffing*, G1 → G4).
 
+> **How agents cheat a gate (never do this, `D-113`):** saying a gate passed without the `validate` or `qa` output that shows it; checking "in your head" instead of running the command; calling an error acceptable or an engine quirk instead of fixing it or telling the owner; setting a `*_verified` or `rendered_png_qa` flag before looking at every render; editing an expected signal or a title to fit the render (`PAT-VIS-014`). Only command output and the owner's words move a gate.
+
 Stages (`D-015`): `deck-context-griller` (G1, stop) → `deck-storyline-builder` (G2, stop) → `deck-visual-planner` (G3, table approval) → `deck-builder` (build) → `deck-reviewer` (G4 agent review) → `deck-finisher` (finish pass) → owner's G4 (stop).
 
 ## Workspace

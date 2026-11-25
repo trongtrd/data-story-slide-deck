@@ -13,13 +13,13 @@ Central directory of all synthesized knowledge cards in `20_knowledge/`.
 | `CTX` | Context, Audience, Stakes, Big Idea | 0 | 8 |
 | `STR` | Storyboarding, Narrative Arc, Tension, Horizontal Logic | 0 | 9 |
 | `TTL` | Words, Takeaway Titles, Descriptive Titles, Annotations | 0 | 8 |
-| `VIS` | Visual & Chart Selection, Trade-offs, One-View-Per-Point | 0 | 25 |
-| `DSN` | Slide Layout, Vertical Logic, Decluttering, Alignment, Color & Focus | 0 | 19 |
-| `AI`  | Human–AI Collaboration, Grilling, Guardrails | 0 | 6 |
+| `VIS` | Visual & Chart Selection, Trade-offs, One-View-Per-Point | 0 | 27 |
+| `DSN` | Slide Layout, Vertical Logic, Decluttering, Alignment, Color & Focus | 0 | 21 |
+| `AI`  | Human–AI Collaboration, Grilling, Guardrails | 0 | 7 |
 | `REV` | Adversarial Review Checklists & Worked Examples | 0 | 3 |
 | `PRS` | Delivery Mode (Live vs. Standalone), Progressive Reveal | 0 | 2 |
 | `LANG`| Language-Specific Rules (`LANG-EN`, `LANG-VI`, …) | 0 | 2 |
-| **Total** | | **0** | **82** |
+| **Total** | | **0** | **87** |
 
 ---
 
@@ -60,7 +60,7 @@ Central directory of all synthesized knowledge cards in `20_knowledge/`.
 |---|---|---|---|---|
 | [`PRIN-TTL-001`](./principles/PRIN-TTL-001_articulate-so-what-before-designing.md) | `principle` | Articulate the Single Highest-Priority Takeaway Before Designing the Visual | `SRC-SWD-000`, `SRC-SWD-010` | `accepted` |
 | [`PRIN-TTL-002`](./principles/PRIN-TTL-002_dual-title-hierarchy.md) | `principle` | Pair a Point-of-View Takeaway Title With a Neutral Descriptive Chart Title | `SRC-SWD-000`, `SRC-SWD-010` | `accepted` |
-| [`PRIN-TTL-003`](./principles/PRIN-TTL-003_seven-functional-word-jobs.md) | `principle` | Assign Every Text Element to One of the Seven Functional Word Jobs | `SRC-SWD-000`, `SRC-SWD-010` | `accepted` |
+| [`PRIN-TTL-003`](./principles/PRIN-TTL-003_seven-functional-word-jobs.md) | `principle` | Assign Every Text Element to One of the Seven Functional Word Jobs | `SRC-SWD-000`, `SRC-SWD-010`, `SRC-SEC-028` | `accepted` |
 | [`PAT-TTL-001`](./patterns/PAT-TTL-001_two-pass-takeaway-title-compression.md) | `pattern` | Two-Pass Takeaway Title Compression to Eliminate AI Verbosity | `SRC-SWD-003`, `SRC-SWD-010` | `accepted` |
 | [`ANTI-TTL-001`](./anti-patterns/ANTI-TTL-001_chart-narrating-descriptive-titles.md) | `anti-pattern` | Mistaking Polished Chart Narration for an Actionable Takeaway Title | `SRC-SWD-000`, `SRC-SWD-010` | `accepted` |
 | [`ANTI-TTL-002`](./anti-patterns/ANTI-TTL-002_text-overload-vs-over-minimalism.md) | `anti-pattern` | Swinging Between Repetitive Text Overload and Bare Over-Minimalism | `SRC-SWD-000`, `SRC-SWD-010` | `accepted` |
@@ -92,6 +92,8 @@ Central directory of all synthesized knowledge cards in `20_knowledge/`.
 | [`PAT-VIS-011`](./patterns/PAT-VIS-011_waterfall-charts.md) | `pattern` | Build Waterfall Charts So the Cascade Reads and the Zero Baseline Holds | `SRC-SWD-011`, `SRC-SEC-011` | `accepted` |
 | [`PAT-VIS-012`](./patterns/PAT-VIS-012_mark-the-event-on-the-chart.md) | `pattern` | Mark the Event That Explains the Data Right on the Chart | `SRC-SWD-005`, `SRC-SWD-010`, `SRC-SEC-012` | `accepted` |
 | [`PAT-VIS-013`](./patterns/PAT-VIS-013_strip-plot-for-place-in-a-distribution.md) | `pattern` | Use a Strip Plot to Show Where One Item Sits Among Many | `SRC-SEC-022`, `SRC-SWD-011`, `SRC-SWD-008` | `accepted` |
+| [`PAT-VIS-014`](./patterns/PAT-VIS-014_state-the-expected-signal-before-building.md) | `pattern` | Write Down What the Chart Must Show Before Building It, Then Check the Render Against It | `SRC-SEC-028`, `SRC-SWD-004` | `accepted` |
+| [`PAT-VIS-015`](./patterns/PAT-VIS-015_place-compared-items-side-by-side.md) | `pattern` | Put the Things the Title Compares Next to Each Other | `SRC-SEC-028`, `SRC-SWD-011`, `SRC-SWD-009` | `accepted` |
 | [`ANTI-VIS-001`](./anti-patterns/ANTI-VIS-001_overloaded-combo-and-multidimensional-stacked-bars.md) | `anti-pattern` | Overloaded Combo Charts and Multi-Dimensional Stacked Bars | `SRC-SWD-004`, `SRC-SWD-007`, `SRC-SWD-009`, `SRC-SWD-011`, `SRC-SEC-009` | `accepted` |
 | [`ANTI-VIS-002`](./anti-patterns/ANTI-VIS-002_novelty-bias-and-static-raster-chart-images.md) | `anti-pattern` | Falling for AI Novelty Bias and Inserting Static Raster Chart Images | `SRC-SWD-004`, `SRC-SWD-007`, `SRC-SWD-011` | `accepted` |
 | [`ANTI-VIS-003`](./anti-patterns/ANTI-VIS-003_precise-comparison-by-area-or-angle.md) | `anti-pattern` | Encoding Precise Comparisons by Area or Angle | `SRC-SWD-011`, `SRC-SEC-009` | `accepted` |
@@ -121,6 +123,8 @@ Central directory of all synthesized knowledge cards in `20_knowledge/`.
 | [`PAT-DSN-004`](./patterns/PAT-DSN-004_constant-entity-colours-across-the-deck.md) | `pattern` | Keep Each Entity's Colour Constant Across the Deck | `SRC-SEC-006`, `SRC-SWD-008` | `accepted` |
 | [`PAT-DSN-005`](./patterns/PAT-DSN-005_keep-chart-text-horizontal.md) | `pattern` | Keep Chart Text Horizontal — Shorten, Wrap, or Re-Chart Instead of Rotating Labels | `SRC-SEC-007`, `SRC-SWD-004` | `accepted` |
 | [`PAT-DSN-006`](./patterns/PAT-DSN-006_glued-elbow-connectors.md) | `pattern` | Route Connectors as Glued Right-Angle Elbows, Labelled Clear of the Line | `SRC-SEC-010`, `SRC-SWD-011` | `accepted` |
+| [`PAT-DSN-007`](./patterns/PAT-DSN-007_cover-the-title-test.md) | `pattern` | Cover the Title: the Emphasis Alone Must Point at the Evidence | `SRC-SEC-028`, `SRC-SWD-005` | `accepted` |
+| [`PAT-DSN-008`](./patterns/PAT-DSN-008_order-panels-by-the-argument.md) | `pattern` | Order Panels in the Order of the Argument | `SRC-SEC-028`, `SRC-SWD-006`, `SRC-SWD-003` | `accepted` |
 | [`ANTI-DSN-001`](./anti-patterns/ANTI-DSN-001_rainbow-defaults-and-competing-focal-points.md) | `anti-pattern` | Using Rainbow Software Defaults and Competing Dark Secondary Series | `SRC-SWD-000`, `SRC-SWD-005`, `SRC-SWD-008` | `accepted` |
 | [`ANTI-DSN-002`](./anti-patterns/ANTI-DSN-002_slide-level-decorative-noise.md) | `anti-pattern` | Slide-Level Decorative Noise — Repeated Logos, Filler Imagery, and Boxes With Both Fill and Outline | `SRC-SEC-005`, `SRC-SWD-005` | `accepted` |
 | [`EX-003`](./examples/EX-003_coffee-menu-two-tier-color-and-staffing-paired-views.md) | `example` | Worked Example: Two-Tier Color Intensity (Menu Sales Change) and Delivery-Mode Paired Views (Staffing Shortfall) | `SRC-SWD-008`, `SRC-SWD-009` | `accepted` |
@@ -134,6 +138,7 @@ Central directory of all synthesized knowledge cards in `20_knowledge/`.
 | [`PRIN-AI-001`](./principles/PRIN-AI-001_middle-zone-human-ai-collaboration.md) | `principle` | Operate in the Middle Zones of Human-AI Collaboration and Keep the Human in the Driver's Seat | `SRC-SWD-000`, `SRC-SWD-001`, `SRC-SWD-002` | `accepted` |
 | [`PRIN-AI-002`](./principles/PRIN-AI-002_anti-sycophancy-and-constructive-challenge.md) | `principle` | Challenge Assumptions Constructively and Ask Clarifying Questions Before Critiquing | `SRC-SWD-000`, `SRC-SWD-002` | `accepted` |
 | [`PRIN-AI-003`](./principles/PRIN-AI-003_strict-factual-grounding.md) | `principle` | Maintain Strict Factual Grounding and Separate Facts From Inferences | `SRC-SWD-000`, `SRC-SWD-002` | `accepted` |
+| [`PRIN-AI-004`](./principles/PRIN-AI-004_inputs-that-disagree-keep-both-figures.md) | `principle` | When Two Inputs Disagree, Keep Both Figures and Let the Owner Choose | `SRC-SEC-024` | `accepted` |
 | [`PAT-AI-001`](./patterns/PAT-AI-001_swd-grounded-stage-gated-prompting.md) | `pattern` | Inject Explicit SWD Principles Across a Five-Stage Gated Workflow | `SRC-SWD-000`, `SRC-SWD-001` | `accepted` |
 | [`ANTI-AI-001`](./anti-patterns/ANTI-AI-001_unguided-end-to-end-deck-generation.md) | `anti-pattern` | Unguided End-to-End Deck Generation and Borrowed Conviction | `SRC-SWD-000`, `SRC-SWD-001`, `SRC-SWD-002` | `accepted` |
 | [`ANTI-AI-002`](./anti-patterns/ANTI-AI-002_ai-scope-inflation.md) | `anti-pattern` | Allowing AI Scope Inflation to Expand Topics Instead of Narrowing Focus | `SRC-SWD-000`, `SRC-SWD-002` | `accepted` |

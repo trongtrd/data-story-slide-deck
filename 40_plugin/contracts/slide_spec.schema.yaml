@@ -848,7 +848,7 @@ $defs:
                 description: "Path to rendered slide image (e.g., 'renders/slide_06.png') inspected by deck-reviewer."
               zero_text_overlap_or_clipping:
                 type: boolean
-                description: "Set true only after inspecting the render. May stay false before the first render; must be true once g4_review_audit.status is agent_review_complete (validator)."
+                description: "Set true only after inspecting the render. May stay false before the first render; must be true once g4_review_audit.status is agent_review_complete (validator). D-113: when renders/text_bounds.json measured the current .pptx in PowerPoint, the validator fails any slide with clipped, overlapping or off-slide text whatever this flag says, and the flag is counted as machine-checked."
               compound_word_linebreak_safe:
                 type: boolean
                 description: "G4.10 & LANG-VI Gate: no Vietnamese two-syllable compound word (từ ghép) is split across line breaks. Same lifecycle as zero_text_overlap_or_clipping: false allowed before the first render, required true once the agent review is complete."

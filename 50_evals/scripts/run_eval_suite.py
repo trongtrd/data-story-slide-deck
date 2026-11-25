@@ -1069,7 +1069,31 @@ def _missing_verified_source(run: Path) -> None:
     p.write_text(p.read_text(encoding="utf-8").replace("path: inputs/source_report.md", "path: inputs/missing_report.md", 1), encoding="utf-8")
 
 
+def _clipped_text_measured(run: Path) -> None:
+    """D-113: PowerPoint reports a takeaway title running past its frame while the reviewer's flag still says true."""
+    pptx = run / "output" / "presentation.pptx"
+    bounds = {
+        "measured_by": "Microsoft PowerPoint (TextFrame2.TextRange bounds)",
+        "pptx_sha256": file_sha256(pptx),
+        "slide_width_pt": 960.0,
+        "slide_height_pt": 540.0,
+        "frames": [{
+            "slide_number": 1, "name": "pai:takeaway_title", "anchor": 1,
+            "left": 40.0, "top": 20.0, "width": 880.0, "height": 34.0,
+            "ink": [40.0, 20.0, 870.0, 68.0], "lines": ["A title that wraps ", "onto a second line."],
+        }],
+    }
+    bounds_path = run / "renders" / "text_bounds.json"
+    bounds_path.write_text(json.dumps(bounds, indent=1) + "\n", encoding="utf-8")
+    manifest_path = run / "renders" / MANIFEST_NAME
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["render_source"] = "pptx_powerpoint"
+    manifest["text_bounds"] = {"file": "text_bounds.json", "sha256": file_sha256(bounds_path), "frames": 1}
+    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+
+
 NEGATIVE_TESTS: List[Tuple[str, Callable[[Path], None], str]] = [
+    ("clipped_text_measured_by_powerpoint", _clipped_text_measured, "[G4.10 / D-113]"),
     ("value_changed_without_source", _mutate_spec(_value_changed), "does not match source"),
     ("missing_source_file", _mutate_spec(_bad_source_ref), "not found"),
     ("label_disagrees_with_value", _mutate_spec(_label_mismatch), "formatted_label"),

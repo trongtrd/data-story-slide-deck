@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-13T15:13:05Z",
+  "timestamp": "2026-11-25T06:46:05Z",
   "overall_passed": true,
   "allowed_failures": [],
   "mean_score": 100.0,
@@ -8,19 +8,19 @@
     "kind": "static_lint",
     "note": "Static lint only. No skill was executed on Antigravity, Claude Code, or Codex by this suite.",
     "skills_checked": 7,
-    "accepted_kb_cards_count": 82,
-    "bound_kb_cards_count": 82,
+    "accepted_kb_cards_count": 87,
+    "bound_kb_cards_count": 87,
     "skill_reports": [
       {
         "skill": "deck-orchestrator",
         "valid": true,
-        "bound_card_count": 11,
+        "bound_card_count": 12,
         "errors": []
       },
       {
         "skill": "deck-context-griller",
         "valid": true,
-        "bound_card_count": 19,
+        "bound_card_count": 20,
         "errors": []
       },
       {
@@ -32,19 +32,19 @@
       {
         "skill": "deck-visual-planner",
         "valid": true,
-        "bound_card_count": 40,
+        "bound_card_count": 43,
         "errors": []
       },
       {
         "skill": "deck-builder",
         "valid": true,
-        "bound_card_count": 43,
+        "bound_card_count": 45,
         "errors": []
       },
       {
         "skill": "deck-reviewer",
         "valid": true,
-        "bound_card_count": 43,
+        "bound_card_count": 47,
         "errors": []
       },
       {
@@ -59,10 +59,16 @@
   "negative_tests": {
     "base_run": "bench_en_software_1plus4",
     "control_passed": true,
-    "caught": 75,
-    "total": 75,
+    "caught": 76,
+    "total": 76,
     "valid": true,
     "tests": [
+      {
+        "test": "clipped_text_measured_by_powerpoint",
+        "caught": true,
+        "expected_issue": "[G4.10 / D-113]",
+        "score": 97.5
+      },
       {
         "test": "value_changed_without_source",
         "caught": true,
@@ -913,7 +919,7 @@
       "total_score": 100.0,
       "max_score": 100.0,
       "passed": true,
-      "machine_checks": 1406,
+      "machine_checks": 1596,
       "self_attested_flags": [
         "context_brief: brand_profile.palette.colorblind_safe_verified",
         "context_brief: g1_gate_audit.G1_1_explanatory_mode",
@@ -925,7 +931,6 @@
         "context_brief: strategic_stakes.zero_generic_buzzwords_verified",
         "slide_spec: slides[].claim_evidence_contract.numeric_source_traceability_verified",
         "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.compound_word_linebreak_safe",
-        "slide_spec: slides[].claim_evidence_contract.rendered_png_qa.zero_text_overlap_or_clipping",
         "slide_spec: slides[].claim_evidence_contract.strict_claim_match_verified",
         "slide_spec: slides[].layout_spec.grid_alignment_verified",
         "slide_spec: slides[].progressive_reveal.standalone_self_sufficient_verified",

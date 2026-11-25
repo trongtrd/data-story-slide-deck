@@ -170,3 +170,11 @@ When a secondary source (`SRC-SEC-*`) contradicts a primary *storytelling with d
 - **Secondary Position:** Shades of one hue are hard to tell apart and suggest an order among groups; give each category its own clearly different hue (`SRC-SEC-022` §24).
 - **Agent Analysis & Recommendation:** The secondary point against same-hue shades for unordered groups is sound and already matches `PRIN-VIS-005`; its fix (five distinct hues) answers a different question from a story slide. Keep SWD: grey plus one accent by default; distinct hues only when every group must be told apart, kept few and labelled directly.
 - **User Ruling:** Keep SWD (`D-085` §6).
+
+### CONF-020 — What the Text Carries When Figures and Text Are Paired
+- **Status:** ruled (see D-110)
+- **Stage:** TTL
+- **Primary Position (SWD):** the takeaway title states the finding and its point of view, and the chart is built to prove that title; title and chart are tied by colour and wording (`SRC-SWD-010`, `SRC-SWD-003`).
+- **Secondary Position:** in a research paper the figures carry the results on their own and the prose explains why the problem matters, why the experiments were chosen and what follows; each story should stand without the other (`SRC-SEC-028`).
+- **Agent Analysis & Recommendation:** the two agree that each channel must work alone, but differ on what the words say. On a slide the words must state the finding, not only the reasons, because many viewers read only the title. Keep SWD: the text story is the chain of takeaway titles (`PRIN-STR-004`); take from the post only the test that the picture alone points at the evidence (`PAT-DSN-007`) and that the reasons for the comparison are named (proposed wording for `PRIN-TTL-003`).
+- **User Ruling:** SWD kept; the post's ideas are taken only as the tests above (`D-110`).

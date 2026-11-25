@@ -1,0 +1,3478 @@
+{
+ "measured_by": "Microsoft PowerPoint (TextFrame2.TextRange bounds)",
+ "pptx_sha256": "53f33c63cb19893095bd8c6f912999cee1b401d7015bafa1db2af8d7a38a1656",
+ "slide_width_pt": 960.0,
+ "slide_height_pt": 540.0,
+ "frames": [
+  {
+   "slide_number": 0,
+   "name": "pai:deck_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 165.6,
+   "width": 792.0,
+   "height": 106.6,
+   "ink": [
+    43.2,
+    165.6,
+    565.3,
+    96.9
+   ],
+   "lines": [
+    "Recover $2.4M in FY2026 through\u000b",
+    "barista hiring and the seasonal menu"
+   ]
+  },
+  {
+   "slide_number": 0,
+   "name": "pai:title_audience",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 286.6,
+   "width": 792.0,
+   "height": 29.2,
+   "ink": [
+    43.2,
+    286.6,
+    295.4,
+    23.6
+   ],
+   "lines": [
+    "Pre-read for the Operating Committee"
+   ]
+  },
+  {
+   "slide_number": 0,
+   "name": "pai:title_meta",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 457.2,
+   "width": 792.0,
+   "height": 28.8,
+   "ink": [
+    43.2,
+    457.2,
+    250.0,
+    15.6
+   ],
+   "lines": [
+    "November 2026 Store Operations and Finance"
+   ]
+  },
+  {
+   "slide_number": 1,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    522.8,
+    31.5
+   ],
+   "lines": [
+    "Seasonal drinks fell while core drinks kept growing."
+   ]
+  },
+  {
+   "slide_number": 1,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    348.1,
+    15.7
+   ],
+   "lines": [
+    "Average year-over-year sales change (%) by menu segment, FY2025"
+   ]
+  },
+  {
+   "slide_number": 1,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 629.8,
+   "height": 24.5,
+   "ink": [
+    46.8,
+    102.2,
+    114.1,
+    15.7
+   ],
+   "lines": [
+    "Two menu segments"
+   ]
+  },
+  {
+   "slide_number": 1,
+   "name": "pai:annotation",
+   "anchor": 1,
+   "left": 709.0,
+   "top": 100.8,
+   "width": 207.6,
+   "height": 68.4,
+   "ink": [
+    709.8,
+    109.5,
+    176.7,
+    32.3
+   ],
+   "lines": [
+    "Core drinks averaged +9.4% while ",
+    "seasonal drinks averaged -7.8%."
+   ]
+  },
+  {
+   "slide_number": 1,
+   "name": "pai:callout",
+   "anchor": 1,
+   "left": 709.0,
+   "top": 182.2,
+   "width": 207.6,
+   "height": 92.4,
+   "ink": [
+    720.9,
+    191.9,
+    165.7,
+    48.9
+   ],
+   "lines": [
+    "Implication and action\r",
+    "Look inside the seasonal lineup ",
+    "before cutting it wholesale."
+   ]
+  },
+  {
+   "slide_number": 1,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 770.8,
+   "top": 498.2,
+   "width": 145.8,
+   "height": 25.2,
+   "ink": [
+    805.0,
+    498.2,
+    113.4,
+    11.8
+   ],
+   "lines": [
+    "FY2026 menu and staffing · 1"
+   ]
+  },
+  {
+   "slide_number": 1,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 706.0,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    275.9,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf point-of-sale data, FY2025 vs. FY2024 (140 stores)."
+   ]
+  },
+  {
+   "slide_number": 2,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    684.6,
+    31.5
+   ],
+   "lines": [
+    "Mint Chill and Hazelnut Cloud fell the most among seasonal drinks."
+   ]
+  },
+  {
+   "slide_number": 2,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    294.8,
+    15.7
+   ],
+   "lines": [
+    "Year-over-year sales change (%) by drink, FY2025, ranked"
+   ]
+  },
+  {
+   "slide_number": 2,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 576.0,
+   "height": 24.5,
+   "ink": [
+    46.8,
+    102.2,
+    101.3,
+    15.7
+   ],
+   "lines": [
+    "Ten drinks, ranked"
+   ]
+  },
+  {
+   "slide_number": 2,
+   "name": "pai:annotation",
+   "anchor": 1,
+   "left": 650.2,
+   "top": 100.8,
+   "width": 266.4,
+   "height": 51.8,
+   "ink": [
+    650.8,
+    109.3,
+    262.1,
+    32.3
+   ],
+   "lines": [
+    "Maple Oat (-3%) and Cocoa Crunch (-6%) also fell, ",
+    "by far less."
+   ]
+  },
+  {
+   "slide_number": 2,
+   "name": "pai:callout",
+   "anchor": 1,
+   "left": 650.2,
+   "top": 165.6,
+   "width": 266.4,
+   "height": 92.4,
+   "ink": [
+    662.0,
+    175.3,
+    236.3,
+    48.9
+   ],
+   "lines": [
+    "Implication and action\r",
+    "Replace Mint Chill and Hazelnut Cloud first; ",
+    "keep watching Maple Oat and Cocoa Crunch."
+   ]
+  },
+  {
+   "slide_number": 2,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 770.8,
+   "top": 498.2,
+   "width": 145.8,
+   "height": 25.2,
+   "ink": [
+    805.0,
+    498.2,
+    113.4,
+    11.8
+   ],
+   "lines": [
+    "FY2026 menu and staffing · 2"
+   ]
+  },
+  {
+   "slide_number": 2,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 706.0,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    275.9,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf point-of-sale data, FY2025 vs. FY2024 (140 stores)."
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    638.6,
+    31.5
+   ],
+   "lines": [
+    "Barista hiring gaps leave stores 22 baristas short by December."
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    459.7,
+    15.7
+   ],
+   "lines": [
+    "Store staff vs. plan by month (left) and year-end forecast by role with its gap to plan (right)"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:panel_headline",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 414.0,
+   "height": 26.4,
+   "ink": [
+    46.8,
+    102.2,
+    282.8,
+    21.0
+   ],
+   "lines": [
+    "Stores end the year 30 staff below plan"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:panel_text",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 130.1,
+   "width": 414.0,
+   "height": 37.4,
+   "ink": [
+    46.8,
+    131.5,
+    369.3,
+    32.3
+   ],
+   "lines": [
+    "The gap widened from May, peaked at 37 in July and holds at 30 through ",
+    "December."
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 174.7,
+   "width": 414.0,
+   "height": 24.5,
+   "ink": [
+    46.8,
+    176.2,
+    152.3,
+    15.7
+   ],
+   "lines": [
+    "Store staff vs. plan, by month"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:label",
+   "anchor": 1,
+   "left": 198.6,
+   "top": 242.8,
+   "width": 191.2,
+   "height": 18.5,
+   "ink": [
+    222.5,
+    242.8,
+    145.6,
+    12.6
+   ],
+   "lines": [
+    "-30 staff vs. plan by December"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:panel_headline",
+   "anchor": 1,
+   "left": 499.0,
+   "top": 100.8,
+   "width": 414.0,
+   "height": 26.4,
+   "ink": [
+    499.0,
+    102.2,
+    213.7,
+    21.0
+   ],
+   "lines": [
+    "Baristas make up 22 of the 30"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:panel_text",
+   "anchor": 1,
+   "left": 499.0,
+   "top": 130.1,
+   "width": 414.0,
+   "height": 20.9,
+   "ink": [
+    499.0,
+    131.5,
+    310.8,
+    15.7
+   ],
+   "lines": [
+    "Supervisors are 6 short and managers 2; bakers are on plan."
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 499.0,
+   "top": 174.7,
+   "width": 414.0,
+   "height": 24.5,
+   "ink": [
+    499.0,
+    176.2,
+    189.0,
+    15.7
+   ],
+   "lines": [
+    "Year-end forecast headcount by role"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:side_column_title",
+   "anchor": 4,
+   "left": 840.1,
+   "top": 206.8,
+   "width": 76.5,
+   "height": 14.7,
+   "ink": [
+    856.0,
+    208.9,
+    61.1,
+    12.6
+   ],
+   "lines": [
+    "Against plan"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:side_column",
+   "anchor": 3,
+   "left": 840.1,
+   "top": 237.2,
+   "width": 76.5,
+   "height": 14.7,
+   "ink": [
+    898.1,
+    238.2,
+    19.0,
+    12.6
+   ],
+   "lines": [
+    "−22"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:side_column",
+   "anchor": 3,
+   "left": 840.1,
+   "top": 277.4,
+   "width": 76.5,
+   "height": 14.7,
+   "ink": [
+    903.7,
+    278.4,
+    13.4,
+    12.6
+   ],
+   "lines": [
+    "−2"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:side_column",
+   "anchor": 3,
+   "left": 840.1,
+   "top": 317.6,
+   "width": 76.5,
+   "height": 14.7,
+   "ink": [
+    903.7,
+    318.6,
+    13.4,
+    12.6
+   ],
+   "lines": [
+    "−6"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:side_column",
+   "anchor": 3,
+   "left": 840.1,
+   "top": 357.7,
+   "width": 76.5,
+   "height": 14.7,
+   "ink": [
+    909.4,
+    358.8,
+    7.8,
+    12.6
+   ],
+   "lines": [
+    "0"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:callout",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 421.2,
+   "width": 873.4,
+   "height": 39.6,
+   "ink": [
+    52.3,
+    433.1,
+    336.5,
+    15.7
+   ],
+   "lines": [
+    "Focus Q1 recruiting on baristas; other roles are within six of plan."
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 770.8,
+   "top": 498.2,
+   "width": 145.8,
+   "height": 25.2,
+   "ink": [
+    805.0,
+    498.2,
+    113.4,
+    11.8
+   ],
+   "lines": [
+    "FY2026 menu and staffing · 3"
+   ]
+  },
+  {
+   "slide_number": 3,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 706.0,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    236.1,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf HR system and FY2026 staffing forecast."
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    634.0,
+    31.5
+   ],
+   "lines": [
+    "Fill barista roles and refresh seasonal drinks to recover $2.4M."
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    275.1,
+    15.7
+   ],
+   "lines": [
+    "Six recovery initiatives compared on payoff and effort"
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:column_heading",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 415.1,
+   "height": 17.0,
+   "ink": [
+    46.8,
+    100.8,
+    36.6,
+    15.7
+   ],
+   "lines": [
+    "Payoff"
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:panel_headline",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 130.1,
+   "width": 415.1,
+   "height": 48.5,
+   "ink": [
+    46.8,
+    131.5,
+    409.5,
+    43.1
+   ],
+   "lines": [
+    "Barista hiring leads on payoff at $1.5M; the menu refresh ",
+    "adds $0.9M."
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 181.4,
+   "width": 415.1,
+   "height": 24.5,
+   "ink": [
+    46.8,
+    182.9,
+    150.2,
+    15.7
+   ],
+   "lines": [
+    "Modeled sales recovery ($M)"
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:column_heading",
+   "anchor": 1,
+   "left": 497.9,
+   "top": 100.8,
+   "width": 415.1,
+   "height": 17.0,
+   "ink": [
+    497.9,
+    100.8,
+    32.8,
+    15.7
+   ],
+   "lines": [
+    "Effort"
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:panel_headline",
+   "anchor": 1,
+   "left": 497.9,
+   "top": 130.1,
+   "width": 415.1,
+   "height": 48.5,
+   "ink": [
+    497.9,
+    131.5,
+    393.2,
+    43.1
+   ],
+   "lines": [
+    "Both proposals need little effort: 2 and 1 on a six-point ",
+    "scale."
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 497.9,
+   "top": 181.4,
+   "width": 415.1,
+   "height": 24.5,
+   "ink": [
+    497.9,
+    182.9,
+    172.7,
+    15.7
+   ],
+   "lines": [
+    "Effort rating (1 easiest, 6 hardest)"
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:recommendation_line",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 436.1,
+   "width": 873.4,
+   "height": 49.9,
+   "ink": [
+    43.2,
+    450.5,
+    768.0,
+    21.0
+   ],
+   "lines": [
+    "Approve 22 barista hires in Q1 and the two-drink refresh (fallback: hire now, decide the menu at the Q2 review)."
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 770.8,
+   "top": 498.2,
+   "width": 145.8,
+   "height": 25.2,
+   "ink": [
+    805.0,
+    498.2,
+    113.4,
+    11.8
+   ],
+   "lines": [
+    "FY2026 menu and staffing · 4"
+   ]
+  },
+  {
+   "slide_number": 4,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 706.0,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    307.0,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf FY2026 sales recovery model and operations effort ratings."
+   ]
+  },
+  {
+   "slide_number": 5,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    628.1,
+    31.5
+   ],
+   "lines": [
+    "Harbor Street is the flagship store furthest behind on baristas."
+   ]
+  },
+  {
+   "slide_number": 5,
+   "name": "pai:table_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 72.0,
+   "width": 873.4,
+   "height": 24.5,
+   "ink": [
+    43.2,
+    72.0,
+    182.0,
+    15.7
+   ],
+   "lines": [
+    "Flagship store scorecard, FY2025"
+   ]
+  },
+  {
+   "slide_number": 5,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 859.9,
+   "top": 498.2,
+   "width": 56.7,
+   "height": 25.2,
+   "ink": [
+    873.7,
+    498.2,
+    44.6,
+    11.8
+   ],
+   "lines": [
+    "Appendix 1"
+   ]
+  },
+  {
+   "slide_number": 5,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 795.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    330.2,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf point-of-sale data and HR system, FY2025 (eight flagship stores)."
+   ]
+  },
+  {
+   "slide_number": 6,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    561.8,
+    31.5
+   ],
+   "lines": [
+    "The three slowest stores are the only ones losing sales."
+   ]
+  },
+  {
+   "slide_number": 6,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    289.5,
+    15.7
+   ],
+   "lines": [
+    "Sales change vs. average wait, by flagship store, FY2025"
+   ]
+  },
+  {
+   "slide_number": 6,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 576.0,
+   "height": 24.5,
+   "ink": [
+    46.8,
+    104.4,
+    113.1,
+    15.7
+   ],
+   "lines": [
+    "Eight flagship stores"
+   ]
+  },
+  {
+   "slide_number": 6,
+   "name": "pai:label",
+   "anchor": 1,
+   "left": 274.2,
+   "top": 304.3,
+   "width": 113.5,
+   "height": 14.7,
+   "ink": [
+    274.2,
+    304.3,
+    81.0,
+    13.8
+   ],
+   "lines": [
+    "Waits over 5 min"
+   ]
+  },
+  {
+   "slide_number": 6,
+   "name": "pai:label",
+   "anchor": 1,
+   "left": 93.1,
+   "top": 176.4,
+   "width": 120.1,
+   "height": 14.7,
+   "ink": [
+    93.1,
+    176.4,
+    88.2,
+    13.8
+   ],
+   "lines": [
+    "Waits under 5 min"
+   ]
+  },
+  {
+   "slide_number": 6,
+   "name": "pai:callout",
+   "anchor": 1,
+   "left": 650.2,
+   "top": 100.8,
+   "width": 266.4,
+   "height": 75.8,
+   "ink": [
+    661.8,
+    110.3,
+    228.4,
+    48.9
+   ],
+   "lines": [
+    "Implication and action\r",
+    "Staff the three slowest stores first; the other ",
+    "five grew."
+   ]
+  },
+  {
+   "slide_number": 6,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 859.9,
+   "top": 498.2,
+   "width": 56.7,
+   "height": 25.2,
+   "ink": [
+    873.7,
+    498.2,
+    44.6,
+    11.8
+   ],
+   "lines": [
+    "Appendix 2"
+   ]
+  },
+  {
+   "slide_number": 6,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 795.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    330.2,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf point-of-sale data and HR system, FY2025 (eight flagship stores)."
+   ]
+  },
+  {
+   "slide_number": 7,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    640.9,
+    31.5
+   ],
+   "lines": [
+    "Baristas account for 22 of the 30 positions missing at year-end."
+   ]
+  },
+  {
+   "slide_number": 7,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    266.7,
+    15.7
+   ],
+   "lines": [
+    "Year-end headcount against the plan of 760, by role"
+   ]
+  },
+  {
+   "slide_number": 7,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 576.0,
+   "height": 24.5,
+   "ink": [
+    46.8,
+    104.4,
+    102.4,
+    15.7
+   ],
+   "lines": [
+    "Roles against plan"
+   ]
+  },
+  {
+   "slide_number": 7,
+   "name": "pai:callout",
+   "anchor": 1,
+   "left": 650.2,
+   "top": 100.8,
+   "width": 266.4,
+   "height": 75.8,
+   "ink": [
+    661.8,
+    110.3,
+    232.3,
+    48.9
+   ],
+   "lines": [
+    "Implication and action\r",
+    "Filling the 22 barista roles closes most of the ",
+    "gap, so hire them first."
+   ]
+  },
+  {
+   "slide_number": 7,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 859.9,
+   "top": 498.2,
+   "width": 56.7,
+   "height": 25.2,
+   "ink": [
+    873.7,
+    498.2,
+    44.6,
+    11.8
+   ],
+   "lines": [
+    "Appendix 3"
+   ]
+  },
+  {
+   "slide_number": 7,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 795.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    260.8,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf HR system, year-end plan and forecast by role."
+   ]
+  },
+  {
+   "slide_number": 8,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    395.3,
+    31.5
+   ],
+   "lines": [
+    "Hiring in two waves is the longest step."
+   ]
+  },
+  {
+   "slide_number": 8,
+   "name": "pai:dg_diagram_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 72.0,
+   "width": 873.4,
+   "height": 24.5,
+   "ink": [
+    43.2,
+    74.2,
+    209.3,
+    15.7
+   ],
+   "lines": [
+    "Recruiting plan for the 22 barista roles"
+   ]
+  },
+  {
+   "slide_number": 8,
+   "name": "pai:dg_budget",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 196.2,
+   "width": 140.1,
+   "height": 194.4,
+   "ink": [
+    70.6,
+    278.2,
+    87.7,
+    30.3
+   ],
+   "lines": [
+    "Approve budget\r",
+    "15 Jan"
+   ]
+  },
+  {
+   "slide_number": 8,
+   "name": "pai:dg_open_roles",
+   "anchor": 3,
+   "left": 226.5,
+   "top": 196.2,
+   "width": 140.1,
+   "height": 194.4,
+   "ink": [
+    256.6,
+    278.2,
+    82.4,
+    30.3
+   ],
+   "lines": [
+    "Open the roles\r",
+    "1 Feb"
+   ]
+  },
+  {
+   "slide_number": 8,
+   "name": "pai:dg_hire",
+   "anchor": 3,
+   "left": 409.8,
+   "top": 196.2,
+   "width": 140.1,
+   "height": 194.4,
+   "ink": [
+    432.4,
+    278.2,
+    97.5,
+    30.3
+   ],
+   "lines": [
+    "Hire in two waves\r",
+    "15 Mar and 30 Apr"
+   ]
+  },
+  {
+   "slide_number": 8,
+   "name": "pai:dg_train",
+   "anchor": 3,
+   "left": 593.1,
+   "top": 196.2,
+   "width": 140.1,
+   "height": 194.4,
+   "ink": [
+    626.3,
+    278.2,
+    76.0,
+    30.3
+   ],
+   "lines": [
+    "Train on shift\r",
+    "Two weeks each"
+   ]
+  },
+  {
+   "slide_number": 8,
+   "name": "pai:dg_filled",
+   "anchor": 3,
+   "left": 776.4,
+   "top": 196.2,
+   "width": 140.1,
+   "height": 194.4,
+   "ink": [
+    809.1,
+    278.2,
+    77.4,
+    30.3
+   ],
+   "lines": [
+    "All roles filled\r",
+    "30 Jun"
+   ]
+  },
+  {
+   "slide_number": 8,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 859.9,
+   "top": 498.2,
+   "width": 56.7,
+   "height": 25.2,
+   "ink": [
+    873.7,
+    498.2,
+    44.6,
+    11.8
+   ],
+   "lines": [
+    "Appendix 4"
+   ]
+  },
+  {
+   "slide_number": 8,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 795.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    171.2,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf recruiting plan, FY2026."
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    404.9,
+    31.5
+   ],
+   "lines": [
+    "All 22 barista roles are filled by 30 June."
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_diagram_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 72.0,
+   "width": 873.4,
+   "height": 24.5,
+   "ink": [
+    43.2,
+    74.2,
+    240.8,
+    15.7
+   ],
+   "lines": [
+    "Recruiting plan for the 22 barista roles, 2026"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_tick_label_0",
+   "anchor": 1,
+   "left": 70.6,
+   "top": 300.6,
+   "width": 26.0,
+   "height": 17.3,
+   "ink": [
+    70.6,
+    302.8,
+    17.0,
+    13.8
+   ],
+   "lines": [
+    "Jan"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_tick_label_1",
+   "anchor": 1,
+   "left": 164.4,
+   "top": 300.6,
+   "width": 26.0,
+   "height": 17.3,
+   "ink": [
+    164.4,
+    302.8,
+    19.0,
+    13.8
+   ],
+   "lines": [
+    "Feb"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_tick_label_2",
+   "anchor": 1,
+   "left": 249.1,
+   "top": 300.6,
+   "width": 26.0,
+   "height": 17.3,
+   "ink": [
+    249.1,
+    302.8,
+    19.5,
+    13.8
+   ],
+   "lines": [
+    "Mar"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_tick_label_3",
+   "anchor": 1,
+   "left": 342.9,
+   "top": 300.6,
+   "width": 26.0,
+   "height": 17.3,
+   "ink": [
+    342.9,
+    302.8,
+    17.8,
+    13.8
+   ],
+   "lines": [
+    "Apr"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_tick_label_4",
+   "anchor": 1,
+   "left": 433.6,
+   "top": 300.6,
+   "width": 26.0,
+   "height": 17.3,
+   "ink": [
+    433.6,
+    302.8,
+    20.8,
+    13.8
+   ],
+   "lines": [
+    "May"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_tick_label_5",
+   "anchor": 1,
+   "left": 527.4,
+   "top": 300.6,
+   "width": 26.0,
+   "height": 17.3,
+   "ink": [
+    527.4,
+    302.8,
+    17.2,
+    13.8
+   ],
+   "lines": [
+    "Jun"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_tick_label_6",
+   "anchor": 1,
+   "left": 618.2,
+   "top": 300.6,
+   "width": 26.0,
+   "height": 17.3,
+   "ink": [
+    618.2,
+    302.8,
+    14.2,
+    13.8
+   ],
+   "lines": [
+    "Jul"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_tick_label_7",
+   "anchor": 1,
+   "left": 712.0,
+   "top": 300.6,
+   "width": 26.0,
+   "height": 17.3,
+   "ink": [
+    712.0,
+    302.8,
+    19.4,
+    13.8
+   ],
+   "lines": [
+    "Aug"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_tick_label_8",
+   "anchor": 1,
+   "left": 805.8,
+   "top": 300.6,
+   "width": 26.0,
+   "height": 17.3,
+   "ink": [
+    805.8,
+    302.8,
+    19.5,
+    13.8
+   ],
+   "lines": [
+    "Sep"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_budget__label",
+   "anchor": 4,
+   "left": 54.1,
+   "top": 225.4,
+   "width": 113.4,
+   "height": 32.0,
+   "ink": [
+    64.9,
+    224.9,
+    94.2,
+    30.3
+   ],
+   "lines": [
+    "Budget approved\r",
+    "15 Jan"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_open_roles__label",
+   "anchor": 1,
+   "left": 122.0,
+   "top": 329.4,
+   "width": 80.4,
+   "height": 32.0,
+   "ink": [
+    131.8,
+    331.6,
+    63.4,
+    30.3
+   ],
+   "lines": [
+    "Roles open\r",
+    "1 Feb"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_wave1__label",
+   "anchor": 4,
+   "left": 239.2,
+   "top": 225.4,
+   "width": 100.2,
+   "height": 32.0,
+   "ink": [
+    252.8,
+    224.9,
+    75.3,
+    30.3
+   ],
+   "lines": [
+    "Wave 1 starts\r",
+    "15 Mar"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_trained__label",
+   "anchor": 1,
+   "left": 284.3,
+   "top": 329.4,
+   "width": 106.8,
+   "height": 32.0,
+   "ink": [
+    297.8,
+    331.6,
+    82.3,
+    30.3
+   ],
+   "lines": [
+    "Wave 1 trained\r",
+    "31 Mar"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_wave2__label",
+   "anchor": 4,
+   "left": 378.3,
+   "top": 225.4,
+   "width": 100.2,
+   "height": 32.0,
+   "ink": [
+    392.0,
+    224.9,
+    75.3,
+    30.3
+   ],
+   "lines": [
+    "Wave 2 starts\r",
+    "30 Apr"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_filled__label",
+   "anchor": 1,
+   "left": 543.1,
+   "top": 329.4,
+   "width": 139.8,
+   "height": 32.0,
+   "ink": [
+    567.9,
+    331.6,
+    92.6,
+    30.3
+   ],
+   "lines": [
+    "All 22 roles filled\r",
+    "30 Jun"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:dg_review__label",
+   "anchor": 4,
+   "left": 795.9,
+   "top": 225.4,
+   "width": 100.2,
+   "height": 32.0,
+   "ink": [
+    808.7,
+    224.9,
+    77.0,
+    30.3
+   ],
+   "lines": [
+    "90-day review\r",
+    "15 Sep"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 859.9,
+   "top": 498.2,
+   "width": 56.7,
+   "height": 25.2,
+   "ink": [
+    873.7,
+    498.2,
+    44.6,
+    11.8
+   ],
+   "lines": [
+    "Appendix 5"
+   ]
+  },
+  {
+   "slide_number": 9,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 795.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    171.2,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf recruiting plan, FY2026."
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    567.8,
+    31.5
+   ],
+   "lines": [
+    "Filling barista roles recovers the most for modest effort."
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_diagram_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 72.0,
+   "width": 873.4,
+   "height": 24.5,
+   "ink": [
+    43.2,
+    74.2,
+    312.1,
+    15.7
+   ],
+   "lines": [
+    "Recovery initiatives by effort and modeled sales recovery"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_x_low",
+   "anchor": 1,
+   "left": 187.2,
+   "top": 445.0,
+   "width": 100.8,
+   "height": 20.2,
+   "ink": [
+    187.2,
+    447.1,
+    20.8,
+    13.8
+   ],
+   "lines": [
+    "Low"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_x_high",
+   "anchor": 1,
+   "left": 787.0,
+   "top": 445.0,
+   "width": 100.8,
+   "height": 20.2,
+   "ink": [
+    867.0,
+    447.1,
+    22.9,
+    13.8
+   ],
+   "lines": [
+    "High"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_x_title",
+   "anchor": 1,
+   "left": 422.3,
+   "top": 445.0,
+   "width": 230.4,
+   "height": 21.6,
+   "ink": [
+    522.3,
+    447.1,
+    32.8,
+    15.7
+   ],
+   "lines": [
+    "Effort"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_y_high",
+   "anchor": 1,
+   "left": 115.2,
+   "top": 108.0,
+   "width": 64.8,
+   "height": 20.2,
+   "ink": [
+    159.2,
+    110.2,
+    22.9,
+    13.8
+   ],
+   "lines": [
+    "High"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_y_low",
+   "anchor": 1,
+   "left": 115.2,
+   "top": 419.0,
+   "width": 64.8,
+   "height": 20.2,
+   "ink": [
+    161.3,
+    421.2,
+    20.8,
+    13.8
+   ],
+   "lines": [
+    "Low"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_y_title",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 244.8,
+   "width": 61.2,
+   "height": 57.6,
+   "ink": [
+    57.3,
+    257.4,
+    49.6,
+    32.3
+   ],
+   "lines": [
+    "Sales ",
+    "recovery"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_fill_roles__label",
+   "anchor": 3,
+   "left": 232.1,
+   "top": 204.3,
+   "width": 166.9,
+   "height": 19.4,
+   "ink": [
+    296.2,
+    206.1,
+    105.2,
+    15.7
+   ],
+   "lines": [
+    "Fill 22 barista roles"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_seasonal__label",
+   "anchor": 3,
+   "left": 322.1,
+   "top": 293.7,
+   "width": 192.6,
+   "height": 19.4,
+   "ink": [
+    322.1,
+    295.5,
+    148.1,
+    15.7
+   ],
+   "lines": [
+    "Refresh two seasonal drinks"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_evenings__label",
+   "anchor": 3,
+   "left": 256.1,
+   "top": 369.9,
+   "width": 146.4,
+   "height": 19.4,
+   "ink": [
+    292.3,
+    371.7,
+    112.7,
+    15.7
+   ],
+   "lines": [
+    "Extend evening hours"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_loyalty__label",
+   "anchor": 3,
+   "left": 672.4,
+   "top": 323.5,
+   "width": 87.0,
+   "height": 19.4,
+   "ink": [
+    672.4,
+    325.3,
+    61.5,
+    15.7
+   ],
+   "lines": [
+    "Loyalty app"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_remodel__label",
+   "anchor": 3,
+   "left": 626.2,
+   "top": 383.1,
+   "width": 126.6,
+   "height": 19.4,
+   "ink": [
+    656.5,
+    385.0,
+    98.8,
+    15.7
+   ],
+   "lines": [
+    "Remodel flagships"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:dg_pricing__label",
+   "anchor": 3,
+   "left": 672.4,
+   "top": 217.5,
+   "width": 100.2,
+   "height": 19.4,
+   "ink": [
+    672.4,
+    219.4,
+    75.2,
+    15.7
+   ],
+   "lines": [
+    "Price changes"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 859.9,
+   "top": 498.2,
+   "width": 56.7,
+   "height": 25.2,
+   "ink": [
+    873.7,
+    498.2,
+    44.6,
+    11.8
+   ],
+   "lines": [
+    "Appendix 6"
+   ]
+  },
+  {
+   "slide_number": 10,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 795.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    309.6,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf operations effort ratings and sales recovery model, FY2026."
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 66.2,
+   "ink": [
+    43.2,
+    20.2,
+    844.0,
+    31.5
+   ],
+   "lines": [
+    "Applicants without barista experience reach the trial shift through a training cohort."
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_diagram_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 105.1,
+   "width": 873.4,
+   "height": 24.5,
+   "ink": [
+    43.2,
+    107.3,
+    171.8,
+    15.7
+   ],
+   "lines": [
+    "Screening of barista applicants"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_applied",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 226.4,
+   "width": 120.2,
+   "height": 54.7,
+   "ink": [
+    71.9,
+    237.7,
+    65.2,
+    32.3
+   ],
+   "lines": [
+    "Application ",
+    "received"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_experienced",
+   "anchor": 3,
+   "left": 234.9,
+   "top": 212.0,
+   "width": 174.1,
+   "height": 83.5,
+   "ink": [
+    288.7,
+    237.7,
+    68.9,
+    32.3
+   ],
+   "lines": [
+    "Barista ",
+    "experience?"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_trial",
+   "anchor": 3,
+   "left": 480.5,
+   "top": 227.5,
+   "width": 98.6,
+   "height": 52.6,
+   "ink": [
+    500.4,
+    238.6,
+    60.9,
+    30.3
+   ],
+   "lines": [
+    "Trial shift\r",
+    "4 hours, paid"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_passed",
+   "anchor": 3,
+   "left": 654.7,
+   "top": 212.0,
+   "width": 104.1,
+   "height": 83.5,
+   "ink": [
+    687.0,
+    237.7,
+    42.1,
+    32.3
+   ],
+   "lines": [
+    "Passed ",
+    "trial?"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_offer",
+   "anchor": 3,
+   "left": 834.5,
+   "top": 233.3,
+   "width": 82.1,
+   "height": 41.0,
+   "ink": [
+    861.6,
+    245.9,
+    30.3,
+    15.7
+   ],
+   "lines": [
+    "Offer"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_cohort",
+   "anchor": 3,
+   "left": 265.8,
+   "top": 354.2,
+   "width": 112.3,
+   "height": 52.6,
+   "ink": [
+    281.3,
+    365.3,
+    83.9,
+    30.3
+   ],
+   "lines": [
+    "Training cohort\r",
+    "Two weeks"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_reapply",
+   "anchor": 3,
+   "left": 650.6,
+   "top": 353.2,
+   "width": 112.3,
+   "height": 54.7,
+   "ink": [
+    663.1,
+    372.6,
+    89.8,
+    15.7
+   ],
+   "lines": [
+    "Invite to reapply"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_experienced__trial__answer",
+   "anchor": 3,
+   "left": 431.2,
+   "top": 232.0,
+   "width": 27.0,
+   "height": 17.4,
+   "ink": [
+    436.1,
+    233.9,
+    19.5,
+    13.8
+   ],
+   "lines": [
+    "Yes"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_experienced__cohort__answer",
+   "anchor": 3,
+   "left": 329.1,
+   "top": 316.2,
+   "width": 20.9,
+   "height": 17.4,
+   "ink": [
+    329.1,
+    318.0,
+    15.8,
+    13.8
+   ],
+   "lines": [
+    "No"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_passed__offer__answer",
+   "anchor": 3,
+   "left": 783.2,
+   "top": 232.0,
+   "width": 27.0,
+   "height": 17.4,
+   "ink": [
+    788.0,
+    233.9,
+    19.5,
+    13.8
+   ],
+   "lines": [
+    "Yes"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:dg_passed__reapply__answer",
+   "anchor": 3,
+   "left": 714.0,
+   "top": 315.6,
+   "width": 20.9,
+   "height": 17.4,
+   "ink": [
+    714.0,
+    317.5,
+    15.8,
+    13.8
+   ],
+   "lines": [
+    "No"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 859.9,
+   "top": 498.2,
+   "width": 56.7,
+   "height": 25.2,
+   "ink": [
+    873.7,
+    498.2,
+    44.6,
+    11.8
+   ],
+   "lines": [
+    "Appendix 7"
+   ]
+  },
+  {
+   "slide_number": 11,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 795.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    171.2,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf recruiting plan, FY2026."
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    616.7,
+    31.5
+   ],
+   "lines": [
+    "Waiting for a regional trainer is the slowest hand-off in hiring."
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_diagram_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 72.0,
+   "width": 873.4,
+   "height": 24.5,
+   "ink": [
+    43.2,
+    74.2,
+    119.6,
+    15.7
+   ],
+   "lines": [
+    "Hiring steps by owner"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_lane_manager",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 100.8,
+   "width": 103.7,
+   "height": 128.4,
+   "ink": [
+    43.2,
+    157.1,
+    81.9,
+    15.7
+   ],
+   "lines": [
+    "Store manager"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_lane_hr",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 229.2,
+   "width": 103.7,
+   "height": 128.4,
+   "ink": [
+    43.2,
+    285.5,
+    18.9,
+    15.7
+   ],
+   "lines": [
+    "HR"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_lane_trainer",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 357.6,
+   "width": 103.7,
+   "height": 128.4,
+   "ink": [
+    43.2,
+    413.9,
+    88.8,
+    15.7
+   ],
+   "lines": [
+    "Regional trainer"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_request",
+   "anchor": 3,
+   "left": 211.6,
+   "top": 136.1,
+   "width": 151.1,
+   "height": 57.8,
+   "ink": [
+    252.7,
+    157.1,
+    71.4,
+    15.7
+   ],
+   "lines": [
+    "Request hire"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_post",
+   "anchor": 3,
+   "left": 211.6,
+   "top": 264.5,
+   "width": 151.1,
+   "height": 57.8,
+   "ink": [
+    263.2,
+    285.5,
+    50.4,
+    15.7
+   ],
+   "lines": [
+    "Post role"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_screen",
+   "anchor": 3,
+   "left": 463.4,
+   "top": 264.5,
+   "width": 151.1,
+   "height": 57.8,
+   "ink": [
+    489.5,
+    285.5,
+    101.2,
+    15.7
+   ],
+   "lines": [
+    "Screen applicants"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_trial",
+   "anchor": 3,
+   "left": 463.4,
+   "top": 392.9,
+   "width": 151.1,
+   "height": 57.8,
+   "ink": [
+    513.6,
+    413.9,
+    53.2,
+    15.7
+   ],
+   "lines": [
+    "Trial shift"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_decide",
+   "anchor": 3,
+   "left": 715.2,
+   "top": 136.1,
+   "width": 151.1,
+   "height": 57.8,
+   "ink": [
+    771.4,
+    157.1,
+    41.1,
+    15.7
+   ],
+   "lines": [
+    "Decide"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_offer",
+   "anchor": 3,
+   "left": 715.2,
+   "top": 264.5,
+   "width": 151.1,
+   "height": 57.8,
+   "ink": [
+    762.7,
+    285.5,
+    58.5,
+    15.7
+   ],
+   "lines": [
+    "Send offer"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:dg_screen__trial__label",
+   "anchor": 3,
+   "left": 546.1,
+   "top": 348.9,
+   "width": 69.9,
+   "height": 17.4,
+   "ink": [
+    546.1,
+    350.7,
+    50.9,
+    13.8
+   ],
+   "lines": [
+    "5-day wait"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 859.9,
+   "top": 498.2,
+   "width": 56.7,
+   "height": 25.2,
+   "ink": [
+    873.7,
+    498.2,
+    44.6,
+    11.8
+   ],
+   "lines": [
+    "Appendix 8"
+   ]
+  },
+  {
+   "slide_number": 12,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 795.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    171.2,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf recruiting plan, FY2026."
+   ]
+  },
+  {
+   "slide_number": 13,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    539.7,
+    31.5
+   ],
+   "lines": [
+    "Baristas make up 22 of the 30 roles short at year end."
+   ]
+  },
+  {
+   "slide_number": 13,
+   "name": "pai:dg_diagram_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 72.0,
+   "width": 873.4,
+   "height": 24.5,
+   "ink": [
+    43.2,
+    74.2,
+    290.8,
+    15.7
+   ],
+   "lines": [
+    "Year-end staffing gap by role, planned minus forecast"
+   ]
+  },
+  {
+   "slide_number": 13,
+   "name": "pai:dg_gap",
+   "anchor": 3,
+   "left": 286.9,
+   "top": 268.9,
+   "width": 121.0,
+   "height": 49.0,
+   "ink": [
+    316.3,
+    278.2,
+    64.6,
+    30.3
+   ],
+   "lines": [
+    "Roles short\r",
+    "30 roles"
+   ]
+  },
+  {
+   "slide_number": 13,
+   "name": "pai:dg_baristas",
+   "anchor": 3,
+   "left": 551.9,
+   "top": 124.4,
+   "width": 121.0,
+   "height": 49.0,
+   "ink": [
+    589.9,
+    133.8,
+    47.4,
+    30.3
+   ],
+   "lines": [
+    "Baristas\r",
+    "22 roles"
+   ]
+  },
+  {
+   "slide_number": 13,
+   "name": "pai:dg_supervisors",
+   "anchor": 3,
+   "left": 551.9,
+   "top": 220.7,
+   "width": 121.0,
+   "height": 49.0,
+   "ink": [
+    566.2,
+    230.1,
+    94.9,
+    30.3
+   ],
+   "lines": [
+    "Shift supervisors\r",
+    "6 roles"
+   ]
+  },
+  {
+   "slide_number": 13,
+   "name": "pai:dg_managers",
+   "anchor": 3,
+   "left": 551.9,
+   "top": 317.0,
+   "width": 121.0,
+   "height": 49.0,
+   "ink": [
+    569.6,
+    326.4,
+    88.0,
+    30.3
+   ],
+   "lines": [
+    "Store managers\r",
+    "2 roles"
+   ]
+  },
+  {
+   "slide_number": 13,
+   "name": "pai:dg_bakers",
+   "anchor": 3,
+   "left": 551.9,
+   "top": 413.3,
+   "width": 121.0,
+   "height": 49.0,
+   "ink": [
+    593.7,
+    422.7,
+    39.8,
+    30.3
+   ],
+   "lines": [
+    "Bakers\r",
+    "0 roles"
+   ]
+  },
+  {
+   "slide_number": 13,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 859.9,
+   "top": 498.2,
+   "width": 56.7,
+   "height": 25.2,
+   "ink": [
+    873.7,
+    498.2,
+    44.6,
+    11.8
+   ],
+   "lines": [
+    "Appendix 9"
+   ]
+  },
+  {
+   "slide_number": 13,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 795.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    214.0,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf staffing plan and forecast, FY2026."
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    530.8,
+    31.5
+   ],
+   "lines": [
+    "Harbor Street is in the slowest fifth at every daypart."
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    265.8,
+    15.7
+   ],
+   "lines": [
+    "Average wait by daypart (min), all 48 stores, FY2025"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 576.0,
+   "height": 24.5,
+   "ink": [
+    46.8,
+    104.4,
+    115.9,
+    15.7
+   ],
+   "lines": [
+    "Each dot is one store"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:strip_band_name",
+   "anchor": 3,
+   "left": 380.1,
+   "top": 149.1,
+   "width": 89.5,
+   "height": 15.8,
+   "ink": [
+    396.8,
+    150.7,
+    58.2,
+    12.6
+   ],
+   "lines": [
+    "Slowest fifth"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:strip_median_name",
+   "anchor": 3,
+   "left": 339.9,
+   "top": 133.3,
+   "width": 49.0,
+   "height": 15.8,
+   "ink": [
+    347.7,
+    134.9,
+    35.6,
+    12.6
+   ],
+   "lines": [
+    "Median"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:strip_value",
+   "anchor": 3,
+   "left": 523.2,
+   "top": 199.9,
+   "width": 103.2,
+   "height": 15.8,
+   "ink": [
+    523.2,
+    201.4,
+    73.5,
+    12.6
+   ],
+   "lines": [
+    "9.1 min · rank 7"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:strip_value",
+   "anchor": 3,
+   "left": 523.2,
+   "top": 293.1,
+   "width": 103.2,
+   "height": 15.8,
+   "ink": [
+    523.2,
+    294.7,
+    73.5,
+    12.6
+   ],
+   "lines": [
+    "6.1 min · rank 6"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:strip_value",
+   "anchor": 3,
+   "left": 523.2,
+   "top": 386.4,
+   "width": 103.2,
+   "height": 15.8,
+   "ink": [
+    523.2,
+    388.0,
+    73.5,
+    12.6
+   ],
+   "lines": [
+    "5.3 min · rank 7"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:label",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 199.5,
+   "width": 71.5,
+   "height": 16.5,
+   "ink": [
+    55.6,
+    201.4,
+    61.1,
+    12.6
+   ],
+   "lines": [
+    "Morning rush"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:label",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 292.8,
+   "width": 71.5,
+   "height": 16.5,
+   "ink": [
+    81.7,
+    294.7,
+    35.0,
+    12.6
+   ],
+   "lines": [
+    "Midday"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:label",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 386.0,
+   "width": 71.5,
+   "height": 16.5,
+   "ink": [
+    79.3,
+    388.0,
+    37.4,
+    12.6
+   ],
+   "lines": [
+    "Evening"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:callout",
+   "anchor": 1,
+   "left": 650.2,
+   "top": 100.8,
+   "width": 266.4,
+   "height": 75.8,
+   "ink": [
+    661.8,
+    110.3,
+    236.3,
+    48.9
+   ],
+   "lines": [
+    "Implication and action\r",
+    "Staff Harbor Street for the whole day, not only ",
+    "the morning rush."
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 854.9,
+   "top": 498.2,
+   "width": 61.6,
+   "height": 25.2,
+   "ink": [
+    869.0,
+    498.2,
+    49.4,
+    11.8
+   ],
+   "lines": [
+    "Appendix 10"
+   ]
+  },
+  {
+   "slide_number": 14,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 790.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    256.6,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf point-of-sale timestamps, FY2025 (48 stores)."
+   ]
+  },
+  {
+   "slide_number": 15,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    591.3,
+    31.5
+   ],
+   "lines": [
+    "Applicants wait a median of five days for a regional trainer."
+   ]
+  },
+  {
+   "slide_number": 15,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    355.9,
+    15.7
+   ],
+   "lines": [
+    "Trial-shift queue in the applicant tracker, Region North, 12 November"
+   ]
+  },
+  {
+   "slide_number": 15,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 576.0,
+   "height": 24.5,
+   "ink": [
+    46.8,
+    102.2,
+    178.9,
+    15.7
+   ],
+   "lines": [
+    "Applicant tracker, trial-shift step"
+   ]
+  },
+  {
+   "slide_number": 15,
+   "name": "pai:annotation",
+   "anchor": 1,
+   "left": 650.2,
+   "top": 100.8,
+   "width": 266.4,
+   "height": 51.8,
+   "ink": [
+    650.8,
+    109.3,
+    266.7,
+    32.3
+   ],
+   "lines": [
+    "Nine applicants are waiting; the longest wait is nine ",
+    "days, at Harbor Street."
+   ]
+  },
+  {
+   "slide_number": 15,
+   "name": "pai:callout",
+   "anchor": 1,
+   "left": 650.2,
+   "top": 165.6,
+   "width": 266.4,
+   "height": 75.8,
+   "ink": [
+    661.8,
+    175.1,
+    231.4,
+    48.9
+   ],
+   "lines": [
+    "Implication and action\r",
+    "Add a second regional trainer before the first ",
+    "hiring wave on 15 March."
+   ]
+  },
+  {
+   "slide_number": 15,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 854.9,
+   "top": 498.2,
+   "width": 61.6,
+   "height": 25.2,
+   "ink": [
+    869.0,
+    498.2,
+    49.4,
+    11.8
+   ],
+   "lines": [
+    "Appendix 11"
+   ]
+  },
+  {
+   "slide_number": 15,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 790.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    314.4,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf HR process review, FY2025; applicant tracker, 12 November."
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    421.0,
+    31.5
+   ],
+   "lines": [
+    "Mint Chill fell 18%, the most of any drink."
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    310.3,
+    15.7
+   ],
+   "lines": [
+    "Menu-board cards and year-over-year sales change, FY2025"
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 269.5,
+   "height": 24.5,
+   "ink": [
+    46.8,
+    102.2,
+    113.3,
+    15.7
+   ],
+   "lines": [
+    "Mint Chill Cold Brew"
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:image_caption",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 315.5,
+   "width": 269.5,
+   "height": 22.3,
+   "ink": [
+    43.2,
+    317.0,
+    122.8,
+    15.7
+   ],
+   "lines": [
+    "-18%, the steepest fall"
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 345.1,
+   "top": 100.8,
+   "width": 269.5,
+   "height": 24.5,
+   "ink": [
+    345.1,
+    102.2,
+    126.6,
+    15.7
+   ],
+   "lines": [
+    "Hazelnut Cloud Mocha"
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:image_caption",
+   "anchor": 1,
+   "left": 341.5,
+   "top": 315.5,
+   "width": 269.5,
+   "height": 22.3,
+   "ink": [
+    341.5,
+    317.0,
+    139.8,
+    15.7
+   ],
+   "lines": [
+    "-14%, the second steepest"
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:panel_title",
+   "anchor": 1,
+   "left": 643.4,
+   "top": 100.8,
+   "width": 269.5,
+   "height": 24.5,
+   "ink": [
+    643.4,
+    102.2,
+    84.3,
+    15.7
+   ],
+   "lines": [
+    "Espresso Tonic"
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:image_caption",
+   "anchor": 1,
+   "left": 639.8,
+   "top": 315.5,
+   "width": 269.5,
+   "height": 22.3,
+   "ink": [
+    639.8,
+    317.0,
+    130.1,
+    15.7
+   ],
+   "lines": [
+    "+15%, the fastest growth"
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:callout",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 421.2,
+   "width": 873.4,
+   "height": 39.6,
+   "ink": [
+    52.3,
+    433.1,
+    459.3,
+    15.7
+   ],
+   "lines": [
+    "Replace Mint Chill and Hazelnut Cloud in March; model the new drink on Espresso Tonic."
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 854.9,
+   "top": 498.2,
+   "width": 61.6,
+   "height": 25.2,
+   "ink": [
+    869.0,
+    498.2,
+    49.4,
+    11.8
+   ],
+   "lines": [
+    "Appendix 12"
+   ]
+  },
+  {
+   "slide_number": 16,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 790.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    385.5,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf point-of-sale data, FY2025 vs. FY2024 (140 stores); menu-board cards, FY2025."
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:takeaway_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 20.2,
+   "width": 873.4,
+   "height": 33.1,
+   "ink": [
+    43.2,
+    20.2,
+    575.0,
+    31.5
+   ],
+   "lines": [
+    "The trainer wait was the top reason applicants withdrew."
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:chart_title",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 59.0,
+   "width": 873.4,
+   "height": 23.0,
+   "ink": [
+    43.2,
+    59.0,
+    386.1,
+    15.7
+   ],
+   "lines": [
+    "Withdrawn barista applicants by reason, with one answer for each, FY2025"
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:quote_group",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 100.8,
+   "width": 269.5,
+   "height": 19.4,
+   "ink": [
+    46.8,
+    102.2,
+    185.6,
+    15.7
+   ],
+   "lines": [
+    "Waited for a trainer: 14 applicants"
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:quote_text",
+   "anchor": 1,
+   "left": 46.8,
+   "top": 137.5,
+   "width": 269.5,
+   "height": 117.2,
+   "ink": [
+    46.8,
+    139.0,
+    225.1,
+    88.0
+   ],
+   "lines": [
+    "“I passed the interview, then heard ",
+    "nothing about a trial shift for over a ",
+    "week… I had taken another job.”\r",
+    "Barista applicant, Harbor Street"
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:quote_group",
+   "anchor": 1,
+   "left": 345.1,
+   "top": 100.8,
+   "width": 269.5,
+   "height": 19.4,
+   "ink": [
+    345.1,
+    102.2,
+    165.4,
+    15.7
+   ],
+   "lines": [
+    "Pay offer too low: 9 applicants"
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:quote_text",
+   "anchor": 1,
+   "left": 345.1,
+   "top": 137.5,
+   "width": 269.5,
+   "height": 117.2,
+   "ink": [
+    345.1,
+    139.0,
+    245.9,
+    65.9
+   ],
+   "lines": [
+    "“The hourly rate in the offer was lower ",
+    "than the café across the street pays.”\r",
+    "Barista applicant, Union Square"
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:quote_group",
+   "anchor": 1,
+   "left": 643.4,
+   "top": 100.8,
+   "width": 269.5,
+   "height": 19.4,
+   "ink": [
+    643.4,
+    102.2,
+    189.5,
+    15.7
+   ],
+   "lines": [
+    "Shift hours did not fit: 7 applicants"
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:quote_text",
+   "anchor": 1,
+   "left": 643.4,
+   "top": 137.5,
+   "width": 269.5,
+   "height": 117.2,
+   "ink": [
+    643.4,
+    139.0,
+    272.1,
+    65.9
+   ],
+   "lines": [
+    "“They could only offer early mornings, and ",
+    "I have classes until ten.”\r",
+    "Barista applicant, Riverside"
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:annotation",
+   "anchor": 3,
+   "left": 43.2,
+   "top": 421.2,
+   "width": 427.7,
+   "height": 49.0,
+   "ink": [
+    43.8,
+    429.5,
+    411.3,
+    32.3
+   ],
+   "lines": [
+    "14 of 40 applicants who withdrew named the wait for a trainer, more than pay or ",
+    "hours."
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:callout",
+   "anchor": 3,
+   "left": 488.9,
+   "top": 421.2,
+   "width": 427.7,
+   "height": 49.0,
+   "ink": [
+    498.1,
+    437.8,
+    384.6,
+    15.7
+   ],
+   "lines": [
+    "Book every trial shift within two days of the interview from the March wave."
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:slide_footer",
+   "anchor": 1,
+   "left": 854.9,
+   "top": 498.2,
+   "width": 61.6,
+   "height": 25.2,
+   "ink": [
+    869.0,
+    498.2,
+    49.4,
+    11.8
+   ],
+   "lines": [
+    "Appendix 13"
+   ]
+  },
+  {
+   "slide_number": 17,
+   "name": "pai:source_footnote",
+   "anchor": 1,
+   "left": 43.2,
+   "top": 498.2,
+   "width": 790.1,
+   "height": 25.2,
+   "ink": [
+    43.2,
+    498.2,
+    368.1,
+    11.8
+   ],
+   "lines": [
+    "Source: Copperleaf applicant withdrawal survey, FY2025 (40 barista applicants who withdrew)."
+   ]
+  }
+ ]
+}

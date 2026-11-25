@@ -3839,5 +3839,155 @@ class FinishPass(unittest.TestCase):
         self.assertEqual(out.getvalue().strip(), content_digest(spec))
 
 
+def _frame(n, name='pai:annotation', box=(100.0, 100.0, 200.0, 50.0), ink=None, lines=('one line',)):
+    left, top, width, height = box
+    return {'slide_number': n, 'name': name, 'anchor': 1, 'left': left, 'top': top, 'width': width, 'height': height,
+            'ink': list(ink or (left + 2, top + 2, width - 4, height - 10)), 'lines': list(lines)}
+
+
+class TextBounds(unittest.TestCase):
+    """D-113: TB1-TB5 from the text bounds PowerPoint measures; the overlap flag becomes the machine's."""
+
+    def bounds(self, *frames):
+        return {'slide_width_pt': 960.0, 'slide_height_pt': 540.0, 'frames': list(frames)}
+
+    def errors(self, b, lang='en'):
+        import text_bounds_qa
+        return [m for _, m in text_bounds_qa.findings(b, lang)['errors']]
+
+    def test_clean_frames_pass(self):
+        import text_bounds_qa
+        b = self.bounds(_frame(1), _frame(1, box=(400.0, 100.0, 200.0, 50.0)))
+        self.assertEqual(self.errors(b), [])
+        self.assertEqual(text_bounds_qa.clean_slides(b), {1: True})
+
+    def test_tb1_text_past_its_frame(self):
+        import text_bounds_qa
+        b = self.bounds(_frame(2, ink=(100.0, 100.0, 200.0, 70.0)))
+        self.assertTrue(any('[TB1' in m for m in self.errors(b)))
+        self.assertEqual(text_bounds_qa.clean_slides(b), {2: False})
+
+    def test_tb2_texts_overlap(self):
+        b = self.bounds(_frame(1), _frame(1, name='pai:callout', box=(150.0, 110.0, 200.0, 50.0)))
+        self.assertTrue(any('[TB2' in m for m in self.errors(b)))
+
+    def test_tb2_neighbours_touching_pass(self):
+        b = self.bounds(_frame(1, ink=(100.0, 100.0, 100.0, 40.0)), _frame(1, box=(201.0, 100.0, 100.0, 50.0), ink=(201.0, 100.0, 100.0, 40.0)))
+        self.assertEqual(self.errors(b), [])
+
+    def test_tb3_off_slide(self):
+        b = self.bounds(_frame(1, box=(900.0, 100.0, 80.0, 50.0), ink=(902.0, 100.0, 70.0, 40.0)))
+        self.assertTrue(any('[TB3' in m for m in self.errors(b)))
+
+    def test_tb4_wider_than_frame_is_a_warning(self):
+        import text_bounds_qa
+        b = self.bounds(_frame(1, ink=(100.0, 100.0, 210.0, 40.0)))
+        found = text_bounds_qa.findings(b)
+        self.assertEqual(found['errors'], [])
+        self.assertTrue(any('[TB4' in m for _, m in found['warnings']))
+
+    def test_tb5_title_lines(self):
+        import text_bounds_qa
+        box = (40.0, 20.0, 880.0, 120.0)
+        three = self.bounds(_frame(1, 'pai:takeaway_title', box, (40.0, 20.0, 870.0, 100.0), ('a ', 'b ', 'c')))
+        self.assertTrue(any('[TB5' in m for m in self.errors(three)))
+        two = self.bounds(_frame(1, 'pai:takeaway_title', box, (40.0, 20.0, 870.0, 70.0), ('a ', 'b')))
+        self.assertEqual(self.errors(two), [])
+        self.assertTrue(any('[TB5' in m for _, m in text_bounds_qa.findings(two, 'en')['warnings']))
+        self.assertEqual(text_bounds_qa.findings(two, 'vi')['warnings'], [])
+
+    def test_vi_line_breaks_skip_paragraph_ends(self):
+        import text_bounds_qa
+        b = self.bounds(_frame(1, lines=('Hợp tác xã ', 'càng lớn\r', 'Ý nghĩa')))
+        self.assertEqual(text_bounds_qa.findings(b, 'vi')['line_breaks'], [(1, 'xã', 'càng')])
+        self.assertEqual(text_bounds_qa.findings(b, 'en')['line_breaks'], [])
+
+    def test_normalise_numbers_slides_like_the_spec(self):
+        import json as _json
+        import render_qa_pngs
+        tmp = Path(tempfile.mkdtemp(prefix='pai_tb_'))
+        self.addCleanup(shutil.rmtree, tmp, True)
+        pptx = tmp / 'deck.pptx'
+        pptx.write_bytes(b'not a real deck')
+        raw = tmp / 'raw.json'
+        raw.write_text(_json.dumps({'slide_width_pt': 960, 'slide_height_pt': 540, 'frames': {
+            'slide_index': 3, 'name': 'pai:callout', 'anchor': 1, 'left': 1.04, 'top': 2.0, 'width': 3.0, 'height': 4.0,
+            'ink': [1.04, 2.0, 3.0, 4.0], 'lines': 'one line'}}), encoding='utf-8-sig')
+        out = render_qa_pngs.normalise_text_bounds(raw, pptx, title_first=True)
+        self.assertEqual(out['pptx_sha256'], file_sha256(pptx))
+        self.assertEqual(out['frames'][0]['slide_number'], 2)
+        self.assertEqual(out['frames'][0]['left'], 1.0)
+        self.assertEqual(out['frames'][0]['lines'], ['one line'])
+
+    def workspace(self):
+        tmp = Path(tempfile.mkdtemp(prefix='pai_tb_ws_'))
+        self.addCleanup(shutil.rmtree, tmp, True)
+        work = tmp / 'run'
+        shutil.copytree(ROOT / '50_evals/runs/bench_en_software_1plus4', work)
+        return work
+
+    def measure(self, work, frames, source='pptx_powerpoint', pptx_hash=None):
+        import json as _json
+        pptx = work / 'output/presentation.pptx'
+        b = self.bounds(*frames)
+        b['pptx_sha256'] = pptx_hash or file_sha256(pptx)
+        path = work / 'renders/text_bounds.json'
+        path.write_text(_json.dumps(b), encoding='utf-8')
+        mpath = work / 'renders/render_manifest.json'
+        manifest = _json.loads(mpath.read_text(encoding='utf-8'))
+        manifest['render_source'] = source
+        manifest['text_bounds'] = {'file': 'text_bounds.json', 'sha256': file_sha256(path), 'frames': len(frames)}
+        mpath.write_text(_json.dumps(manifest), encoding='utf-8')
+
+    def validate(self, work):
+        return validate_spec.validate_slide_spec_file(work / 'artifacts/slide_spec.yaml', work)
+
+    def test_validator_rejects_measured_clipping(self):
+        work = self.workspace()
+        self.measure(work, [_frame(1, 'pai:takeaway_title', (40.0, 20.0, 880.0, 34.0), (40.0, 20.0, 870.0, 68.0))])
+        res = self.validate(work)
+        self.assertTrue(any('[G4.10 / D-113]' in e and 'says true' in e for e in res['errors']))
+
+    def test_clean_measurement_makes_the_flag_machine_checked(self):
+        work = self.workspace()
+        flag = 'slides[].claim_evidence_contract.rendered_png_qa.zero_text_overlap_or_clipping'
+        self.assertIn(flag, self.validate(work)['self_attested'])
+        self.measure(work, [_frame(1)])
+        res = self.validate(work)
+        self.assertTrue(res['valid'], res['errors'])
+        self.assertNotIn(flag, res['self_attested'])
+        self.assertIn('text_bounds', res['machine_checks'])
+
+    def test_untrusted_bounds_are_ignored(self):
+        import text_bounds_qa
+        work = self.workspace()
+        bad = [_frame(1, ink=(100.0, 100.0, 200.0, 90.0))]
+        self.measure(work, bad, source='pptx_libreoffice')
+        self.assertIsNone(text_bounds_qa.load_bounds(work / 'renders', work / 'output/presentation.pptx'))
+        self.measure(work, bad, pptx_hash='0' * 64)
+        self.assertIsNone(text_bounds_qa.load_bounds(work / 'renders', work / 'output/presentation.pptx'))
+        self.assertFalse(any('D-113' in e for e in self.validate(work)['errors']))
+
+    @unittest.skipUnless(sys.platform == 'win32', 'PowerPoint bounds are read through Windows COM')
+    def test_powerpoint_measures_a_clipped_title(self):
+        import render_qa_pngs
+        import text_bounds_qa
+        from pptx import Presentation
+        from pptx.util import Inches
+        if not render_qa_pngs.find_powerpoint():
+            self.skipTest('Microsoft PowerPoint is not installed')
+        work = self.workspace()
+        deck = work / 'output/presentation.pptx'
+        prs = Presentation(str(deck))
+        title = next(sh for sh in content_slides(prs)[0].shapes if sh.name == 'pai:takeaway_title')
+        title.width = Inches(4)
+        prs.save(str(deck))
+        render_qa_pngs.render_qa_pngs(deck, work / 'renders', renderer='powerpoint')
+        b = text_bounds_qa.load_bounds(work / 'renders', deck)
+        self.assertIsNotNone(b)
+        errors = [m for _, m in text_bounds_qa.findings(b)['errors']]
+        self.assertTrue(any('[TB1' in m and 'pai:takeaway_title' in m for m in errors), errors)
+
+
 if __name__ == '__main__':
     unittest.main(verbosity=2)

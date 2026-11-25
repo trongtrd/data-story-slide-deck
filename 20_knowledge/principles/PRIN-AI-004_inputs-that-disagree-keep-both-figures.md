@@ -5,7 +5,8 @@ type: principle
 stage: AI
 origin: supplementary
 sources: [SRC-SEC-024]
-status: proposed
+status: accepted
+revised: "2026-11-25 (D-109 accepted)"
 ---
 
 # `PRIN-AI-004` — When Two Inputs Disagree, Keep Both Figures and Let the Owner Choose

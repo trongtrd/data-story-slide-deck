@@ -54,6 +54,14 @@ _Avoid_: Takeaway title, slide headline
 The property where reading only the Takeaway Titles across all slides in sequence tells the complete, coherent story of the presentation.
 _Avoid_: Slide transitions, deck outline
 
+**Expected Signal**:
+One sentence written at Checkpoint G3, before the build, saying what a viewer will see on the chart if the Takeaway Title is true; the G4 render is checked against it.
+_Avoid_: Hypothesis, preview, chart description
+
+**Cover-the-Title Test**:
+The G4 check that, with the Takeaway Title and other text hidden, the strongest emphasis on the slide still lands on the marks that prove the title.
+_Avoid_: Squint test, visual-only review
+
 **Vertical Logic**:
 The property where every element on a single slide—Takeaway Title, Descriptive Chart Title, visual, annotations, and supporting text—reinforces the same single point.
 _Avoid_: Slide consistency, grid alignment

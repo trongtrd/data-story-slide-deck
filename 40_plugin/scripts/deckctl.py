@@ -312,8 +312,38 @@ def cmd_qa(workspace: Path) -> int:
         return 2
     source = json.loads(manifest.read_text(encoding="utf-8")).get("render_source")
     print(f"[OK] QA renders written to {workspace / 'renders'} ({manifest.name}, {source})")
+    rc = max(rc, cmd_text_bounds(workspace))
     cmd_html_qa(workspace)
     return rc
+
+
+def cmd_text_bounds(workspace: Path) -> int:
+    """D-113: TB1-TB5 from the text bounds PowerPoint measured; without them the overlap flag stays the reviewer's."""
+    import yaml
+    from text_bounds_qa import findings, load_bounds
+
+    bounds = load_bounds(workspace / "renders", workspace / "output" / "presentation.pptx")
+    if bounds is None:
+        print(
+            "[WARN] No text bounds from PowerPoint (rendered with LibreOffice, or on macOS): clipping and overlap are not "
+            "machine-checked; inspect every render yourself before setting rendered_png_qa.zero_text_overlap_or_clipping."
+        )
+        return 0
+    spec_path = workspace / "artifacts" / "slide_spec.yaml"
+    spec = (yaml.safe_load(spec_path.read_text(encoding="utf-8")) or {}) if spec_path.exists() else {}
+    lang = str((spec.get("deck_meta") or {}).get("deck_language", "en"))
+    found = findings(bounds, lang)
+    for _, msg in found["errors"]:
+        print(f"  ERROR: {msg}")
+    for _, msg in found["warnings"]:
+        print(f"[WARN] {msg}")
+    if found["line_breaks"]:
+        print("[INFO] Line breaks to check for split compound words (LANG-VI), as slide: last syllable | first syllable:")
+        for n, left, right in found["line_breaks"]:
+            print(f"    slide {n}: {left} | {right}")
+    frames = len(bounds.get("frames") or [])
+    print(f"[{'OK' if not found['errors'] else 'FAIL'}] Text geometry (PowerPoint bounds, {frames} text frames): {len(found['errors'])} error(s)")
+    return 0 if not found["errors"] else 1
 
 
 def prebuild_errors(workspace: Path, *, fixture: bool = False) -> List[str]:

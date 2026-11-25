@@ -4490,6 +4490,28 @@ def validate_slide_spec_dict(
                     "renders/render_manifest.json [G4.10 / D-044]: renders are Pillow previews, not images of the .pptx; the render "
                     "flags rest on them only. Ask the owner to open output/presentation.pptx and check every slide before G4."
                 )
+        # D-113: when PowerPoint measured the current deck, the overlap flag is the machine's, not the reviewer's
+        if workspace is not None:
+            from text_bounds_qa import clean_slides, findings as bounds_findings, load_bounds
+
+            bounds = load_bounds(workspace / "renders", workspace / "output" / "presentation.pptx")
+            if bounds is not None:
+                res["machine_geometry"] = True
+                count_check(res, "text_bounds", len(bounds.get("frames") or []))
+                clean = clean_slides(bounds, deck_lang)
+                messages: Dict[Any, List[str]] = {}
+                for n, msg in bounds_findings(bounds, deck_lang)["errors"]:
+                    messages.setdefault(n, []).append(msg)
+                for slide in slides:
+                    n = slide.get("slide_number")
+                    if clean.get(n, True):
+                        continue
+                    qa = (slide.get("claim_evidence_contract") or {}).get("rendered_png_qa") or {}
+                    claim = " although rendered_png_qa.zero_text_overlap_or_clipping says true" if qa.get("zero_text_overlap_or_clipping") is True else ""
+                    errors.append(
+                        f"{slide.get('slide_id')} [G4.10 / D-113]: PowerPoint measured clipped or overlapping text{claim}: "
+                        + " ".join(m for m in messages.get(n, []) if "[TB1" in m or "[TB2" in m or "[TB3" in m)
+                    )
     human = g4.get("human_g4") or {}
     if human.get("decision") in ("accepted", "changes_requested"):
         missing = [k for k in ("approved_by", "approved_at", "owner_words") if not str(human.get(k, "")).strip()]
@@ -4678,7 +4700,10 @@ def validate_slide_spec_dict(
                     "Vietnamese diacritics; confirm its glyph coverage, or PowerPoint will mix faces inside words."
                 )
 
-    res["self_attested"].extend(collect_self_attested({"slides": slides}))
+    attested = collect_self_attested({"slides": slides})
+    if res.pop("machine_geometry", False):  # D-113: PowerPoint measured the current deck, so this flag is machine-checked
+        attested = [f for f in attested if not f.endswith("rendered_png_qa.zero_text_overlap_or_clipping")]
+    res["self_attested"].extend(attested)
     return finish(res)
 
 

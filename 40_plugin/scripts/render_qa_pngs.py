@@ -28,7 +28,7 @@ import sys
 import tempfile
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple
 
 from spec_digest import SPEC_DIGEST_PREFIX, file_sha256
 
@@ -37,6 +37,7 @@ POWERPOINT_RENDER_SOURCE = "pptx_powerpoint"
 AUTHORITATIVE_RENDER_SOURCES = (POWERPOINT_RENDER_SOURCE, RENDER_SOURCE)  # D-044: renders of the real .pptx
 RENDERERS = ("powerpoint", "libreoffice")
 MANIFEST_NAME = "render_manifest.json"
+TEXT_BOUNDS_NAME = "text_bounds.json"  # D-113: text bounds measured by PowerPoint
 MAC_POWERPOINT_APP = "/Applications/Microsoft PowerPoint.app"
 
 
@@ -108,6 +109,32 @@ $pres = $null
 try {
   $pres = $app.Presentations.Open($env:PAI_PPTX, -1, 0, 0)
   $pres.SaveAs($env:PAI_PDF, 32)
+  if ($env:PAI_BOUNDS) {
+    # D-113: the ink box of every text frame after wrapping, and the text of each line
+    $frames = New-Object System.Collections.Generic.List[object]
+    foreach ($s in $pres.Slides) {
+      foreach ($sh in $s.Shapes) {
+        $items = @($sh)
+        if ($sh.Type -eq 6) { $items = @($sh.GroupItems) }
+        foreach ($x in $items) {
+          if ($x.HasTextFrame -and $x.TextFrame2.HasText) {
+            $tr = $x.TextFrame2.TextRange
+            $n = $tr.Lines().Count
+            $lines = New-Object System.Collections.Generic.List[string]
+            for ($i = 1; $i -le $n; $i++) { $lines.Add($tr.Lines($i, 1).Text) }
+            $frames.Add([pscustomobject]@{
+              slide_index = $s.SlideIndex; name = $x.Name; anchor = [int]$x.TextFrame2.VerticalAnchor
+              left = $x.Left; top = $x.Top; width = $x.Width; height = $x.Height
+              ink = @($tr.BoundLeft, $tr.BoundTop, $tr.BoundWidth, $tr.BoundHeight)
+              lines = $lines.ToArray()
+            })
+          }
+        }
+      }
+    }
+    $out = [pscustomobject]@{ slide_width_pt = $pres.PageSetup.SlideWidth; slide_height_pt = $pres.PageSetup.SlideHeight; frames = $frames.ToArray() }
+    [IO.File]::WriteAllText($env:PAI_BOUNDS, ($out | ConvertTo-Json -Depth 5), (New-Object Text.UTF8Encoding($false)))
+  }
   Write-Output ('Microsoft PowerPoint ' + $app.Version)
 } finally {
   if ($pres) { $pres.Close() }
@@ -135,12 +162,14 @@ end run
 
 
 def convert_with_powerpoint(pptx_path: Path, out_dir: Path, timeout_s: int = 300) -> Tuple[Path, str]:
-    """Export the deck to PDF with PowerPoint itself; returns (pdf path, renderer version)."""
+    """Export the deck to PDF with PowerPoint itself; returns (pdf path, renderer version). On Windows the same session
+    also writes `raw_text_bounds.json` into `out_dir` (D-113)."""
     src = out_dir / f"pai_render_{pptx_path.name}"
     shutil.copyfile(pptx_path, src)
     pdf_path = out_dir / (pptx_path.stem + ".pdf")
     if sys.platform == "win32":
-        env = dict(os.environ, PAI_PPTX=str(src.resolve()), PAI_PDF=str(pdf_path.resolve()))
+        env = dict(os.environ, PAI_PPTX=str(src.resolve()), PAI_PDF=str(pdf_path.resolve()),
+                   PAI_BOUNDS=str((out_dir / RAW_BOUNDS_NAME).resolve()))
         cmd = [shutil.which("powershell") or "powershell", "-NoProfile", "-NonInteractive", "-ExecutionPolicy", "Bypass", "-Command", WINDOWS_POWERPOINT_SCRIPT]
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout_s, env=env)
     else:  # macOS (unverified until tested on a Mac, D-044)
@@ -150,6 +179,41 @@ def convert_with_powerpoint(pptx_path: Path, out_dir: Path, timeout_s: int = 300
         raise RuntimeError(f"PowerPoint export failed (exit {proc.returncode}).\nstdout: {proc.stdout.strip()}\nstderr: {proc.stderr.strip()}")
     version = (proc.stdout.strip().splitlines() or ["Microsoft PowerPoint"])[-1]
     return pdf_path, version
+
+
+RAW_BOUNDS_NAME = "raw_text_bounds.json"
+
+
+def normalise_text_bounds(raw_path: Path, pptx_path: Path, title_first: bool) -> Optional[Dict[str, Any]]:
+    """Turn PowerPoint's raw dump into `text_bounds.json`: slide numbers as in the spec, values rounded to 0.1 pt so
+    a re-render of the same deck gives the same file, and the hash of the measured .pptx (D-113)."""
+    if not raw_path.exists():
+        return None
+    raw = json.loads(raw_path.read_text(encoding="utf-8-sig"))
+    frames = raw.get("frames") or []
+    if isinstance(frames, dict):
+        frames = [frames]
+    out = []
+    for f in frames:
+        lines = f.get("lines") or []
+        if isinstance(lines, str):
+            lines = [lines]
+        idx = int(f.get("slide_index", 0))
+        out.append({
+            "slide_number": idx - 1 if title_first else idx,
+            "name": f.get("name", ""),
+            "anchor": f.get("anchor"),
+            **{k: round(float(f.get(k, 0.0)), 1) for k in ("left", "top", "width", "height")},
+            "ink": [round(float(v), 1) for v in (f.get("ink") or [])],
+            "lines": [str(x) for x in lines],
+        })
+    return {
+        "measured_by": "Microsoft PowerPoint (TextFrame2.TextRange bounds)",
+        "pptx_sha256": file_sha256(pptx_path),
+        "slide_width_pt": round(float(raw.get("slide_width_pt", 960)), 1),
+        "slide_height_pt": round(float(raw.get("slide_height_pt", 540)), 1),
+        "frames": out,
+    }
 
 
 def read_spec_digest_from_pptx(pptx_path: Path) -> Optional[str]:
@@ -254,7 +318,9 @@ def render_qa_pngs(
                     source = POWERPOINT_RENDER_SOURCE
                 else:
                     pdf_path, version, source = convert_pptx_to_pdf(exe, pptx_path, Path(tmp)), soffice_version(exe), RENDER_SOURCE
-                pngs = rasterize_pdf(pdf_path, png_dir, width_px, title_first=opens_on_title_slide(pptx_path))
+                title_first = opens_on_title_slide(pptx_path)
+                pngs = rasterize_pdf(pdf_path, png_dir, width_px, title_first=title_first)
+                bounds = normalise_text_bounds(Path(tmp) / RAW_BOUNDS_NAME, pptx_path, title_first) if name == "powerpoint" else None
             break
         except (RuntimeError, OSError, subprocess.TimeoutExpired) as exc:
             failures.append(f"{name}: {exc}")
@@ -272,6 +338,12 @@ def render_qa_pngs(
         "slide_count": len(pngs),
         "pngs": [{"file": p.name, "sha256": file_sha256(p)} for p in pngs],
     }
+    bounds_path = png_dir / TEXT_BOUNDS_NAME
+    if bounds is not None:
+        bounds_path.write_text(json.dumps(bounds, indent=1, ensure_ascii=False) + "\n", encoding="utf-8")
+        manifest["text_bounds"] = {"file": TEXT_BOUNDS_NAME, "sha256": file_sha256(bounds_path), "frames": len(bounds["frames"])}
+    elif bounds_path.exists():
+        bounds_path.unlink()  # measured from an earlier render; never leave it beside new images
     if failures:
         manifest["renderer_fallback"] = failures
     manifest_path = png_dir / MANIFEST_NAME
